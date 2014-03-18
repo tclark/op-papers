@@ -1,0 +1,105 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{IN719 Systems Administration\\A Puppet Module for Hosts Files}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+Last time we made a Puppet module for \texttt{sudo}.  That module wasn't very flexible, however.  It only worked because we configure \texttt{sudo} in the exact same way on every system. Today we'll make a more flexible module to manage our hosts files.  To accomplish this, we'll make use of Puppet's \emph{variables}, \emph{conditionals}, and \emph{templates}.
+
+\section{Module setup}
+Create a standard module structure in the \texttt{/etc/puppet/modules} directory of your puppetmaster.
+
+\texttt{hosts\_file} \\
+\texttt{hosts\_file/manifests} \\
+\texttt{hosts\_file/files} \\
+\texttt{hosts\_file/templates} \\
+
+Create an \texttt{init.pp} file in your \texttt{manifests} subdirectory.
+
+\section{Module manifest}
+Put the following code in your \texttt{init.pp} file.  Adjust the IP addresses to match your systems.
+
+\begin{verbatim}
+  class hosts_file {
+    if $osfamily == 'Debian' {
+      include deb_hosts
+    }
+    elsif $osfamily == 'windows' {
+      include win_hosts
+    }
+  }
+
+  class hosts_file::deb_hosts {
+    file { "/etc/hosts" :
+      ensure => present,
+      owner => 'root',
+      group => 'root',
+      mode => 0444,
+      content => template('hosts_file/debhosts.erb'),
+    }
+  }
+
+  class hosts_file::win_hosts {
+    file {"C:\windows\System32\drivers\etc\hosts" :
+      ensure => present,
+      content => template('hosts_file/winhosts.erb'),
+    }
+  }
+  
+\end{verbatim}
+
+\newpage
+
+There are a few new things happening in this manifest.
+\begin{itemize}
+  \item We're using a \emph{variable}, \texttt{\$osfamily}.  We can define and use our own variables, but many variables are populated for us by a utility called \emph{Facter}.  You can see a list of the core facts produced by Facter at \\ http://docs.puppetlabs.com/facter/1.6/core\_facts.html.
+  \item We are using an \texttt{if/elsif} structure to conditionally select which Puppet class to use based in the operating system of the agent.
+  \item Instead of copying over static files, we are using \emph{templates}.  The template files are to be placed in the \texttt{templates} subdirectory of the module.  Puppet's templates use the erb (Embedded Ruby) templating system.
+\end{itemize}
+
+\section{Template files}
+Finally, we need to write our template files in the \texttt{templates} subdirectory of our module.  The text of those files is below.
+
+\textbf{debhosts.erb}
+\begin{verbatim}
+127.0.0.1       localhost <%= hostname %>
+10.26.1.50      ad ad.sqrawler.com
+10.26.1.51      app app.sqrawler.com
+10.26.1.52      db db.sqrawler.com
+10.26.1.53      mgmt mgmt.sqrawler.com
+10.26.1.54      backup backup.sqrawler.com
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+\end{verbatim}
+
+
+\textbf{winhosts.erb}
+\begin{verbatim}
+127.0.0.1       localhost <%= hostname %>
+10.26.1.50      ad ad.sqrawler.com
+10.26.1.51      app app.sqrawler.com
+10.26.1.52      db db.sqrawler.com
+10.26.1.53      mgmt mgmt.sqrawler.com
+10.26.1.54      backup backup.sqrawler.com
+
+\end{verbatim}
+
+In these templates we are inserting the correct value for the local host name with the \texttt{hostname} variable that is defined by Facter.
+
+\section{Follow up}
+You can, and should, read more about Puppet templates at http://docs.puppetlabs.com/learning/templates.html.
+
+\end{document}
