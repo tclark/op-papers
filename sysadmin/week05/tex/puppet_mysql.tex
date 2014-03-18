@@ -96,7 +96,7 @@ The mysql::service class is brief.  Place it in your \texttt{service.pp} file.
       ensure => running,
       hasstatus => true,
       hasrestart => true,
-      enabled => true,
+      enable => true,
       require => Class["mysql::config"],
     }
   }
