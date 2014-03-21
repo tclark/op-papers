@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{IN719 Systems Administration\\A Puppet Module for Hosts Files}
+\title{Lab 4.3: A Puppet Module for Hosts Files \\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -50,7 +50,7 @@ Put the following code in your \texttt{init.pp} file.  Adjust the IP addresses t
   }
 
   class hosts_file::win_hosts {
-    file {"C:\windows\System32\drivers\etc\hosts" :
+    file {"C:/windows/System32/drivers/etc/hosts" :
       ensure => present,
       content => template('hosts_file/winhosts.erb'),
     }

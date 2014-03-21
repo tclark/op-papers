@@ -1,0 +1,13 @@
+\frametitle {Modules}
+  A collection of related resources can be organised into a \emph{module}.  For example, we may want to install the bacula-fd package, its configuration file, and set up a working directory for restores.  We can create a module that incorporates all of these things, and then use the module in a node:
+
+\begin{verbatim}
+node 'foo.sqrawler.com' {
+  include bacula-client
+}
+\end{verbatim}
+
+We will create and apply a module in today's lab.
+
+
+
