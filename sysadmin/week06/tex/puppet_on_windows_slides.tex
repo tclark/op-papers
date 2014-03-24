@@ -1,0 +1,150 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Puppet on Windows}
+\author[IN719]{Systems Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{You can use Puppet to manage Windows}
+  
+\begin{itemize}
+\item The puppetmaster must be *nix.
+\item  The puppet agents can be Windows 7, Windows 8,  Server 2003 - Server 2012.
+\item  The puppet agent version can be lower than the master (e.g., a 2.7 agent can talk to a 3.0 master), but not the reverse.
+\item Some Puppet resources can be specified in a cross platform way, but
+         \begin{itemize}
+\item  some need to be specified in a platform specific way,
+\item  some are platform specific.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Installing the Windows agent}
+  
+\begin{itemize}
+\item Download the msi from http://downloads.puppetlabs.com/windows or \\ the I: drive.
+\item The msi's include all of the dependencies.
+\item Edit the hosts file before you install.  The Agent needs to be able to resolve the hostname of the puppetmaster.
+\end{itemize}
+
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+ \frametitle{Writing Manifests for Windows}
+  
+Puppet can manage the following resource types on Windows
+\begin{itemize}
+\item file
+\item user
+\item group
+\item package
+\item service
+\item exec
+\item host
+\item scheduled\_task
+\end{itemize}
+
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Windows File Paths}
+  
+Forward slash or black slash?
+
+Use forward slashes for 
+\begin{itemize}
+\item file resource titles and paths
+\item package resource paths
+\item the command attribute of an exec resource (with exceptions)
+\end{itemize}
+
+You \emph{must} use back slashes for 
+\begin{itemize}
+\item the command of a scheduled\_task
+\item the install\_options of a package resource
+\end{itemize}
+
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Installing packages}
+  
+Puppet can install MSI and executable packages, but the file must be locally available on the agent.  You can either
+\begin{itemize}
+\item Manage the installer as a file resource, or
+\item Place the installer on a mapped network drive, or
+\item Specify a UNC path.
+\end{itemize}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Installing packages}
+  Examples
+
+  \begin{verbatim}
+    package { 'mysql':
+        ensure          => '5.5.16',
+        source          => 'N:/packages/mysql-5.5.16-winx64.msi',
+        install_options => ['INSTALLDIR=C:\mysql-5.5'],
+    }
+    package { "Git version 1.8.4-preview20130916":
+        ensure   => installed,
+        source   => 'C:\\code\\puppetlabs\\temp\\windowsexample\\Git-1.8.4-preview20130916.exe',
+        install_options => ['/VERYSILENT']
+    }
+  \end{verbatim}
+
+
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Users and Groups}
+  Puppet can only directly manage local users and groups.  To manage domain users you will 
+  need to use a Powershell script.
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Line Endings}
+
+  Remember that Unix/Linux and Windows systems denote line endings differently.  If you 
+  create a file resource on a *nix systems that will be used on Windows hosts, you may need 
+  to modify the line endings.
+
+\end{frame}
+
+
+
+\end{document}
