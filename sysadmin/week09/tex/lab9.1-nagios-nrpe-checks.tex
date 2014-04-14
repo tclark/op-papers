@@ -21,7 +21,7 @@ Up until now we have performed two kinds of checks with Nagios:
   \item We have checked network-accessible services like SSH and MySQL.
 \end{enumerate}
 
-But how can we check for local properties like tha latter on remote systems?  Servers aren't in the habit of reporting on free disk space over the network?  The answer is to use the \emph{Nagios Remote Plugin Executor} (NRPE) service on the remote machine we want to monitor.  Then our Nagios server can request that the remote NRPE service performs the check and reports back with the result.  In this lab we will walk through the steps required to check disk space on our \texttt{db} servers.
+But how can we check for local properties like the latter on remote systems?  Servers aren't in the habit of reporting on free disk space over the network.  The answer is to use the \emph{Nagios Remote Plugin Executor} (NRPE) service on the remote machine we want to monitor.  Then our Nagios server can request that the remote NRPE service perform the check and report back with the result.  In this lab we will walk through the steps required to check disk space on our \texttt{db} servers.
 
 The NRPE service could be easily abused, since basically it accepts remote requests to execute programs on the monitored server.  For this reason, we have to configure it carefully.
 
@@ -46,7 +46,7 @@ Now that our remote server is ready, we can configure the check in Nagios on \te
 \section{Follow up}
 Use the NRPE service to provide some more remote checks on your db server.  Then set up those checks on your other Debian servers.
 
-NRPE service is provided on your Windows server by the NSClient++ service.  It's configuration is similar, but you'll need to take into account the different operating system when setting up your checks.
+NRPE service is provided on your Windows server by the NSClient++ service.  Its configuration is similar, but you'll need to take into account the different operating system when setting up your checks.
 
 Get a comprehensive set of checks running across your network, and document how you did it so that you will be able to add more checks as we add to it.
 \end{document}
