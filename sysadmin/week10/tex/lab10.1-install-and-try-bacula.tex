@@ -48,6 +48,37 @@ Carry out the following procudure on your \texttt{backup} server.
   \item Now you are ready to run some backup and restore jobs.  Open a second ssh session to your \texttt{backup} server. In it, run the 
         \texttt{bconsole} command.  The next several commands take place inside the \texttt{bconsole}.
 
+  \item Enter \texttt{show filesets} to see what files Bacula is configured to back up.
+
+  \item Enter the commands \texttt{status dir}, \texttt{status client}, and \texttt{status storage} to see the statuses of those services.
+
+  \item Now let's do a backup.  Start by entering \texttt{run} in bconsole.  You will see a list of available jobs.  Enter 1 to run the 
+        \texttt{BackupClient1} job.  Say yes at the next prompt.
+
+  \item Enter \texttt{messages} to view status messages.  You will see that your job is blocked because your storage device is not ready.
+
+  \item Enter \texttt{label} to prepare your storage device. If you get a menu of choices, pick the \emph{File} option.
+
+  \item Name your new volume \texttt{TestVolume1}
+
+  \item You will need to put your volume in a \emph{Pool}.  Choose the \emph{Default} pool.  Now your backup job should run.
+
+  \item In your other ssh session, delete some of the files you placed in \texttt{/home/bacula/data-to-backup}.
+
+  \item Now we will restore the missing files.  In bconsole, enter the command \texttt{restore all}.  From the 
+        resulting menu, pick option 5.
+
+  \item Bacula will ask what files you want to resotre.  Enter \texttt{done} to restore everything.
+
+  \item Bacula will placed the resotred files under \texttt{/home/bacula/restores}.  Verify that the files are correct
+        before manually copying them to the desired location.
+
+  \item What if you want to restore the files to their original locations?  Start a new restore job as you did above.
+        When you get to the yes/no/mod step, enter \texttt{mod}. Set the \emph{Where} property of the restore to 
+	nothing or /.  Now Bacula will restore the files directly to their original locations. 
+
 \end{enumerate}
 
+Play with Bacula a bit more and consult the online documentation to get a feel for it.  You may want to save copies of the configuration files 
+before you modify them.
 \end{document}
