@@ -1,0 +1,167 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{ulem}
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Backups - The Most Important Topic of the Semester}
+\author[IN719]{Systems Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{The Sysadmin's Lifeboat}
+ 
+Good backups solve a range of problems.
+
+\begin{itemize}
+\item Somebody deletes important files:  restore from backup.
+\item Your server's hard drive burns up:  restore from backup.
+\item Bad guys break into your server:  wipe it and restore from backup.
+\item Your office burns down: set up in a new location, restore from backup.
+\item You need to archive old data: store it on backup media
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Start with a plan}
+ 
+
+\begin{itemize}
+\item What to back up
+\item When to back up
+\item How to store and manage your backup media
+\item How to restore from backup
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Backup everything!}
+ 
+
+\begin{itemize}
+\item Whatever you may need, you'll have it.
+\item It's easy to restore after a major problem. \\
+       However,
+\item You'll wind up storing a lot of data, much of it redundant.
+\item Larger backups are more time consuming to create and to restore.
+\item You may not want to retain some data.
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Backup selectively}
+ 
+
+\begin{itemize}
+\item Identify data that is valuable.
+\item Identify data that you can't get elsewhere.
+\item Identify data that you don't want to save.
+\item Consult applicable regulations and policies.
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{When to back up}
+ 
+
+\begin{itemize}
+\item  Should you back up hourly, daily, weekly?
+\item  Do you want full or incremental backups?
+\item  How much can you afford to lose?
+\item  How long does it take to perform a backup?
+\item  Do you need to take any services offline while backing up? 
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Managing backup media}
+ 
+
+\begin{itemize}
+\item We may back up to tape, disk, or an offsite service. 
+\item We need a rotation schedule for media.
+\item We must maintain a catalogue of backup media.
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Restoring from backup}
+ 
+
+\begin{itemize}
+\item There's no point in backing up if we can't restore.
+\item Typically a complicated process.
+      \begin{itemize}
+        \item Identify storage media
+	\item Mount and restore in the correct order
+	\item Execute restore commands
+      \end{itemize}
+\item The process needs to be well documented and tested regularly.
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{A backup system is needed}
+
+\begin{itemize}
+\item It identifies what is to be backed up.
+\item It performs the backups automatically according to a schedule.
+\item It manages storage media.
+\item It helps automate the restore process.
+\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Many systems are available}
+
+\begin{itemize}
+\item ARCServe
+\item Arkeia
+\item Barracuda
+\item AMANDA
+\item Bacula
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Bacula}
+
+  We will use Bacula, which is documented here:
+  
+  http://www.bacula.org/5.0.x-manuals/en/main/main/index.html
+
+\end{frame}
+
+\end{document}
