@@ -61,7 +61,7 @@ Carry out the following procudure on your \texttt{backup} server.
 
   \item Name your new volume \texttt{TestVolume1}
 
-  \item You will need to put your volume in a \emph{Pool}.  Choose the \emph{Default} pool.  Now your backup job should run.
+  \item You will need to put your volume in a \emph{Pool}.  Choose the \emph{File} pool.  Now your backup job should run.
 
   \item In your other ssh session, delete some of the files you placed in \texttt{/home/bacula/data-to-backup}.
 
@@ -70,7 +70,7 @@ Carry out the following procudure on your \texttt{backup} server.
 
   \item Bacula will ask what files you want to resotre.  Enter \texttt{done} to restore everything.
 
-  \item Bacula will placed the resotred files under \texttt{/home/bacula/restores}.  Verify that the files are correct
+  \item Bacula will placed the restored files under \texttt{/home/bacula/restores}.  Verify that the files are correct
         before manually copying them to the desired location.
 
   \item What if you want to restore the files to their original locations?  Start a new restore job as you did above.
