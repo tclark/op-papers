@@ -1,0 +1,58 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{Lab 10.2:  Configuring a Backup Job\\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+In the last lab we performed a simple backup and restore to familiarise ourselves with the Bacula tools and processes.  Configuring a ``real" backup job is a bit more involved, however.  Much of the necessary configuration required involves getting the various components to communicate over the network\footnote{You will need to have your hosts files properly set up in order for this lab to work.}.
+
+In this lab we will configure a job to backup files on our \texttt{mgmt} servers.  After completing this lab you should be ready to cofigure backup jobs on all of your Linux servers.
+
+\section{Configure Bacula-fd on mgmt}
+\begin{enumerate}
+  \item Install the \texttt{bacula-client} package on \texttt{mgmt}.
+  \item Modify the configuration file \texttt{/etc/bacula/bacula-fd.conf}.
+  \begin{enumerate}
+    \item In the \emph{Director} section, change the name to \texttt{backup-dir} (or whatever your 
+          Bacula Director's name is configured to be).  Change the password value to something you can
+	  remember and copy accurately later.
+    \item In the \emph{FileDaemon} section, change the FDAddress to the IP address of your \texttt{mgmt}
+          server.  If your hosts file is set up properly, then you may be able to use your server's
+	  fully qualified name instead.
+    \item In the \emph{Messages} section, change the name of the name of the director.
+  \end{enumerate}
+  \item Restart the \texttt{bacula-fd} service after modifying the configuration.
+  \item Create the directory \texttt{/home/bacula/restores} and make sure that it is owned by bacula.
+\end{enumerate}
+
+\section{Configure Bacula-sd on backup}
+Right now our Bacula storage daemons are not configured to listen on the network.  We need to make one small change to \texttt{/etc/bacula/bacula-sd.conf} on our \texttt{backup} servers.
+
+In the \emph{Storage} section, change the \texttt{SDAddress} to the ip address or hostname of your \texttt{backup} server.  Restart the \texttt{bacula-sd} service.
+
+\section{Configure the Bacula director on backup}
+Make the following changes in \texttt{/etc/bacula/bacula-dir.conf}.
+\begin{enumerate}
+  \item Find the \emph{Storage} section that defines your \texttt{File} storage.  Modify the \texttt{Address} property to use the IP address or hostname of your backup server.
+  \item Create a new Client definition for your \texttt{mgmt-fd} file daemon.  The \texttt{Name} value should be texttt{mgmt-fd}, the \texttt{Address} should match your \texttt{mgmt} server address, and the \texttt{Password} should match the password value from the bacula-fd.conf file on your \texttt{mgmt} server.
+  \item Create a new \emph{FileSet} definition to identify the files you want backed up on \texttt{mgmt}.  Set the \texttt{File} property to \texttt{/etc/puppet} so that your Puppet configuation is backed up.  You can add additional \texttt{File} properties to the set as well.
+  \item Create a new \emph{Job} definition for a backup job on \texttt{mgmt}.  Set the \texttt{JobDefs} poperty to \texttt{DefaultJob} to inherit the default properties.  Then you just need to override the ones that need to change.  Override the \texttt{Name}, \texttt{FileSet}, and \texttt{Client} properties to give your new job a unique name, to use the new FileSet you defined, and to use the \texttt{mgmt-fd} client.
+  \item Restart the \texttt{bacula-director} service after changing the configuration.
+
+\end{enumerate}
+
+\section{Try your new backup job}
+Using \texttt{bconsole} on \texttt{backup}, try running your new backup job to be sure that it works.  Then try a restore of that backup.  Note that the restore process will copy the restored files to \texttt{/home/bacula/restores} on \emph{the server from which the files were backed up} by default with our configuration.
+
+Once this is done you are prepared to create backup jobs on all of your Linux servers following the same process described here.
+\end{document}
