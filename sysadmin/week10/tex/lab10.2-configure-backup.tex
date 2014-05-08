@@ -44,7 +44,7 @@ In the \emph{Storage} section, change the \texttt{SDAddress} to the ip address o
 Make the following changes in \texttt{/etc/bacula/bacula-dir.conf}.
 \begin{enumerate}
   \item Find the \emph{Storage} section that defines your \texttt{File} storage.  Modify the \texttt{Address} property to use the IP address or hostname of your backup server.
-  \item Create a new Client definition for your \texttt{mgmt-fd} file daemon.  The \texttt{Name} value should be texttt{mgmt-fd}, the \texttt{Address} should match your \texttt{mgmt} server address, and the \texttt{Password} should match the password value from the bacula-fd.conf file on your \texttt{mgmt} server.
+  \item Create a new Client definition for your \texttt{mgmt-fd} file daemon.  The \texttt{Name} value should be \texttt{mgmt-fd}, the \texttt{Address} should match your \texttt{mgmt} server address, and the \texttt{Password} should match the password value from the bacula-fd.conf file on your \texttt{mgmt} server.
   \item Create a new \emph{FileSet} definition to identify the files you want backed up on \texttt{mgmt}.  Set the \texttt{File} property to \texttt{/etc/puppet} so that your Puppet configuation is backed up.  You can add additional \texttt{File} properties to the set as well.
   \item Create a new \emph{Job} definition for a backup job on \texttt{mgmt}.  Set the \texttt{JobDefs} poperty to \texttt{DefaultJob} to inherit the default properties.  Then you just need to override the ones that need to change.  Override the \texttt{Name}, \texttt{FileSet}, and \texttt{Client} properties to give your new job a unique name, to use the new FileSet you defined, and to use the \texttt{mgmt-fd} client.
   \item Restart the \texttt{bacula-director} service after changing the configuration.
