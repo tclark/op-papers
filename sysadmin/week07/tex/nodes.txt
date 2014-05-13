@@ -95,7 +95,7 @@ nagios_service {'MySQL':
 
 
 
-    nagios_hostgroup{'db-servers':
+nagios_hostgroup{'db-servers':
               target => '/etc/nagios3/conf.d/ppt_hostgroups.cfg',
               alias => 'Database Servers',
               members => 'db.sqrawler.com',
