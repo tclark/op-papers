@@ -1,0 +1,42 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{Lab 11.2:  Backing up MySQL\\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+Backing up data from a database is a special case.  We could just back up the database files, but if the database server is running when we perform the backup the results will be unreliable. Shutting down the database server would allow us to perform a physical backup of the files, but the resulting system downtime may not be acceptable.  If we want to perform a backup of a database without requiring downtime, then we need to use a specialised database backup tool.  One such tool is \emph{mysqldump}.  We will use it in this lab.
+
+\section{Using mysqldump}
+We can easily produce an SQL script that will restore our database structure and data.  For example, the command
+
+\texttt {mysqldump --all-databases --add-drop-table > /home/someuser/db-backup.sql}
+
+will save your database information in the file \texttt{db-backup.sql} in someuser's home directory.  If this file is backed up by Bacula we will be able to restore the database as it was when the file was produced.
+
+There are many options for \texttt{mysqldump} that are documented at http://dev.mysql.com/doc/refman/5.5/en/mysqldump.html.
+
+\section{Set up a cron job}
+Since we must automate our backup processes, it's necessary to place a command like the one above in cron.  A suitable crontab entry would be something like this
+
+\texttt{20 1 * * *    mysqldump --all-databases --add-drop-table > /home/someuser/db-backup.sql}
+
+will write a backup fiile at 1:20 each morning.  Note that, since it will overwrite the output file every time it is run, it's important to back up the file after it is written.
+
+More information about cron is available at http://www.tldp.org/LDP/lame/LAME/linux-admin-made-easy/using-cron.html.
+
+\section{Using Puppet}
+Since we prefer to manage our configuration with Puppet, we should set up a Puppet \texttt{cron} resource as part of our MySQL module.  In this way we ensure that every MySQL server runs a backup job.
+
+See http://docs/puppetlabs.com/references/2.7.stable/type.html\#cron for more information.
+
+\end{document}
