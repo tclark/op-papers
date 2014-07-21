@@ -1,0 +1,125 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+
+\title{Database Application Development}
+
+\author[IN705]{Databases Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{The basic problem}
+  We want to model something in the ``real world".
+ \begin{itemize}
+  \item Television programmes
+  \item Ski fields
+  \item Job candidates
+  \end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Databases}
+ \begin{itemize}
+  \item A database is a good choice for storing our model data in many cases.
+  \item Usually, this means a \emph{relational} database.
+  \item Relational databases are well understood and there are plenty of
+        excellent tools available for working on them.
+  \item A properly designed and implemented relational database helps 
+        guarantee the consistency and integrity of its data.
+  \end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Database applications}
+ \begin{itemize}
+  \item Users aren't interested in writng SQL - nor should they be.
+  \item We write database applications that provide our users with access to 
+        the database.
+  \item CRUD
+     \begin{itemize}
+       \item Create
+       \item Read
+       \item Update
+       \item Delete
+     \end{itemize}
+  \item This is one of the main objectives of this paper.
+  \end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Problem One}
+  There is a fundamental impedance mismatch between relational data
+  modeling and object-oriented programming.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Solution One}
+  Object-Relational Mapping (ORM) libraries help to resolve\footnote{Or perhaps they merely conceal it.} this difficulty.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Problem Two}
+  We often want to have multiple user applications that access the same 
+  database.
+  \begin{itemize}
+   \item This makes problem one harder.
+   \item We want a consistent interface to the data.
+   \item We want modular code.
+  \end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Problem Three}
+  Is it webscale?\footnote{http://www.mongodb-is-web-scale.com} 
+\vskip 1\baselineskip
+
+  RDBMSs are difficult to scale up.  You can only go so far scaling vertically,  and scaling horizontally by clustering or partioning makes application 
+  development even harder.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Solution Two}
+  We can build an integration application between the data store and client applications.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Solution Three}
+  Alternative database types
+  \begin{itemize}
+   \item Document stores
+   \item Key-value stores
+   \item Column-family stores
+   \item Graph databases
+  \end{itemize}
+
+  These are commonly referred to collectively as \emph{NoSQL} databases.
+\end{frame}
+
+\end{document}
