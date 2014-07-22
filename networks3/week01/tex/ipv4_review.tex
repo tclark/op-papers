@@ -1,0 +1,177 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Review of IPv4}
+
+\author[IN715]{Networks Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Remember this?}
+
+ \begin{itemize}
+  \item An IPv4 address is 32 bits long - 4 bytes
+  \item Each byte has 256 possible values (0 - 255)
+  \item We usually respresent them in dotted decimal notation 
+        \begin{itemize}
+          \item 10.50.1.80
+          \item 74.125.237.207
+          \item 224.0.0.118
+        \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Network and host bits}
+
+ \begin{itemize}
+  \item Any IP address can be divided into two parts:
+        \begin{enumerate}
+          \item network
+          \item host
+        \end{enumerate}
+  
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Network masks}
+ \begin{itemize}
+  \item We can identify the network and host bits by examinng the network mask.
+  \item Example: 255.255.192.0 \\
+        In binary:  11111111.11111111.11000000.00000000 \\
+        The 1's indicate network bits and the 0's indicate host bits
+  \item We can indicate the same thing by writing /18 - indicating 18 network bits.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Address classes}
+  In the absense of a network mask, we can infer it from the address class
+
+ \begin{tabular}{|l|l|l|l|l|}
+  \hline
+  Class & Leading Octet & Mask & Networks  & Hosts \\ \hline
+  A     & 1 - 127       & /8   & 127       & 16,777,216  \\ \hline
+  B     & 128 - 192     & /16  & 16,384    & 65,536  \\ \hline
+  C     & 192 - 223     & /24  & 2,097,152 &  256 \\ \hline
+ 
+ \end{tabular}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Subnetting}
+
+ \begin{itemize}
+  \item Given an IPv4 network, we can divide it into smaller subnetworks, or subnets.
+  \item We do this by ``borrowing" host bits and adding them to the network portion of the address.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Subnetting example}
+
+ \begin{itemize}
+  \item Given 192.168.1.0/24
+  \item We ``borrow" 2 host bits to create 4 subnets: \\
+        192.168.1.0/26 \\
+        192.168.1.64/26 \\
+        192.168.1.128/26 \\
+        192.168.1.192/26 
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Private networks}
+   
+   Some address ranges can be used for private networks. These addresses
+   are not publically routable.
+
+ \begin{itemize}
+  \item 10.0.0.0/8  
+  \item 172.16.0.0/16 - 172.31.0.0/16 
+  \item 192.168.0.0/24 - 192.168.255.0/24
+ \end{itemize}
+ Network address translation (NAT) can be used to allow privately addressed hosts to connect to the internet.
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Network addresses}
+
+ \begin{itemize}
+  \item An address like 192.168.10.0/24 is usually a \emph{network address}. 
+  \item Network addresses do not refer to any one host.  They refer to entire networks in aggregate.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Broadcast addresses}
+
+ \begin{itemize}
+  \item An address like 192.168.10.255 is usually a \emph{broadcast address}.
+  \item Broadcast addresses do not refer to any one host.  
+  \item A packet sent to a broadcast address is intended to be received by \textbf{every} host on a network. 
+ \end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Gateway addresses}
+
+ \begin{itemize}
+  \item Hosts on a network are usually configured with a \emph{gateway address} or \emph{default gateway}. These are the addresses of local router interfaces.
+  \item These are ordinary host addresses on the network. Unlike network or broadcast addresses, you can't recognise a gateway address just by looking at it.
+  \item Packets whose destinations are off the local network must be forwarded through the gateway address.
+ \end{itemize}
+
+
+
+\end{frame}
+
+
+
+\end{document}
