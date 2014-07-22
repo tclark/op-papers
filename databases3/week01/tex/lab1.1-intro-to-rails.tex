@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 1.1: Introduction to Rails \\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+During this class we will be developing database applications on our ec2 servers using Ruby on Rails.  To begin,
+We will verify that we can log into our servers, install Rails, and create a simple "Hello, world" Rails app.
+
+\section{Logging into your server}
+An Amazon ec2 server has been prepared for your use.  Its hostname is \texttt{lastname.sqrawler.com}\footnote{There's nothing special about sqrawler.com. It's just a spare domain name that I have.}.(substitute in your last name).  Your username is your last name in lower case and your initial password is ``db3IsAwesome".  Please change this password when you log in for the first time.
+
+Using an ssh client like PuTTY, log into your server.  It's usually helpful to have a couple of ssh sessions running when you are working on your server.
+
+
+\section{Install Rails}
+All of the required software dependencies should be installed on your server already.  Install Rails with the command
+
+\texttt{sudo gem install rails --version 4.0.0 --no-ri --no-rdoc}
+
+Verify that this is successful before proceeding.
+
+\section{Hello, Rails}
+At this point you need to go through the creation of the demo Rails application as described in Chapter 2 of the Rails book.  Once you get the application going, feel free to play around with it a bit to get a feel for Ruby and Rails.
+
+A note on text editing:  Your ec2 server has the typical text editors available on Linux servers, and you're free to install something else if you'd like to.  Some desktop text editors like Notepad++ support remote editing over ssh, or you can use WinSCP to edit files remotely or to transfer them back and forth.  We're not going to get into any editor holy wars in this paper.
+
+Do be sure that you back up any important files this semester.  Don't get in a bind because the only copy of your work is on the server.  Soon we'll see how to use GitHub to help with this.
+
+\end{document}
