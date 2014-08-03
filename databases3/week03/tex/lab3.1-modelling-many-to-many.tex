@@ -12,16 +12,16 @@
 
 \begin{document}
 
-\title{Lab 3.1: Modeling Many-to-Many Relationship \\ IN705 Databases Three}
+\title{Lab 3.1: Modelling Many-to-Many Relationships \\ IN705 Databases Three}
 \date{}
 \maketitle
 
 \section*{Introduction}
-Our Splatter application needs to model ``following".  Each user will be able to follow and be followed by other users.  In general, modeling many-to-many realtionships like this is easy with Rails and ActiveRecord, but this case involves a slightly tricky self join.
+Our Splatter application needs to model ``following".  Each user will be able to follow and be followed by other users.  In general, modelling many-to-many realtionships like this is easy with Rails and ActiveRecord, but this case involves a slightly tricky self join.
 
 Our plan is as follows:
 \begin{enumerate}
-  \item Write a \emph{migration} to create our join table;
+  \item Write a migration to create our join table;
   \item Add code to our \texttt{User} model to describe the relationship;
   \item Add methods to our \texttt{UserController} to show, add, and list followers;
   \item Add routes to the \texttt{config/routes.rb} file for our new methods.
@@ -43,10 +43,10 @@ end
 
 Since both fields will be used in joins we index them.  However, note that even though both fields are intended to be foreign keys, nothing in this code implements foreign key constraints or identifies a primary key. There are a couple of ways to solve this.  The most direct method is to call \texttt{execute} from our \texttt{change} method (right after the \texttt{create\_table} block and add the SQL to do this.  One problem with this approach is that it is not comepletely DBMS-agnostic, but it gets the job done.
 
-There is a view among some Rails developers that constraints should be implemented in the model code rather than the database to avoid spreading our model logic across two locations.  While this is not entirely without merit, there probably remains some value in using database constraints.  For now, we will leave them off and note that we may include them later.
+There is a view among some Rails developers that constraints should be implemented in the model code rather than the database to avoid spreading our model logic across two locations.  While this is not entirely without merit, there probably remains some value in using database constraints.  For now, we will leave them off and note that we may wish to include them later.
 
 \section{Adding followers and followed to our model}
-We model many-to-many realtionships through join tables with ActiveRecord's \texttt{has\_and\_belongs\_to\_many} method.  In a typical case we need only identify the class at the other end of the relationship, but our case involves a slightly tricky self join, so we need to specify extra options as follows in \texttt{app/models/user.rb}.
+We model many-to-many realtionships through join tables with ActiveRecord's \texttt{has\_and\_belongs\_to\_many} method.  In a typical case we need only identify the class at the other end of the relationship, but our case involves a self join, so we need to specify extra options as follows in \texttt{app/models/user.rb}.
 
 \begin{verbatim}
   has_and_belongs_to_many :follows,
@@ -75,8 +75,8 @@ We need to add four methods to our UserController:
 \begin{description}
   \item[\texttt{show\_follows}] uses the \texttt{id} value from \texttt{params} to return a JSON list (possibly empty) of the users followed by the indicated user.  It will be accessed with a URL like \texttt{/users/follows/1} using a GET.  We have written a similar method before to show a user's splatts.
   \item[\texttt{show\_followers}]  is very similar to \texttt{show\_follows}, except that it returns a list of followers of a given user.
-  \item[\texttt{add\_follows}] uses the \texttt{id} and the \texttt{follows\_id} valueis from \texttt{params} to add the user with \texttt{follow\_id} to the list of users followed by the user with \texttt{id}.  It will be accessed with a URL like \texttt{/users/follows} using a POST.  The ids are passed in the POST body.
-  \item[\texttt{delete\_follows}]  will be accessed with a URL like \texttt{/users/follows/1/2} using a DELETE.  The method will remove the user with \texttt{id} 2 from the list of users followed be the user with \texttt{id} 1. 
+  \item[\texttt{add\_follows}] uses the \texttt{id} and the \texttt{follows\_id} values from \texttt{params} to add the user with \texttt{follow\_id} to the list of users followed by the user with \texttt{id}.  It will be accessed with a URL like \texttt{/users/follows} using a POST.  The ids are passed in the POST body.
+  \item[\texttt{delete\_follows}]  will be accessed with a URL like \texttt{/users/follows/1/2} using a DELETE.  The method will remove the user with \texttt{id} 2 from the list of users followed by the user with \texttt{id} 1. 
 \end{description}
 
 Everything you need to know to write these methods is available in this document or in your \texttt{UsersController} class.
