@@ -1,0 +1,97 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 3.1: Modeling Many-to-Many Relationship \\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Our Splatter application needs to model ``following".  Each user will be able to follow and be followed by other users.  In general, modeling many-to-many realtionships like this is easy with Rails and ActiveRecord, but this case involves a slightly tricky self join.
+
+Our plan is as follows:
+\begin{enumerate}
+  \item Write a \emph{migration} to create our join table;
+  \item Add code to our \texttt{User} model to describe the relationship;
+  \item Add methods to our \texttt{UserController} to show, add, and list followers;
+  \item Add routes to the \texttt{config/routes.rb} file for our new methods.
+\end{enumerate}
+
+\section{The migration}
+So far we have generated our mgration files, but in this case we will to write it from scratch.  In \texttt{db/migrate}, create a new file called \texttt{<timestamp>\_create\_follows.rb}. The timestamp format is YYYYMMDDHHMMSS and should relect the time at which the file is created. It should contain the following:
+
+\begin{verbatim}
+class CreateFollows < ActiveRecord::Migration
+  def change
+    create_table :follows do |t|
+      t.integer :follower_id, index: true
+      t.integer :followed_id, index: true
+    end
+  end
+end
+\end{verbatim}
+
+Since both fields will be used in joins we index them.  However, note that even though both fields are intended to be foreign keys, nothing in this code implements foreign key constraints or identifies a primary key. There are a couple of ways to solve this.  The most direct method is to call \texttt{execute} from our \texttt{change} method (right after the \texttt{create\_table} block and add the SQL to do this.  One problem with this approach is that it is not comepletely DBMS-agnostic, but it gets the job done.
+
+There is a view among some Rails developers that constraints should be implemented in the model code rather than the database to avoid spreading our model logic across two locations.  While this is not entirely without merit, there probably remains some value in using database constraints.  For now, we will leave them off and note that we may include them later.
+
+\section{Adding followers and followed to our model}
+We model many-to-many realtionships through join tables with ActiveRecord's \texttt{has\_and\_belongs\_to\_many} method.  In a typical case we need only identify the class at the other end of the relationship, but our case involves a slightly tricky self join, so we need to specify extra options as follows in \texttt{app/models/user.rb}.
+
+\begin{verbatim}
+  has_and_belongs_to_many :follows,
+      class_name: "User",
+      join_table: :follows,
+      foreign_key: :follower_id,
+      association_foreign_key: :followed_id
+\end{verbatim}
+
+We also need to add the inverse relationship \texttt{followed\_by} to access the followers of a user.  This is done in a very similar way and is left as an exercise.
+
+With this relationship in place, we can add, show, and remove following relationships between users. Given user objects \texttt{u1} and \texttt{u2}:
+
+\begin{verbatim}
+  u1.follows            # returns a list of users followed by u1
+
+  u1.follows << u2      # adds u2 to u1's list of followed users
+
+  u1.follows.delete(u2) #removes u2 from u1's list
+\end{verbatim}
+
+\section{Adding methods to the controller}
+
+We need to add four methods to our UserController:
+
+\begin{description}
+  \item[\texttt{show\_follows}] uses the \texttt{id} value from \texttt{params} to return a JSON list (possibly empty) of the users followed by the indicated user.  It will be accessed with a URL like \texttt{/users/follows/1} using a GET.  We have written a similar method before to show a user's splatts.
+  \item[\texttt{show\_followers}]  is very similar to \texttt{show\_follows}, except that it returns a list of followers of a given user.
+  \item[\texttt{add\_follows}] uses the \texttt{id} and the \texttt{follows\_id} valueis from \texttt{params} to add the user with \texttt{follow\_id} to the list of users followed by the user with \texttt{id}.  It will be accessed with a URL like \texttt{/users/follows} using a POST.  The ids are passed in the POST body.
+  \item[\texttt{delete\_follows}]  will be accessed with a URL like \texttt{/users/follows/1/2} using a DELETE.  The method will remove the user with \texttt{id} 2 from the list of users followed be the user with \texttt{id} 1. 
+\end{description}
+
+Everything you need to know to write these methods is available in this document or in your \texttt{UsersController} class.
+
+\section{Adding routes}
+Before we can access our new controller methods with our REST API, we need to add routes to \texttt{config/routes.rb} that map HTTP requests controller methods.  Since we have not done much with routes, just add the lines below to your routes file, just after the existing routes.
+
+\begin{verbatim}
+  get 'users/follows/:id' => 'users#show_follows'
+  get 'users/followers/:id' => 'users#show_followers'
+  post 'users/follows' => 'users#add_follows'
+  delete 'users/follows/:id/:follows_id' => 'users#delete_follows'
+\end{verbatim}
+
+\section{Wrapping up}
+With your new routes in place, start your Rails server and try out the new API features using \texttt{curl}.  Don't forget to commit your changes to your Git repository.
+
+\end{document}
