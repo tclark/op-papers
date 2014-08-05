@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 3.2: Producing a Splatter News Feed\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Now that our models support following, we can produce a feed of the splatts belonging to each of the users a particular user follows.  This feed, which we will return as a JSON array, should be presented in descending chronological order.
+
+\section{Retrieving the feed data}
+The feed is just a list of splatts.  But how can we get the list?  Given the capabilities of our models, we have a few choices.
+
+\begin{enumerate}
+  \item Given a user, iterate over the users followed by that user.  For each, retrieve the list of splatts.  Merge those lists into a unified list with the desired order.
+
+  \item Explore the capabilities of ActiveRecord models and see if we can find methods that will do the above more simply and efficiently.
+
+  \item Write an SQL query that returns the desired list and execute it directly.
+\end{enumerate}
+
+Option 1 would work, but it would be inefficient.  Option 2 \emph{might} work and has much to recommend it, but frankly I don't care.  Option 3 will work.  It is simple to implement and it leverages the capabilites of the RDBMS.  Finally, it demonstrates how we can use the ORM to use raw SQL when it suits us, and this is my not-so-hidden agenda.
+
+To retrieve the feed data, we will use ActiveRecord's \texttt{find\_by\_sql} method to retrieve a list of splatts.  Add a method to your UsersController like this:
+
+\begin{verbatim}
+  # GET /users/splatts-feed/1
+  def splatts_feed
+    @feed = Splatt.find_by_sql()
+
+    render json: @feed
+  end
+\end{verbatim}
+
+All you need to do is write an SQL query that produces the sorted list of splatts.  This is left as an exercise, since you all took Databases 2.
+
+Don't forget to add a route for your new method.
+
+\section{Formatting our JSON}
+That's not really all you need to do.
+
+So far, we have just been rendering JSON using the \texttt{render} method.  But we would like to be able to controll our JSON formatting more explicitly.  It turns out that Rails 4 has a view facility for JSON called jbuilder.
+
+There is a good introductory article about jbuilder at \url{http://richonrails.com/articles/getting-started-with-jbuilder}. Using that article as a reference, use jbuilder to format the JSON for your new splatts feed.
+
+Once you have that working, use jbuilder for other methods that need explicit formatting, like the UsersController's \texttt{show} method.
+\end{document}
