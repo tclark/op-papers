@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 5.1: Introduction to Angular.js\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Now that we have a REST/JSON service available to handle our data, it is extremely easy to create clientsthat interact with it.  One way to create such a client is to use one of the many imodern JavaScript frameworks available.  Angular.js is one example of such a framework and it is the one we will introduce in this lab.
+
+We will use Angular.js to handle the HTTP calls between our web client and our REST service, but before we do that we will familiarise ourselves with the basics of the framework.
+
+
+\section{Clone the sample code from GitHub}
+An repository containing a basic code skeleton is available of GitHub. You can download the code with the Git command
+
+\texttt{git clone git@github.com:tclark/splatter-client.git}
+
+You will see that the repository contains the following files
+\begin{description}
+  \item[index.html] An HTML page including the basic directives to connect our Angular.js app to our HTML.
+  \item[app.js] A JaveScript file in which we will place our client application code.  It also includes some sample data.
+  \item[angular.min.js, angular-resource.js]Angular libraries on which our application depends.
+\end{description}
+
+\section{Review the sample code}
+First, look at the app.js file.  You will see that we create a \emph{module} called ``splatter-web'' and that we attach a \emph{controller} called ``UserController'' to our module.  We will add code to this controller later.  You will also see that we have some sample data in basic JavaScript data structures.
+
+Next, look at the index.html file.  Notice how we have associated our Angular.js module with the page using the \texttt{ng-app} directive at the top of the file.  We also have three script tags to load the required JavaScript code files.
+
+Finally, observe how we have connected our \texttt{UserController} with a \texttt{div} element on the page.  This means that properties of the controller will be accessible only within the associated \texttt{div}.  We have also created a local label, \texttt{user}, to refer to our controller within this scope.
+
+\section{Hello, Angular world}
+We will begin with a simple example. Add the following line to your controller:
+
+\texttt{this.hello = "Hello, world";}
+
+Now your controller exposes its \texttt{hello} property.
+
+Add the following line to controller's scope in the \texttt{div} in \texttt{index.html}:
+
+\texttt{ <p>\{\{user.hello\}\}</p> }
+
+Save both files and view your web page in a browser. Now you can see how properties of the controller can be passed through to an HTML page, which is most of what you need to know.
+
+\section{Displaying user information}
+For the time being we have a sample user available in our JavaScript file.  Associate this user data with our controller by adding the line
+
+\texttt{this.u = u1;}
+
+Now we can access the user's properties in our HTML file with the variables \texttt{user.u.name}, \texttt{user.u.email}, and \texttt{user.u.blurb}.  Add HTML and Angular expressions (the code in double curly braces) to your index.html file to show our user's properties.
+
+\section{Displaying the splatts feed}
+We also have a sample news feed in the form of an array of splatts.  Assign the value of this array to you \texttt{UserController}'s \texttt{feed} property.  We can display the feed on our HTML page, but we need a way to loop over an array.
+\end{document}
