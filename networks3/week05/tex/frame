@@ -1,11 +1,11 @@
 
 %----------- slide --------------------------------------------------%
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{}
 
- \begin{itemize}
-  \item 
- \end{itemize}
+ \begin{verbatim}
+   
+ \end{verbatim}
 
 \end{frame}
 
