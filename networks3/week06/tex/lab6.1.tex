@@ -85,5 +85,21 @@ Use the \texttt{dig} command on your BSD server to be sure that it is responding
 \texttt{dig a www.trademe.co.nz}
 
 and see that you get an address. 
+\newpage
+\section{Adding zone files}
+In the last lab we prepared two \emph{zone files} for use with BIND.  Place those files in \texttt{/var/named/master}.  Be sure to note the file names you used.
 
+Now we need to add the zone entries to \texttt{/var/named/etc/named.conf}.  Add an entry for the \texttt{nw3.sqrawler.com} zone as follows.
+
+\begin{verbatim}
+zone "nw3.sqrawler.com" {
+        type master;
+        file "master/db.nw3.sqrawler.com";
+        allow-transfer { localnets; };
+};
+\end{verbatim}
+
+The \texttt{type} line says that we are a master server for this zone rather than a slave.  The \texttt{file} line indicates where the zone file is.  The \texttt{allow-transfer} line says that we will transfer zone data to slaves on our local networks only.
+
+Create similar sections for your reverse zone, restart the server, and then use dig to be sure your DNS is functioning properly.
 \end{document}
