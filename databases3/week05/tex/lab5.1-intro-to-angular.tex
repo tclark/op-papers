@@ -64,4 +64,76 @@ Now we can access the user's properties in our HTML file with the variables \tex
 
 \section{Displaying the splatts feed}
 We also have a sample news feed in the form of an array of splatts.  Assign the value of this array to you \texttt{UserController}'s \texttt{feed} property.  We can display the feed on our HTML page, but we need a way to loop over an array.
+
+In your \texttt{index.html} file, add a new \texttt{div} like the one below.
+
+\begin{verbatim}
+  <div ng-repeat="splatt in user.feed">
+
+  </div>
+\end{verbatim}
+
+Angular will create one div for each member of the \texttt{user.feed} array. Inside the div you can access the individual splatt attributes with the local variable \texttt{splatt}.  So, for example, you can display the splatt body with the expression \texttt{\{\{splatt.body\}\}}.
+
+The splatts have a \texttt{created\_at} attribute, so it's worthwhile to look at how we can use a \emph{filter} to controll its display.  Angular has a \texttt{date} filter that can read in timestamps is a variety of formats and then display them in another format.  For example, we can apply it to our splatt timestamps like this:
+
+\texttt{ \{\{splatt.created\_at | date: 'dd/MM/yyyy h:mma'\}\} }
+
+There are filters available for many kinds of data.
+
+\newpage
+
+\section{Adding a form}
+So far we have dealt with displaying information.  Now let's see how to enter information and work with it using Angular.
+
+Add a simple form to your \texttt{index.html} file like this:
+
+\begin{verbatim}
+  <form name="myform">
+    <input type="text" />
+    <input type="submit" value="Update user" />
+  </form>
+\end{verbatim}
+
+It's a simple form that doesn't do much, but we want to make it update the user's name that we display on our page.  To do this we need to 
+
+\begin{enumerate}
+  \item Bind the form to a controller;
+  \item Direct the form to a method of this controller;
+  \item In the controller method, take the form data and use it to update
+        the user.
+\end{enumerate}
+
+To bind the form to a controller, add the following attributes to the \texttt{form} tag.
+
+\texttt{ng-controller="UpdateFormController as form"}
+
+\texttt{ng-submit="form.updateUser(user)"}
+
+Then bind the text input to a controller attribute with the directive
+
+\texttt{ng-model="form.data.name"}
+
+in the text \texttt{input} tag.
+
+Now the form is ready to work with a controller.  We just need to add the controller to the indicated spot in our \texttt{app.js} file.  Here is the code for the controller.
+
+\begin{verbatim}
+
+  app.controller("UpdateFormController", function() {
+      this.data = {};
+      this.updateUser = function(user) {
+          user.u.name = this.data.name;
+          this.data = {}; // clears the form
+      }
+   });
+\end{verbatim}
+
+Verify that your form works and that it updates the user's name on the page.
+
+\section{Conclusion}
+Angular.js provides a lot of power to build a dynamic and responsive web application in a pretty manageable way.  You should take some time to play around with Angular.  Documentation and tutorials are available at \url{http://angularjs.org}.
+
+Next week we will see how to connect our web page to our REST service using Angular.
+
 \end{document}

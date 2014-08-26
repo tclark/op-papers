@@ -1,0 +1,243 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{DNS Zones}
+
+\author[IN715]{Networks Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{DNS Zones}
+
+ \begin{itemize}
+  \item Recall that last time we saw how the DNS hierarchy can be viewed as a tree.
+  \item Each node on that tree is a \emph{DNS Zone}.
+  \item A zone is composed of a set of \emph{Resource Records} of various types.
+  \item Information about a particular zone is kept in a \emph{Zone File}.  These files conform to a standard format\footnote{RFC 1034 and RFC 1035}.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Zone file names}
+
+ \begin{itemize}
+  \item There is no particular requirement for how zone files are named.
+  \item Best practice is to indicate the domain name for the zone in the filename, e.g., \texttt{db.example.com} for the \emph{example.com} zone.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Time To Live (TTL)}
+
+ \begin{itemize}
+  \item We start a zone (in BIND 9) by specifying its \emph{TTL}, e.g.,
+      \begin{itemize}
+        \item \texttt{\$TTL 3h}
+        \item \texttt{\$TTL 1d}
+        \item \texttt{\$TTL 1w}
+      \end{itemize}
+  \item The TTL specifies the length of time for which our zone data should be cached.
+  \item A high TTL saves load on our servers, but it means that changes will take more time to propagate.
+ \end{itemize}
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Statement of Authority (SOA)}
+ The SOA states that this server is an \emph{authoritative} source of informatiion about our zone.
+ \begin{verbatim}
+  example.com. IN SOA ns1.example.com. tech.somedomain.net. (
+       20140821092215	; serial number
+       3h               ; slave refresh 
+       1h               ; slave retry
+       3d               ; slave expires
+       1h )             ; negative ttl
+ \end{verbatim}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Nameserver (NS) records}
+ NS records identify the authoritative name servers for our zone
+ \begin{verbatim}
+   example.com.  IN NS ns1.example.com.
+   example.com.  IN NS ns2.example.com.
+   example.com.  IN NS ns.otherdomain.com.
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Address (A) records}
+ A records map host names to IP addresses.
+ \begin{verbatim}
+   fred.example.com. IN A  123.220.44.91
+
+   ;a host with two addresses
+   barney.example.com. IN A 71.44.116.17
+   barney.example.com. IN A 123.211.16.100
+
+   ;A records can point to the same address as other A records
+   ws1.example.com. IN A 71.44.116.17
+   ws2.example.com. IN A 123.211.16.100
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Alias (CNAME) records}
+
+ A CNAME record creates an alias for another hostname
+ \begin{verbatim}
+   dino.example.com. IN CNAME fred.example.com. 
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Mail Exchange (MX) records}
+ MX records identify servers that receive mail for our domain
+ \begin{verbatim}
+   example.com. IN MX 10  wilma.example.com.  
+   example.com. IN MX 20  betty.bedrock.org.
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Reverse zone files}
+
+ Recall that we use the in-addr.arpa domain to support reverse DNS 
+ lookups.  This requires another zone file
+ 
+ File: db.192.168.10
+ \begin{verbatim}
+   $TTL 3h
+   10.168.192.in-addr.arpa. IN SOA ns2.example.com. tec.sdn.net (
+    ... SOA stuff ... )
+       10.168.192.in-addr.arpa.  IN NS ns1.example.com.
+       10.168.192.in-addr.arpa.  IN NS ns2.example.com.
+
+       1.10.168.192.in-addr.arpa.  IN PTR pebbles.example.com.
+       2.10.168.192.in-addr.arpa.  IN PTR slate.example.com.
+       41.10.168.192.in-addr.arpa. IN PTR bambam.rubble.com.
+
+
+   
+ \end{verbatim}
+
+\end{frame}
+
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{}
+
+ \begin{verbatim}
+   
+ \end{verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Abbreviations}
+ There are a few ways we can abbreviate resource records.
+
+ 1.  @ Notation: If the domain name in a record is the same as the 
+ \emph{origin}, it can be abbreviated with an @.
+ \begin{verbatim}
+  example.com. IN SOA ns1.example.com. tech.somedomain.net. (
+ 
+   is the same as 
+ 
+  @ IN SOA ns1.example.com. tech.somedomain.net. (
+
+
+   
+ \end{verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Appending domain names}
+
+ You can leave the domain names off of the record names when they match the origin.
+
+ \begin{verbatim}
+   fred.example.com. IN A  123.220.44.91
+
+   becomes
+
+   fred IN A  123.220.44.91
+
+
+   1.10.168.192.in-addr.arpa.  IN PTR pebbles.example.com.
+
+   becomes
+
+   1  IN PTR pebbles.example.com.
+   
+ \end{verbatim}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Repeated names}
+
+ You can omit repeated resource names used on multiple records.
+ \begin{verbatim}
+   
+   barney.example.com. IN A 71.44.116.17
+                       IN A 123.211.16.100
+ 
+\end{verbatim}
+
+\end{frame}
+
+
+\end{document}
