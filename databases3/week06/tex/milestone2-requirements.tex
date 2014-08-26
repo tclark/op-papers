@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Milestone 2: Web Interface\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Our API server is running and we've seen how we can interact with it using JavaScript, it's time to develop our web based user interface.  Web interfaces have become the typical way to present database applications, even in corporate IT settings.  They can be developed more quickly and are simpler to deploy than desktop applications.  We will develop our user interface as a \emph{single page application} using AngularJS. 
+
+In order to build our web interface we will need to do some UI design and planning to sort out the desired user interaction and associated interface layout.  Implementing the interface using AngularJS is relatively easy, but you will need to dig into some of AngularJS's directives to see how to accopmplish this if you have not done so already.  You will need to write some controllers to manage the data objects and workwith the API server.  You may also choose to modify the API server somewhat to better align with your UI plan.  We are agile, after all.
+
+\section{Web interface requirements}
+Your user interface shall support the following user actions:
+
+\begin{itemize}
+ \item A new user shall be able to create an account.
+ \item An existing user shall be able to ``sign in''.
+ \item An existing user shall be able to edit her name and blurb fields.
+ \item An existing user shall be able to compose and submit a new splatt.
+ \item An existing user shall be able to see his splatts feed.
+ \item A user, whether signed in or not, shall be able to view other users' information and splatts.
+ \item An exisiting user shall be able to follow and unfollow other users.
+ \item An existing user shall be able to delete her account.
+\end{itemize}
+
+
+
+\textbf{Challenge problem}: Implement a search function or functions that allow a user to search for other users or to search for splatts by keyword.
+
+\section{Submission requirements}
+  You will submit your source code by \emph{tagging}\footnote{See \url{http://git-scm.com/book/Git-Basics-Tagging}.  Use a lightweight or annotated tag labeled ``M2''.} a commit to your GitHub repository with the tag ``M2''.  This commit must be dated no later than Monday, 8 September at 18:00 NZST. Late submissions will be penalised 10\% per day beginning at 18:00:01 each day beginning on 8 September.  Improper submissions will not be marked.  
+
+  You will also deploy a running instance of your web interface on your server.  To mark your submission, the lecturer will test and evaluate your deployed instance and will pull your source code from GitHub to evaluate the code quality.
+
+\begin{itemize}
+  \item correct and complete implementation of the requirements:  50\%
+  \item A functional, responsive, and appealing interface: 25\%
+  \item quality of source code: 25\%
+\end{itemize}
+\end{document}
