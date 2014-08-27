@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 6.1: Restful Resources with Angular.js\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+We've made a start with Angular.js, but we need to get the interaction with our REST API server going, meaning we need to start sending HTTP requests to our server.  Since our API is reasonably RESTful, we can do this pretty easily using ngResource, a library for use with Angular.js.
+
+\section{Preliminaries: an issue with our API server}
+Our JavaScript client isn't going to play nicely with our REST server unless we make a little change to our HTTP headers coming from the server.  We need to add a small amount of code to our controller classes.
+
+At the top of your UsersController class, add the line
+
+\texttt{before\_filter :set\_headers}
+
+This tells the controller to apply the \texttt{set\_headers} method before performing other methods.  The new method should be placed at the bottom of the class and looks like this
+
+\begin{verbatim}
+def set_headers
+  headers['Access-Control-Allow-Origin'] = '*'
+end
+\end{verbatim}
+
+
+\section{Adding to our Angular controller}
+First, we need to include \texttt{ngResource} into our app by modifying the module definition as follows
+
+\texttt{var app = angular.module('splatter-web', [\textbf{'ngResource'}]);}
+
+Then we identify our RESTful resource as follows
+
+\begin{verbatim}
+app.factory("User", function($resource) {
+	return $resource("http://clark.sqrawler.com:3000/users/:id");
+});
+\end{verbatim}
+
+Now our app has a \texttt{User} resource that can get data from and send data to our REST server.
+
+Use the resource in your \texttt{UserController} like this
+
+\begin{verbatim}
+app.controller('UserControiller', function(User) {  //notice that we pass User here
+	this.u = User.get({id:1});
+});
+\end{verbatim}
+
+Now we get our user from the REST server.
+
+\section{Deployment}
+At this stage you should place your HTML and JavaScript files in the \texttt{/var/www/html} directory of
+your EC2 server so that they are accessible online.
+
+\end{document}
