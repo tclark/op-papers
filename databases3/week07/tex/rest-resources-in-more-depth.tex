@@ -6,7 +6,6 @@
 \usetheme{CambridgeUS}
 \usepackage{graphicx}
 \usepackage{fancyvrb}
-\usepackage{sidecap}
 
 
 \title{Rest Resources in some more depth}
@@ -50,9 +49,12 @@
  app.factory('User', function($resource) {
     return $resource('http://someurl/users/:id.json')});
 
- ... later ...
-
+  app.controller('UserController' function(User) {
   user = User.get({id: 1});
+
+  this.getUser = function() {
+      this.user = User.get(this.data.id);
+  };
 
  \end{verbatim}
 
@@ -65,76 +67,60 @@
   \frametitle{Creating a new user}
 
  \begin{verbatim}
-  user = new User({name:'John Doe'});
-  user.$save();
+  
 
-OR
+ this.createUser = function() {
+     user = new User({name: this.data.name, 
+     email: this.data.email,
+     password: this.data.password
+     });
+     user.$save();
+ };
+ \end{verbatim}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Custom method for updating}
+
+  We want an update method that performs an HTTP PUT.  This is 
+  not a standard ngResource method.
  
- User.save({},user);
- \end{verbatim}
-
-\end{frame}
-
-
-%----------- slide --------------------------------------------------%
-\begin{frame}
-  \frametitle{Problem 1: CORS issues}
-
- \begin{itemize}
-  \item Once you start doing something like a POST, you may run into CORS problems.
-  \item If you see your server getting an OPTIONS request, that's a CORS issue.
-  \item One method: \url{http://blog.rudylee.com/2013/10/29/rails-4-cors/}
- \end{itemize}
-
-\end{frame}
-
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{Another CORS approach: in JS}
-
- \begin{verbatim}
-  app.config(['$httpProvider', function($httpProvider) {
-    $httpProvider.defaults.headers.common = {};
-    $httpProvider.defaults.headers.post = {};
-    $httpProvider.defaults.headers.put = {};
-  }]);
- \end{verbatim}
-
-\end{frame}
-
-
-
-%----------- slide --------------------------------------------------%
-\begin{frame}
-  \frametitle{Problem 2: POST/PUT payloads}
-
- \begin{itemize}
-  \item Our JSON data should be going into the payloads of our POST or PUT 
-        requests.
-  \item However, I've run into problems where this data isn't showing up.
- \end{itemize}
-\end{frame}
-
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{Custom methods}
- We also want to be able to add custom methods for our resources.
  \begin{verbatim}
  app.factory('User', function($resource) {
     return $resource('http://someurl/users/:id.json', {},
       {update: {method:'PUT', url:'http://someurl/users/:id.json'}}
     )});
-
-  Then we can call 
-
-  User.update({id: 1}, {user: data});
-  
  \end{verbatim}
 
+ Then, in our controller, we can call the \texttt{update} method.
 
+ \begin{verbatim}
+
+  this.updateUser = function() {
+      this.user.name = form.data.name;
+      this.user.blurb = form.data.blurb;
+      User.update({id: this.user.id}, this.user });
+  } 
+ \end{verbatim}
 \end{frame}
 
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Deleting a user}
+
+ \begin{verbatim}
+ 
+  this.deleteUser = function() {
+      User.delete({id: this.user.id});
+  };
+ \end{verbatim}
+
+\end{frame}
 
 \end{document}
