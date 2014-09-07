@@ -51,7 +51,7 @@
 \begin{frame}
   \frametitle{Logging events}
 
-  Any application of any importance should write logs.
+  An application of any importance should write logs.
  \begin{itemize}
   \item Log any problems or exceptions that could indicate a bug.
   \item Log events that could represent a security issue like a failed login.
@@ -70,7 +70,7 @@
   \item Usually we write to a log file.
 	  \begin{itemize} 
 		  \item This is simple to do.
-		  \item Operating systems already include this capability.  (e.g., Windows event viewer, Unix/Linux syslog)
+		  \item Operating systems already include this capability.  (e.g., Windows Event Log, Unix/Linux syslog)
 		  \item It's easy to set up other programs to monitor and process logs.
 	  \end{itemize}
   \item Occasionally, an application may log events in a database in order to support more complex built in event reporting.
@@ -112,7 +112,7 @@
  \begin{itemize}
   \item We can, and do, view logs manually.
   \item If we have a large volume of logs, we may use software to process and summarise the logged data.
-  \item We may use monitoring programs to checked logs in near real time to alert us to problems.
+  \item We may use monitoring programs to check logs in near real time to alert us to problems.
   \item Seperating responsibility for writing logs from the responsibility for monitoring logs
 	  \begin{itemize}
 		  \item means that application programmers don't have to anticipate user security demands;
