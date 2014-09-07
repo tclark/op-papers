@@ -27,13 +27,12 @@ namespace PasswordHandling
         {
 		string source = "IN618 Example Application";
 		string log = "IN618 Log";
-
-		// Check to see if log exists and create it if necessary.
-		if (!System.Diagnostice.EventLog.SourceExists(source))
-		{
-		    appEventLog = new System.Diagnostics.EventLog(log);
-		    appEventLog.Source = source;
+                if (!System.Diagnostics.EventLog.SourceExists(sSource))
+	        {	
+                    System.Diagnostics.EventLog.CreateEventSource(source,log);
 		}
+	        appEventLog = new System.Diagnostics.EventLog(log);
+	        appEventLog.Source = source;
         }
 
 
