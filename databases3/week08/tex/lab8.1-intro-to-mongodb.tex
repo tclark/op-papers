@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 8.1: Introduction to MongDB\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Relational databases are, and are likely to remain, the preferred way to handle object persistence in applications.  Relational databases are especially good at providing transactional integrity and at processing ad-hoc queries.  
+
+For some applications, however, other databases may work well, particularly when there is a need for easy scalability or to avoid fixed schema.  A variety of \emph{NoSQL} databases have emerged recently that address these needs.  One such dtabase is MongoDB\footnote{See \url{http://www.mongodb.org}}.
+
+MongoDB is a \emph{document database} that stores its data in \emph{BSON}, or Binary JSON, format.  JavaScript, rather than SQL, is used to interact with the database.
+
+MongoDB is used in a number of notable large deployments for organisations like SAP, Codecademy, and CERN.
+
+\section{Install MongoDB}
+Although MongoDB has its own package repository, the standard Ubuntu package suits our needs.  Install it on your EC2 server with the command
+
+\texttt{sudo apt-get install mongodb}
+
+\section{Using the Mongo shell}
+Start MongoDB with the command
+
+\texttt{mongo lab8.1}
+
+MongoDB stores data in \emph{collections} rather than tables.  Unlike tables,
+collections have no fixed schemata and can be created by simply inserting a record into one, like this:
+
+\begin{verbatim}
+
+db.cities.insert( {
+  name: "Dundedin",
+  population: 126000,
+  mayor: "Dave Cull",
+  famous_for: ["scarfies", "shit weather"]
+})
+
+\end{verbatim}
+
+Now you can see that the \texttt{cities} collection exists by entering the \texttt{show collections} command.  You can view the items in the collection by using \texttt{db.cities.find()}.
+
+The language of the MongoDB shell is Javascript.  You can see the source of any function by typing its name without brackets, like this:
+
+\texttt{db.cities.insert}
+
+You can also write your own functions in JavaScript, like this:
+
+\begin{verbatim}
+function addCity(name, population, mayor, famous_for) {
+    db.cities.insert({ name: name, population: population, 
+                       mayor: mayor, famous_for: famous_for});
+}
+\end{verbatim}
+
+Now we can add cities like this:
+
+\texttt{addCity("Christchurch", 366000, "Lianne Dalziel", ["earthquakes"]) }
+
+Since MongoDB collections don't have to adhere to schemata, you can insert a
+city like this:
+
+\texttt{db.cities.insert({name: "Melbourne", country: "Australia"})}
+
+\section{Querying}
+MongoDB provides decent support for ad hoc queries.  For example, to find 
+cities with populations under 200,000, we could enter
+
+\texttt{db.cities.find({population: {\$lt: 200000}})}
+
+We can find Dunedin by entering
+
+\texttt{db.cities.find({name: "Dunedin"})}
+
+\section{Updating}
+Updating is a bit tricky.  For example
+
+
+\texttt{db.cities.update({name: "Dunedin"}, {population: 125000})}
+
+probably doesn't do what you want.  Instead, use the \texttt{\$set} operator like this:
+
+
+\texttt{db.cities.update({name: "Dunedin"}, {\$set: {population: 125000}})}
+
+\section{Deleting}
+You can remove records from a collection by passing in arguments that will find the correct records, like this:
+
+\texttt{db.cities.remove({name: "Christchurch"})}
+
+section{Homework}
+Explore more of the capabilities of MongoDB by consulting the relevant chapter in the emph{Seven Databases} book or online documents.
+
+Since Mongo data records are scored in a JSON-like format, it should be easy to see how our splatter data could be transferred to it.  Sketch out a plan to do this.
+
+
+\end{document}
