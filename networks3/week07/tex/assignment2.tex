@@ -12,7 +12,7 @@
 
 \begin{document}
 
-\title{ Assignment 2 \\ DHCP \\ IN715 Networks Three}
+\title{ Assignment 2 \\ DNS \\ IN715 Networks Three}
 \date{\today}
 \maketitle
 
@@ -21,31 +21,43 @@ For this assignment you will deploy a DNS system for a small network that will i
 
 This assignment is due on Friday, 19 September.  It is worth 20\% of your overall mark in the paper.
 
-\section{DHCP server on OpenBSD}
-You will configure the ISC DHCP server on your OpenBSD server.  Your configuration will satisfy the following requirements:
+\section{Requirements}
+You will set up two DNS servers;
+  \begin{enumerate}
+    \item Your primary server will run on your BSD server using BIND.
+    \item Your secondary server will run on your Windws server using the 
+          Windows DNS server.  It will act as a slave node for your primary.
+  \end{enumerate}
 
+On your primary server, you will provide the following:
 \begin{itemize}
-  \item It will configure nw3.sqrawler.com as the domain name;
-  \item It will give two addresses for DNS servers: The address of your OpenBSD server and the address of your Windows server;
-  \item Your server will be authoritative;
-  \item It will use an address pool of 172.16.xxx.100 - 172.16.xxx.150\footnote{Substitute in the appropriate value for your subnet for ``xxx''}
-    \begin{itemize}
-      \item The gateway for this pool will be 172.16.xxx.1;
-      \item The default lease time shall be 1 day;
-      \item The maximum lease time shall be 3 days;
-    \end{itemize}
-  \item On the same network as the pool above, reserve an address of
-        172.16.xxx.30 for your Linux client on that network;
-  \item It will use a second  address pool of 192.168.2.50 - 192.168.2.100
-    \begin{itemize}
-      \item The gateway for this pool will be 192.168.2.2
-      \item The default lease time shall be 8 hours
-      \item The maximum lease time shall be 12 hours.
-    \end{itemize}
+    \item perform recursive lookups for client on your local networks only;
+    \item provide forward lookups for the \texttt{nw3.sqrawler.com} zone, 
+          including:
+          \begin{itemize}
+            \item A proper SOA record;
+            \item Two NS records;
+            \item An MX record;
+            \item Correct A records for your hosts with static IP addresses;
+            \item A CNAME record that directs www.nw3.sqrawler.com to your
+                  BSD server.
+          \end{itemize}
+    \item provide reverse lookups for your two networks.  For every A record 
+          in your forward zone, there should be a corresponding PTR record 
+          in the appropriate reverse zone.
 \end{itemize}
+Your secondary server should be configured as a slave for each of the three zones on your primary server.
 
+Configure your BIND DNS server and your ISC DHCP server to perform dynamic DNS updates of your forward and reverse zones so that your Windows client machines have correct forward and reverse records.
 
-\section{Assignment submission}
-Prepare the DNS system described above on your provided VMWare virtual systems by  the end of the day on 19 September.  The lecturer shall evaluate the configuration of the servers and test their functionality on each of the clients to be sure it satisfies the requirements. 
+Be sure that every system on your network in configured to use your DNS servers for name resolution.
 
+\section{Submission requirements}
+Have your servers configured and running by the end of the day on Friday, 19 September.  The lecturer shall mark your work by inspecting your running systems.Be sure that 
+  \begin{enumerate}
+    \item everything functions properly;
+    \item your configuration is correct, neatly formatted and commented;
+    \item all relevant files are appropriately named and that configuration 
+          directories do not contain any extraneous files.
+  \end{enumerate}
 \end{document}
