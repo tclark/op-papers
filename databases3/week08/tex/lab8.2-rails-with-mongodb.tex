@@ -1,0 +1,116 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 8.1: Introduction to MongoDB\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In the last lab we installed and tried out MongoDB, a \emph{document database}.  In this lab we will convert
+our Rails application to use MongoDB rather than a relational database as it does now.  The remarkable thing 
+is how little we actually have to do.
+
+\section{Create a new Git branch}
+We want to work on our new version of splatter without interfering with development of our original relational database version.  We will create a \emph{branch} in our Git repository to support this.
+
+Make a new working directory your home direstory on your EC2 server.  Inside that directory, execute the
+following
+
+\begin{verbatim}
+git clone git@github.com:<your username>/db3.git
+git checkout -b mongo
+\end{verbatim}
+
+Inside your \texttt{splatter} directory, edit your \texttt{Gemfile}, adding the follwoing lines:
+
+\begin{verbatim}
+gem 'mongoid', github: 'mongoid/mongoid'
+gem 'bson_ext'
+\end{verbatim}
+
+Then, commit your changes on the new branch.
+
+\begin{verbatim}
+git add .
+git commit -m "added deps for mongo to Gemfile"
+git push origin mongo
+\end{verbatim}
+
+Check the Github web site to verify that your new branch is present.
+
+\section{Reconfigure your Rails application}
+We need to make a some configuration changes to our Rails application. Carry out the 
+following tasks in your \texttt{splatter} directory.
+
+First, update your Ruby gems by running \texttt{bundle update}.
+
+Next, generate your MongoDB configuration file with the command \texttt{rails g mongoid:config}. This will 
+write the file \texttt{config/mongoid.yml}.  It's not necessary to make any changes right now, but you should
+take a minute to look at this file.
+
+\newpage
+
+Edit the file \texttt{config/application.rb}.  Comment out the line that says \texttt{require 'rails/all'} and
+add the following lines:
+
+\begin{verbatim}
+require "action_controller/railtie"
+require "action_mailer/railtie"
+require "sprockets/railtie"
+\end{verbatim}
+
+Edit the file \texttt{config/environments/development.rb}, commenting out the line 
+
+\texttt{config.active\_record.migration\_error = :page\_load}
+
+\section{Modify the models}
+Since the model classes are the part of our code that interacts with the database, we need to change
+those classes.
+
+First, remove the original user.rb file and replace it with a new one:
+
+\begin{verbatim}
+rm app/models/user.rb
+rails g model user name:string email:string password:string blurb:string
+\end{verbatim}
+
+Take a look at the new model and note the differences.  Since a MongoDB database is schemaless, we
+have to specify our data fields in the model.
+
+We don't need the splatt model file for now, so remove it from the your repository with the command
+
+\texttt{git rm app/model/splatt.rb}
+
+Now try running you server with the command \texttt{rails server}.
+
+\section{Test your application}
+You can use curl to test your user CRUD functions:
+
+\begin{verbatim}
+ curl -H "Content-type: application/json" -X POST http://localhost:3000/users \ 
+        -d '{"name": "Mongo User", "email":"a@b.c", "password":"foo", "blurb":"bar"}'
+
+ curl -H "Content-type: application/json" -X GET http://localhost:3000/users
+\end{verbatim}
+
+Note the id of your new user and substitute it in the requests below..
+
+\begin{verbatim}
+curl -H "Content-type: application/json" -X GET http://localhost:3000/users/540f3f736269623441000000
+
+curl -H "Content-type: application/json" -X PUT http://localhost:3000/users/540f3f736269623441000000 \
+        -d '{"name":"Bob"}'
+\end{verbatim}
+
+Once you have tested your application, commit and push your changes.
+
+\end{document}
