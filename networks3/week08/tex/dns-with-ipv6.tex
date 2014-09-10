@@ -1,0 +1,105 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{DNS with IPv6}
+
+\author[IN715]{Networks Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{IPv6 works with DNS}
+
+ \begin{itemize}
+  \item It is possible to integrate IPv6 DNS resources together with
+        existing IPv4 ones.
+  \item Only one new resource record type is required.
+  \item Reverse zones work in a similar way.
+  \item Recent versions of the main DNS servers are compatible with IPv6.
+ \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Initial Considerations}
+
+ \begin{itemize}
+  \item Your DNS servers need IPv6 connectivity.
+  \item Your domain name registrar needs to support IPv6.\footnote{See http://dnc.org.nz/content/srs\_registrar\_list.html}
+  \item Your TLD needs to support IPv6. (.nz does)
+ \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Configuring DNS}
+
+ \begin{itemize}
+  \item Ensure that your NS records point to servers with IPv6 addresses as well as IPv4 addresses.
+  \item Configure your DNS servers to listen on IPv6 interfaces, e.g.: \
+          \texttt{ listen-on-v6 \{ any; \}} in named.conf.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Forward lookup: AAAA}
+  The IPv6 equivalent of an A record is an AAAA record:
+
+  \begin{verbatim}
+   gredo  IN  A  2402:6000:0:101::83cb:30a
+  \end{verbatim}
+
+For machines that have both IPv4 and IPv6 addresses, be sure that you 
+have distinct A and AAAA records for them, e.g.  \texttt{gredo.ip4} 
+and \texttt{gredo.ip6}.
+\end{frame}
+\begin{frame}
+  \frametitle{Reverse lookup}
+  Reverse lookup is a wee bit more complicated.  for example, suppose our
+  network is \texttt{2400:330A:0:118/64}
+  
+  What is the reverse zone?
+
+ 
+\end{frame}
+\begin{frame}
+  \frametitle{2400:330A:0:118/64}
+  \begin{enumerate}
+    \item Expand the network address:  \texttt{2400:330A:0000:0118}
+    \item Reverse the characters and put dots between them
+          \texttt{8.1.1.0.0.0.0.0.A.0.3.3.0.0.2.4}
+    \item Append \texttt{.ip6.arpa}
+  \end{enumerate}
+
+  So the zone is 8.1.1.0.0.0.0.0.A.0.3.3.0.0.2.4.ip6.arpa.
+ 
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{PTR records}
+  PTR records work the same way in IPv6. Since the resulting names get
+  very long, so you want to abbreviate.
+  \begin{verbatim}
+   
+a.0.3.0.b.c.3.8.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa.    IN    PTR    gredo.example.com.
+  \end{verbatim}
+\end{frame}
+
+There are some online tools that will help you generate these entries, 
+e.g.: http://rdns6.com/zone.
+
+\end{document}
