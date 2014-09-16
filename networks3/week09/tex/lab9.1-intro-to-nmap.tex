@@ -1,0 +1,135 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 9.1 Introduction to Nmap\\ IN715 Networks Three}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+Nmap\footnote{http://nmap.org} is a tool for network discovery and auditing.  It is basically a \emph{port scanner} that gathers information by sending packets to various hosts and ports to determine what services are available on the network.  For example, we can see if a web server is running on a particular host by sending packets to port 80 on that host and checking for a reply.
+
+Tools like Nmap are useful for 
+
+\begin{itemize}
+    \item Network discovery and inventory;
+    \item Security auditing;
+    \item System monitoring;
+    \item System management.
+\end{itemize}
+
+Of course, they are also useful for reconnaissance in preparation for an attack.
+
+In this lab you will try out Nmap to get a sense of how the tool can be used for both good and bad purposes. Note that port scanning another party's hosts may be viewed as malicious activity, so use Nmap and similar tools responsibly.
+
+\section{Install Nmap}
+Install Nmap on your OpenBSD server with the command
+
+\texttt{pkg\_add nmap}
+
+Also, to run scans on your inner network (192.168.2.0/24) you amy need to set up a route on your BSD server with the command
+
+\texttt{route add -net 192.168.2.0/24 172.16.xx.254}
+
+substituting in the correct value for the third octet of your network.
+
+\section{Basic Nmap usage}
+In general we invoke Nmap in the following manner:
+
+\texttt{nmap [<scan type>] [<options>] <target specification>}
+
+So, suppose we want to catalog all of the hosts on a network with a simple ping sweep.  The command for this is:
+
+\texttt{nmap -sn -e em1 192.168.2.0/24}
+
+In this example our \emph{scan type} is \texttt{-sn}, which is a simple ping sweep.  We use the \emph{option} \texttt{-e em1} to indicate that we want to use the \texttt{em1} network interface, and we have specified the network \texttt{192.168.2.2/24} as our target.
+
+Run this scan and a similar one to sweep your other (\texttt{172.16.xx.0}) network and see what hosts you find.  Did you find every host?  Why or why not?
+
+
+Run Nmap with no arguments to get a brief list of common scan types and options. 
+
+\section{Target specifications}
+Nmap provides a number of ways to specify targets.  A single target can be specified by ip address or hostname:
+
+\texttt{nmap -sL www.nw3.sqrawler.com}
+
+\texttt{nmap -sL 172.16.11.4}
+
+You can also specify a network using standard CIDR notation.
+
+\texttt{nmap -sL 10.20.0.0/16}
+
+You can also use this to specify the network or network segment containing a particular host.
+
+\texttt{nmap -sL www.nw3.sqrawler.com/24}
+
+You can also specify lists or ranges in particular octets of an address.
+
+\texttt{nmap -sL 192.168.2,3,17.100}
+
+\texttt{nmap -sL 172.16.10-25.1-254}
+
+Note that the \texttt{-sL} option above will cause Nmap to print a list of hosts to be scanned but will not perform and scans. This is a good way to check you scan targets before you start firehosing your network with scans.
+
+Find three different ways to scan your networks using methods shown above.
+
+
+\section{A more intense scan}
+Once you have identified a host with a broad scan like the ping sweep above, you can try a more intense scan on a specific host. For example, 
+
+\texttt{nmap -PS1-1024 172.16.xx.5} 
+
+will perform a TCP SYN scan on ports 1-1024 on the specified host.
+
+Or, you can run 
+
+\texttt{nmap -A 172.16.xx.5} to perform the most comprehensive scan on the 
+target host.
+
+If you just want to attempt OS fingerprinting, try 
+
+\texttt{nmap -O 172.16.xx.5}
+
+Or you can attempt to fingerprint services by running
+
+\texttt{nmap -sV 172.16.xx.5}
+
+
+Try some of these scans on hosts running on your network.  Note that some of these scans can be very time consuming.
+
+Consult the online documentation to see some other scans you can run. Try a few of these scans on your hosts.
+
+\section{Port states}
+Nmap will identify ports as being in one of these six states\footnote{http://nmap.org/book/man-port-scanning-basics.html}:
+
+\begin{description}
+    \item[open]An application is actively accepting TCP connections, UDP datagrams or SCTP associations on this port. Finding these is often the primary goal of port scanning. Security-minded people know that each open port is an avenue for attack. Attackers and pen-testers want to exploit the open ports, while administrators try to close or protect them with firewalls without thwarting legitimate users. Open ports are also interesting for non-security scans because they show services available for use on the network.
+    \item[closed]A closed port is accessible (it receives and responds to Nmap probe packets), but there is no application listening on it. They can be helpful in showing that a host is up on an IP address (host discovery, or ping scanning), and as part of OS detection. Because closed ports are reachable, it may be worth scanning later in case some open up. Administrators may want to consider blocking such ports with a firewall. Then they would appear in the filtered state, discussed next.
+    \item[filtered]Nmap cannot determine whether the port is open because packet filtering prevents its probes from reaching the port. The filtering could be from a dedicated firewall device, router rules, or host-based firewall software. These ports frustrate attackers because they provide so little information. Sometimes they respond with ICMP error messages such as type 3 code 13 (destination unreachable: communication administratively prohibited), but filters that simply drop probes without responding are far more common. This forces Nmap to retry several times just in case the probe was dropped due to network congestion rather than filtering. This slows down the scan dramatically.
+    \item[unfiltered]The unfiltered state means that a port is accessible, but Nmap is unable to determine whether it is open or closed. Only the ACK scan, which is used to map firewall rulesets, classifies ports into this state. Scanning unfiltered ports with other scan types such as Window scan, SYN scan, or FIN scan, may help resolve whether the port is open.
+    \item[open-filtered]Nmap places ports in this state when it is unable to determine whether a port is open or filtered. This occurs for scan types in which open ports give no response. The lack of response could also mean that a packet filter dropped the probe or any response it elicited. So Nmap does not know for sure whether the port is open or being filtered. The UDP, IP protocol, FIN, NULL, and Xmas scans classify ports this way.
+    \item[closed-filtered]This state is used when Nmap is unable to determine whether a port is closed or filtered. It is only used for the IP ID idle scan.
+\end{description}
+
+\section{Using and recognising port scans}
+Running port scans on your own networks can give you an attackers-eye view of your systems and identify ports that you may wish to protect with a firewall.  On the other hand, you can also use tools like Nmap to be sure that services that should be accessible are online and available.
+
+Since port scans may also be a precursor to an attack, you should also learn how to recognise port scans so that you can respond to unwanted scans and block subsequent attacks.  
+
+See http://www.linuxjournal.com/article/4234 for more information on this.
+
+ 
+
+
+
+\end{document}
