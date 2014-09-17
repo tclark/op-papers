@@ -1,0 +1,175 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+
+\title{Introdution to Firewalls}
+
+\author[IN715]{Networks Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{The Internet is a pretty scary place}
+
+ \begin{itemize}
+  \item An unprotected system exposed to the Internet will be subect to attacks within minutes.
+  \item Hosts on our networks typically emit network traffic that should not be visible outside 
+	  our networks.
+  \item Compromised machines may send unwanted traffic that should be contained.
+ \end{itemize}
+ 
+ Conclusion:  We need firewalls to control the flow of network traffic.
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Host or network based}
+
+ \begin{itemize}
+	 \item Most operating systems include firewalling capabilities to protect individual hosts.
+	 \item Network firewalls may be deployed at network perimeters to protect entire networks.
+	 \item A comprehensive security strategy should include both.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Application firewalls}
+
+ Application firewalls work at the application layers, inspecting the payload data
+ for unwanted traffic.
+
+ Examples:
+ \begin{itemize}
+	 \item Email spam and virus filters
+	 \item Web filters
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Packet filters}
+
+ Packet filters inspect individual packets for network and transport layer information.  They 
+ pass or block traffic according to rules based on
+
+ \begin{itemize}
+	 \item Source and destination IP addresses
+	 \item Source and destination ports
+	 \item Transport layer protocols (TCP, UDP, ICMP, ICMP6)
+	 \item Traffic direction (inbound or outbound)
+	 \item Connection state
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{PF: OpenBSD packet filter}
+
+ \begin{itemize}
+   \item PF (Packet Filter) is the firewall package included in OpenBSD.
+   \item It is installed and enabled by default (It's just configured to
+	   pass all traffic.
+   \item It is configured using the file \texttt{/etc/pf.conf} and from the 
+	   commmand line using \texttt{pfctl}
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Some handy \texttt{pfctl} commands}
+
+ \begin{verbatim}
+ # pfctl -f /etc/pf.conf     Load the pf.conf file
+ # pfctl -nf /etc/pf.conf    Parse the file, but don't load it
+ # pfctl -sr                 Show the current ruleset
+ # pfctl -ss                 Show the current state table
+ # pfctl -si                 Show filter stats and counters
+ # pfctl -sa                 Show EVERYTHING it can show
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{PF rules}
+
+ PF inspects packets according to its set of \emph{rules}.  When a packet matches a rule's
+ selection criteria, the rule's action may be carried out.
+
+ \begin{verbatim}
+   block in all
+   pass in from all to 10.4.0.3 22
+   pass out from 192.160.1.0/24 to any port www
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Rule syntax}
+
+ \begin{verbatim}
+action [direction] [log] [quick] [on interface] [af] 
+  [proto protocol] [from src_addr [port src_port]] 
+  [to dst_addr [port dst_port]] [flags tcp_flags] 
+  [state]
+ \end{verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Rule order}
+
+ \begin{itemize}
+	 \item Rules are processed in order.
+	 \item A packet may match many rules.  
+	 \item The last rule matched wins.
+	 \item We can short-circuit this with the \texttt{quick} option
+ \end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{More information}
+
+ \url{http://www.openbsd.org/faq/pf/index.html}
+   
+
+
+
+\end{frame}
+
+
+\end{document}
