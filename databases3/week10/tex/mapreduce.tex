@@ -1,0 +1,271 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+
+\title{MapReduce}
+
+\author[IN705]{Databases Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Problem: counting splatts}
+ Suppose we want to count the number of splatts in our collection.
+ \begin{itemize}
+	 \item Relational : \texttt{select count(*) from splatts;}
+	 \item Document : If we had a splatts collection, we could
+		 do this - \texttt{db.splatts.count()}  - but
+		 we don't have one.
+	 \item We need to tell MongoDB how to find and count our
+		 splatts.
+		
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{The data}
+
+ \begin{verbatim}
+ {
+   "_id" : ObjectId("5416717562696259b8010000"),
+   "email" : "imp@casterlyrock.com",
+   "follower_ids" : [ ObjectId("5416717562696259b8000000") ],
+   "name" : "Tyrion Lannister",
+   "splatts" : [
+      {
+       "_id" : ObjectId("5416727962696259b8030000"),
+       "body" : "user 2 splatt 2",
+       "created_at" : ISODate("2014-09-15T05:00:41.376Z")
+      } 
+   ] 
+}
+
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{The plan}
+
+ \begin{enumerate}
+  \item Iterate over the users\footnote{Our data set is small, but this could be parallelised over
+	  a large data set.};
+  \item Count the splatts belonging to each one;
+  \item Add up the counts.
+ \end{enumerate}
+
+ This is a common pattern, and it has a name: MapReduce.
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{MapReduce}
+
+ \begin{enumerate}
+  \item Map:  For each user, count the splatts.
+  \item Reduce: Sum up the indvidual counts.
+ \end{enumerate}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{MapReduce implementation}
+
+  We need to supply JavaScript code to MongoDB telling it
+  how to perform the Map and Reduce steps
+ \begin{itemize}
+  \item We write a map function that is called one time on
+	  each user in the collection.  It will emit the 
+	  count of each user's splatts.
+  \item We write a reduce function that sums up the output from the 
+	  map function.
+  \item We supply both of these functions to MongoDB's \texttt{mapReduce} command.
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Map}
+
+ \begin{verbatim}
+var map = function() { 
+    var length = 0;
+    if(this.splatts) {
+        length = this.splatts.length
+    }
+    emit ("count", length); 
+};
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Map results}
+
+ After applying the map to a collection with 3 users, the result set
+ may look like this:
+ \begin{verbatim}
+ results = [
+     {key: "count", value: 4 },
+     {key: "count"  value: 3 },
+     {key: "count", value: 3 }
+     ]
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Reduce}
+
+ \begin{verbatim}
+var reduce =  function(key, val) {
+    var data =  0;
+    val.forEach(function(v) {
+        data += v;
+    });
+    return data;
+}
+ \end{verbatim}
+
+This reduce function will be called one time for each key value in the map results.
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{MapReduce}
+
+ We use our \texttt{map} and \texttt{reduce} functions in a call to MongoDB's 
+ \texttt{mapReduce} command.
+ \begin{verbatim}
+  db.users.mapReduce(
+    map,
+    reduce,
+    {
+      out: {inline: 1}
+    }
+  }
+
+
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{The final result}
+
+ \begin{verbatim}
+{
+  "results" : [
+    {
+      "_id" : "count",
+      "value" : 10
+    }
+  ],
+  "timeMillis" : 0,
+  "counts" : {
+    "input" : 3,
+    "emit" : 3,
+    "reduce" : 1,
+    "output" : 1
+  },
+  "ok" : 1,
+}
+
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{In Ruby}
+
+ The Mongoid library provides access to MongoDB's MapReduce functionality:
+
+ \begin{verbatim}
+ map = %Q{ function() { 
+      var length = 0;
+      if(this.splatts) {
+          length = this.splatts.length
+      }
+      emit ("count", length); 
+  } 
+}
+ reduce =  %Q{ function(key, val) {
+    var data =  0;
+    val.forEach(function(v) {
+        data += v;
+    })
+    return data;
+ }
+}
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{In Ruby}
+
+ \begin{verbatim}
+
+User.map_reduce(map,reduce).out(inline: true)
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Today's lab}
+
+ \begin{enumerate}
+  \item Adapt the test scripts you wrote earlier this semester to 
+	  enter some sample data into your MongoDB database.
+  \item Use MapReduce from within the MongoDB shell to get a count of the number of splatts.
+  \item Add a function to your Rails UsersController to return the total number of splatts.
+
+ \end{enumerate}
+
+\end{frame}
+
+\end{document}
