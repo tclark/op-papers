@@ -146,7 +146,8 @@
  var finalise = function(key, val) {
      var mylist = val.list;
      if(mylist) {
-         mylist.sort(function(a, b) { return b.created_at - a.created_at});
+         mylist.sort(function(a, b) { 
+	   return b.created_at - a.created_at});
       }
      return {"list": mylist};
  }
@@ -161,6 +162,7 @@
 
  \begin{verbatim}
  db.users.mapReduce(map, reduce,
+    {
     out: {inline: 1},
     finalize: finalise,
     query: {_id: ObjectId("5416717562696259b8000000")}
