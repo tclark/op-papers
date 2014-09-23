@@ -1,0 +1,171 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+
+\title{Lists, Tables, and  Macros}
+
+\author[IN715]{Networks Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Firewall rules}
+ Last time we started creating firewall rules. They include
+ \begin{itemize}
+    \item an action (\texttt{block} or \texttt{drop};
+    \item specifications for matching packets, such as
+        \begin{itemize}
+             \item source or destination IP address
+             \item source or destination port
+             \item transport protocol
+             \item network interface
+        \end{itemize}
+    \item Example: \texttt{pass in on em0 to 172.20.44.8 to port 80} 
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Multiple rules}
+
+ In many situations you may find yourself writing pretty repetitive rules.
+
+ \begin{verbatim}
+ pass in on em0 proto tcp to 192.168.5.5 port 22    
+ pass in on em0 proto tcp to 192.168.5.5 port 25    
+ pass in on em0 proto tcp to 192.168.5.5 port 80    
+ pass in on em0 proto tcp to 192.168.5.5 port 443   
+ \end{verbatim}
+ 
+ You can condense a rule set like this with a list.
+ \begin{verbatim}
+ pass in on em0 proto tcp to 192.168.5.5 port { 22 25 80 443 }   
+ \end{verbatim}
+ PF just expands your rule to four rules as they are shown above.
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{List uses}
+
+ You can use a list anywhere where you want to insert mulitple values in a 
+ rule set.
+
+ \begin{verbatim}
+ block out from { 192.168.6.211 10.115.8.20 } port www
+
+ pass in proto { udp tcp } to 172.18.18.6 port 53   
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{List expansion}
+ Rules with lists are expanded out to multiple rules.  You need
+ to be careful to avoid unintended consequences.
+ \begin{verbatim}
+   pass in on fxp0 from { 10.0.0.0/8, !10.1.2.3 }
+ \end{verbatim}
+ Expands to 
+ \begin{verbatim}
+   pass in on fxp0 from 10.0.0.0/8
+   pass in on fxp0 from !10.1.2.3
+ \end{verbatim}
+ Which is almost certainly not what was intended.
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Macros}
+
+ Macros are user-defined variables.
+ \begin{verbatim}
+   allowed_ports = "{ 22 80 443 }"
+   web_server = "10.10.1.5"
+   pass in to $web_server port $allowed_ports
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Macros in lists}
+
+ You can use macros in lists.
+ \begin{verbatim}
+   malicious_ips = "{ 192.168.15.7 172.21.233.18 }"
+   marketing = "10.40.1.0/24"
+   block all from { $malicious_ips $marketing }
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Tables}
+
+ \begin{itemize}
+   \item Tables hold groups of IP addresses.
+   \item Tables lookup are faster and use less resources than lists.
+   \item Tables can be modified on the fly.
+   \item Table syntax handles negations nicely (unlike lists).
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Declaring tables}
+
+ \begin{verbatim}
+   table <office_net> { 192.168.10.0/24 }
+   table <allowed_out> const { 10.10.0.0/16 !10.10.5.5 }
+   table <spammers> persist file "/etc/spammers"
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Manipulating tables}
+
+ Tables not declared as \texttt{const} can be modified with \texttt{pfctl}
+ \begin{verbatim}
+   pfctl -t spammers -T add 203.0.113.0/24
+
+   pfctl -t spammers -T show
+
+   pfctl -t spammers -T delete 203.0.113.0/24
+ \end{verbatim}
+
+\end{frame}
+
+\end{document}
