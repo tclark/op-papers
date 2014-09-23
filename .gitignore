@@ -1,4 +1,5 @@
 *.aux
+frame
 *.glo
 *.idx
 *.log
