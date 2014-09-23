@@ -1,0 +1,173 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+
+\title{Using MapReduce to Retrieve Our News Feed}
+
+\author[IN705]{Databases Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Last time}
+
+ \begin{itemize}
+  \item We saw how to use MapReduce to perform complex queries.
+  \item We supply a \emph{map} function that gets data from documents.
+  \item We supply a \emph{reduce} function that aggregates the map results.
+  \item We supply additional options as required.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Retrieving our feed}
+
+ Map stage
+ \begin{itemize}
+	 \item Iterate over the user's \texttt{follow\_ids} list.
+         \item \emph{Emit} the splatts for each user in the list.
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Map code}
+
+ \begin{verbatim}
+ var map = function() {
+   if(this.follow_ids) {
+       this.follow_ids.forEach(function(id) {
+           var u = db.users.findOne({_id: id});
+           emit("feed", {"list": u.splatts});
+       });
+   } else {
+     emit("feed", {"list": []});
+   }
+ }
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Retrieving our feed}
+ Reduce stage
+ \begin{itemize}
+  \item Merge our lists of splatts together.
+  \item At this stage, we leave them unsorted.
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Reduce code}
+
+ \begin{verbatim}
+ var reduce = function(key, values) {
+     var myfeed = {"list": []};
+     values.forEach(function(v) {
+         myfeed.list = myfeed.list.concat(v.list);
+     });
+     return myfeed;
+ }
+	     \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Retrieving our feed}
+
+  Additional options
+ \begin{itemize}
+  \item Output
+  \item Query
+  \item Finalisation
+ \end{itemize}
+
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+
+  \frametitle{Output}
+
+ \begin{verbatim}
+  output:  {inline: 1}
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Query}
+
+ \begin{verbatim}
+ query: {_id: ObjectId("5416717562696259b8020000")}
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Finalisation}
+
+ \begin{verbatim}
+ var finalise = function(key, val) {
+     var mylist = val.list;
+     if(mylist) {
+         mylist.sort(function(a, b) { return b.created_at - a.created_at});
+      }
+     return {"list": mylist};
+ }
+
+ \end{verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Putting it all together}
+
+ \begin{verbatim}
+ db.users.mapReduce(map, reduce,
+    out: {inline: 1},
+    finalize: finalise,
+    query: {_id: ObjectId("5416717562696259b8000000")}
+    })
+ \end{verbatim}
+
+\end{frame}
+
+
+\end{document}
