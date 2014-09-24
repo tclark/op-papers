@@ -11,7 +11,7 @@
 
 \begin{document}
 
-\title{ Lab 10.1 Lists, Macros, and Tables\\ IN715 Networks Three}
+\title{ Lab 10.2 PF Logging\\ IN715 Networks Three}
 \date{\today}
 \maketitle
 
@@ -23,11 +23,11 @@ we will see how to write to and read from PF's logs.
 \section{Writing to PF logs}
 To log packets handled by a perticular rule, just add the \texttt{log} keyword to that rule as follows:
 
-\texttt{pass \textbf{log} from any proto tcp to any port 22}
+\texttt{pass \textbf{log} proto tcp from any to any port 22}
 
 You can also add logging option in parentheses after the \texttt{log} keyword.
 
-\texttt{pass log \textbf{(all, user)} from any proto tcp to any port 22}
+\texttt{pass log \textbf{(all, user)} proto tcp from any to any port 22}
 
 The available options are
 
