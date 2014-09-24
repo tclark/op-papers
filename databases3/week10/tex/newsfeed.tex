@@ -45,7 +45,7 @@
 
  Map stage
  \begin{itemize}
-	 \item Iterate over the user's \texttt{follow\_ids} list.
+	 \item Iterate over the users followed by a given user.
          \item \emph{Emit} the splatts for each user in the list.
  \end{itemize}
 
@@ -58,13 +58,8 @@
 
  \begin{verbatim}
  var map = function() {
-   if(this.follow_ids) {
-       this.follow_ids.forEach(function(id) {
-           var u = db.users.findOne({_id: id});
-           emit("feed", {"list": u.splatts});
-       });
-   } else {
-     emit("feed", {"list": []});
+   if(this.splatts) {
+     emit("feed", {"list": this.splatts})
    }
  }
  \end{verbatim}
@@ -132,7 +127,9 @@
   \frametitle{Query}
 
  \begin{verbatim}
- query: {_id: ObjectId("5416717562696259b8020000")}
+ query: {_id:  {$in: db.users.findOne(
+   {_id: ObjectId("5416717562696259b8000000")}).follow_ids }
+ }
  \end{verbatim}
 
 \end{frame}
@@ -165,7 +162,9 @@
     {
     out: {inline: 1},
     finalize: finalise,
-    query: {_id: ObjectId("5416717562696259b8000000")}
+    query: {_id:  {$in: db.users.findOne(
+       {_id: ObjectId("5416717562696259b8000000")}).follow_ids }
+        }
     })
  \end{verbatim}
 
