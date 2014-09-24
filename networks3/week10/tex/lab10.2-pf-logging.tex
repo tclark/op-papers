@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 10.1 Lists, Macros, and Tables\\ IN715 Networks Three}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+PF can log information about the packets it processes.  These logs can be useful when configuring and troubleshooting 
+a firewall.  It can also provide information about possible security threats and general network usage.  In this lab
+we will see how to write to and read from PF's logs.
+
+\section{Writing to PF logs}
+To log packets handled by a perticular rule, just add the \texttt{log} keyword to that rule as follows:
+
+\texttt{pass \textbf{log} from any proto tcp to any port 22}
+
+You can also add logging option in parentheses after the \texttt{log} keyword.
+
+\texttt{pass log \textbf{(all, user)} from any proto tcp to any port 22}
+
+The available options are
+
+\begin{description}
+	\item[\texttt{all}] Causes all matching packets, not just the initial packet, to be logged. Useful for rules that create state.
+	\item[\texttt{to pflogN}] Causes all matching packets to be logged to the specified pflog(4) interface. The default log interface is \texttt{pflog0}
+	\item[\texttt{user}] Causes the UNIX user-id and group-id that owns the socket that the packet is sourced from/destined to (whichever socket is local) to be logged along with the standard log information.
+\end{description}
+
+\section{Reading the log}
+PF data is logged to \texttt{/var/log/pflog} file.  This log is in a binary format that is not human-readable.  We use \texttt{tcpdump} to view the log.
+
+View the log file with the command
+
+\texttt{tcpdump -n -e -ttt -r /var/log/pflog}
+
+or you can view logs in real time by reading from the \texttt{pflog0} interface
+
+\texttt{tcpdump -n -e -ttt -i pflog0}
+
+We can use \texttt{tcpdump} to restrict its output to show only the data that matches certain conditions.  For example,
+
+\texttt{tcpdump -n -e -ttt -r /var/log/pflog port 80}
+
+shows only packets matching port 80, and 
+
+\texttt{tcpdump -n -e -ttt -r /var/log/pflog port 80 and host 192.168.1.40}
+
+only shows packets matching port 80 on a particular machine.  Additional filter options can be found on the \texttt{tcpdump} man page of on the 
+OpenBSD PF web pages at \url{http://www.openbsd.org/faq/pf/}.
+
+\section{Experiment with logging}
+Firewall logs will be an important tool during the upcoming security exercise.  Add some logging to your firewall rules and send some sample network traffic so that your logs will have some data in them. Perhaps you should run some port scans.  Then inspect your logs to see what information you can get from them.
+
+In real-world scenarios it's important to find a balance between too little and too much logging.  You want to caputre relevant information, but you don't
+want to get buried in logs you'll never read.  In the security exercise, however, you should log pretty aggressively.
+
+
+\end{document}
