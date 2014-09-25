@@ -144,7 +144,7 @@
      var mylist = val.list;
      if(mylist) {
          mylist.sort(function(a, b) { 
-	   return b.created_at - a.created_at});
+           return b.created_at - a.created_at});
       }
      return {"list": mylist};
  }
@@ -166,6 +166,22 @@
        {_id: ObjectId("5416717562696259b8000000")}).follow_ids }
         }
     })
+ \end{verbatim}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{In Ruby}
+
+  Define strings containing the JavaScript code for map, reduce, and finalise.
+  Then, you can do this:
+ \begin{verbatim}
+  user = User.find(params[:id])
+  result = User.in(id: user.follow_ids).map_reduce(map, reduce).
+           out(inline: true).finalize(finalise)
+  render json: result.entries[0][:value][:list]
  \end{verbatim}
 
 \end{frame}
