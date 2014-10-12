@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Milestone 3: REST API Server - MongoDB Version\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+We have spent the past few weeks modifying our REST server to use MongoDB.  During the next week you will fianlise this work and submit it for review.  
+
+This is the third phase of your project assessment for this paper and it constitutes 20\% of your mark on the project.
+
+\section{API server requirements}
+Your API server support the following methods with the specified HTTP requests:
+
+\begin{itemize}
+ \item User methods
+  \begin{itemize}
+    \item \texttt{GET /users}  $\Rightarrow$ returns a list of all users
+    \item \texttt{POST /users}  $\Rightarrow$ creates a new user with data in the POST body
+    \item \texttt{PUT /users}  $\Rightarrow$ updates a user with data in the PUT body
+    \item \texttt{GET /users/[:id]} $\Rightarrow$ returns the user with the specified id
+    \item \texttt{DELETE /users/[:id]} $\Rightarrow$ deletes the user with the specified id
+    \item \texttt{GET /users/splatts/[:id]}  $\Rightarrow$ returns a list of the specified user's splatts
+    \item \texttt{GET /users/splatts-feed/[:id]}  $\Rightarrow$ returns the specified user's ``news feed''
+    \item \texttt{POST /users/follows}  $\Rightarrow$ creates a follower/followed relationship between specified users
+    \item \texttt{GET /users/follow/[:id]}  $\Rightarrow$ returns a list of the users followed by the specified user
+    \item \texttt{GET /users/follower/[:id]}  $\Rightarrow$ returns a list of the users who follow the specified user
+    \item \texttt{GET /users/splatts/[:id]}  $\Rightarrow$ returns a list of the specified user's splatts
+    \item \texttt{DELETE /users/[:id1]/[:id2]} $\Rightarrow$ causes user with id1 to unfollow the user with id2
+
+  \end{itemize}
+
+ \item Splatt methods
+  \begin{itemize}
+    
+    \item \texttt{GET /splatts/[:id]} $\Rightarrow$ returns the splatt with the specified id
+    \item \texttt{POST /splatts}  $\Rightarrow$ creates a new splatt with data in the POST body
+    \item \texttt{DELETE /splatts/[:id]} $\Rightarrow$ deletes the splatt with the specified id
+  \end{itemize}
+\end{itemize}
+
+
+\section{Submission requirements}
+  You will submit your source code \emph{tagging}\footnote{See \url{http://git-scm.com/book/Git-Basics-Tagging}.  Use a lightweight or annotated tag labeled ``M3''.} a commit to your GitHub repository with the tag ``M3''.  This commit must be dated no later than Monday, 20 October`at 18:00 NZDT. Late submissions will be penalised 10\% per day beginning at 18:00:01 each day beginning on October.  Improper submissions will not be marked.  
+
+To mark your submission, the lecturer shall clone your GitHub repository at the tagged point, set up the appliation and test it, and inspect your source code.  Your submission will be marked according the the following schedule.
+
+\begin{itemize}
+  \item correct and complete implementation of the API:  55\%
+  \item quality of source code: 45\%
+\end{itemize}
+\end{document}
