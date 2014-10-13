@@ -64,11 +64,11 @@ Add a few more animals on your own.
 
 Besides retrieving individual records, you can also view your buckets:
 \begin{verbatim}
-  user@riak:~/dev$ curl http://localhost:8098/riak?buckets=true
+  user@riak:$ curl http://localhost:8098/riak?buckets=true
 \end{verbatim}
 or see all the values in a bucket
 \begin{verbatim}
-  user@riak:~/dev$ curl http://localhost:8098/riak/hello?keys=true
+  user@riak:~$ curl http://localhost:8098/buckets/hello/keys?keys=true
 \end{verbatim}
 
 \section{Links}
@@ -79,15 +79,15 @@ Let's put our possum, Bob, in a cage.
   user@riak:~/dev$ curl -v -X PUT http://localhost:8098/riak/cages/1 \
 > -H "Content-Type: application/json" \
 > -H "Link: </riak/animals/bob>; riaktag=\"contains\"" \
-> -d '{"room":"D311"}
+> -d '{"room":"D311"}'
 \end{verbatim}
 I guess the cage is in my office.
 
 Now we can see what animal is on cage 1 using a technique called \emph{link walking}:
 \begin{verbatim}
-  user@riak:~/dev$ curl http://localhost:8098/riak/cages/1/_,contains._
+  user@riak:~/dev$ curl http://localhost:8098/riak/cages/1/_,contains,_
 \end{verbatim}
-The comma-separated values on the end of the URL above indicate whaich links we want to follow.  Underscores indicate wildcards.  The first position indicates what bucket we want linked vaules from. Putting ``animals" in this position will retrieve only links to animals.  The second postion indicates what riaktags we want to follow.  In the example above we looked for the links tagged ``contains".  The third value may be 0 or 1 and indicates if we want to keep intermediate values when we follow a chain of links.
+The comma-separated values on the end of the URL above indicate which links we want to follow.  Underscores indicate wildcards.  The first position indicates what bucket we want linked values from. Putting ``animals" in this position will retrieve only links to animals.  The second postion indicates what riaktags we want to follow.  In the example above we looked for the links tagged ``contains".  The third value may be 0 or 1 and indicates if we want to keep intermediate values when we follow a chain of links.
 
 \section{Other MIME types and binary data}
 Riak is perfectly happy to store binary data.  Find a picture of a possum online and copy it to your Riak server.  Suppose it is named ``bob.jpg".  We can store the picture and link it to Bob like this:
