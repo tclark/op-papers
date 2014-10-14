@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 11.1 Introduction to Snort\\ IN715 Networks Three}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+Snort is a powerful network traffic analysis tool.  It has the capacity to 
+
+\begin{itemize}
+		 \item sniff network packets in real time;
+		 \item log packet data to a file;
+		 \item analyse captured packets for intrusion dectection.
+	 \end{itemize}
+
+Ultimately it is the last item that is most interesting to us.
+
+Carry out this lab on your \texttt{router2} system.
+
+\section{Install and try Snort}
+Installation on our OpenBSD servers is extremely easy.  Just enter the command
+
+\begin{verbatim}
+  pkg_add snort
+\end{verbatim}
+
+and it will be installed.
+
+Try out Snort by having it sniff packets and output its data to the console with the following command.
+
+\begin{verbatim}
+snort -v --daq-dir/usr/local/lib/daq
+\end{verbatim}
+
+Information about packets will be displayed in the console. Carry out some network activity to generate some interesting packets to log.  Enter \texttt{Ctrl-c} to stop Snort when you are done.  If you want to see the packet payload data as well, invoke Snort with the -d option:
+
+
+\begin{verbatim}
+snort -dv --daq-dir/usr/local/lib/daq
+\end{verbatim}
+
+\section{Logging Snort data to a file}
+In a typical network setting Snort will capture too much data to be usefull examined in standard output.  It is more productive to have Snort write its data to a logfilethat we can examine later.  We can do this by using Snort's \texttt{-l} option, like this:
+
+
+\begin{verbatim}
+mkdir log
+snort -dv -l ./log --daq-dir/usr/local/lib/daq
+\end{verbatim}
+
+Snort will then write its data into a file in the \texttt{log} directory.  This logfile is in a binary format that can be read with tools like \texttt{tcpdump} or with snort itself.  After having Snort log for a few minutes, stop Snort by entering \texttt{Ctrl-c}.  Then you can inspect the logged data by converting it to a text file with a command like this:
+
+
+\begin{verbatim}
+snort -dv --daq-dir/usr/local/lib/daq -r ./log/<log file name>   > snort_log
+\end{verbatim}
+
+Now the file \texttt{snort\_log} contains the data in text format.
+
+\section{Running the Snort service}
+To use Snort as a proper \emph{Network Intrusion Detection System} (NIDS), we need to install some processing rules that identify packets of interest.  Rather than log every packet seen, we want to indentify those that match a suspected attack signature.  We can write our own rules, but it's best to start with a standard set.
+
+First, make a directory to store our rules:
+
+\begin{verbatim}
+  mkdir /usr/local/snort
+  cd /usr/local/snort
+  \end{verbatim}
+
+Now download some rules an unpack them.
+
+\begin{verbatim}
+pkg_add curl
+curl http://kate.ict.op.ac.nz/~tclark/snortrules.tgz > snortrules.tgz
+tar -xzf snortrules.tgz
+\end{verbatim}
+
+Now you need to modify the configuration in \texttt{/etc/snort/snort.conf} Modify the \texttt{RULE\_PATH}, \texttt{SO\_RULE\_PATH}, and \texttt{PREPROC\_RULE\_PATH} variables to point to your directories in \texttt{usr/local/snort}.
+
+You also need to specify an output format.  In the config file, look for a line that starts \texttt{output unified2} and uncomment that.
+
+Now you can start Snort with the command \texttt{/etc/rc.d/snort start}.  Log files should be created under \texttt{/var/snort}.  Next time we will see how we can use those logs.
+
+\end{document}
