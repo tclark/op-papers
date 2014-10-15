@@ -38,7 +38,6 @@ Your API server support the following methods with the specified HTTP requests:
     \item \texttt{POST /users/follows}  $\Rightarrow$ creates a follower/followed relationship between specified users
     \item \texttt{GET /users/follow/[:id]}  $\Rightarrow$ returns a list of the users followed by the specified user
     \item \texttt{GET /users/follower/[:id]}  $\Rightarrow$ returns a list of the users who follow the specified user
-    \item \texttt{GET /users/splatts/[:id]}  $\Rightarrow$ returns a list of the specified user's splatts
     \item \texttt{DELETE /users/[:id1]/[:id2]} $\Rightarrow$ causes user with id1 to unfollow the user with id2
 
   \end{itemize}
@@ -46,9 +45,7 @@ Your API server support the following methods with the specified HTTP requests:
  \item Splatt methods
   \begin{itemize}
     
-    \item \texttt{GET /splatts/[:id]} $\Rightarrow$ returns the splatt with the specified id
     \item \texttt{POST /splatts}  $\Rightarrow$ creates a new splatt with data in the POST body
-    \item \texttt{DELETE /splatts/[:id]} $\Rightarrow$ deletes the splatt with the specified id
   \end{itemize}
 \end{itemize}
 
