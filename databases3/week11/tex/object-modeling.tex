@@ -1,0 +1,143 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{ulem}
+
+
+\title{Object Modeling with Riak}
+
+\author[IN705]{Databases Three}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Previous versions}
+
+  \begin{itemize}
+	  \item Relational DB/ActiveRecord:  A lot of the db structure
+		  was basically determined for us.
+	  \item MongoDB/Mongoid:  The db structure was less fixed
+		  but the tools still storngly influenced our
+		  data modeling.
+	  \item In both cases libraries handeled much of the data
+		  storage and retrieval.
+  \end{itemize}
+
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{New version: Riak}
+
+ \begin{itemize}
+	 \item  Riak itself doesn't impose any db structure.
+	 \item  Libraries available:  \sout{ripple}, riak-client
+	 \item  riak-client handles db interactions, but doesn't do object modeling, so we're on our own.
+ \end{itemize}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Objects}
+  
+
+ \begin{itemize}
+  \item User
+	  \begin{itemize}
+		  \item email
+		  \item name
+		  \item password
+		  \item list of splatts
+		  \item list of followed users
+		  \item list of followers
+	  \end{itemize}
+  \item Splatt
+	  \begin{itemize}
+		  \item created-at timestamp
+		  \item body
+	  \end{itemize}
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Relevant questions}
+
+ \begin{itemize}
+  \item What are the keys?
+  \item How shall we store the records?  What are the buckets?
+ \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Some sample code}
+
+ \begin{verbatim}
+require 'hashie'
+
+class User < Hashie::Dash
+  property :name
+  property :password
+  property :blurb
+  property :follows
+  property :followers
+end
+ \end{verbatim}
+
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{}
+
+ \begin{verbatim}
+ class UserRepository
+   BUCKET = 'users'
+
+   def initialize(client)
+     @client = client
+   end
+
+   def save(user)
+
+   end
+   def get(user_name)
+
+   end
+ end
+
+ \end{verbatim}
+
+\end{frame}
+
+\end{document}
