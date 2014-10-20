@@ -1,0 +1,191 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 12.1: Data Modeling with  Riak\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Last week we discussed how we could organise our data models for a key\textendash{}value store like Riak.  We also saw that 
+the modeling libraries for Riak do not have some of the nice features of libraries like ActiveRecord and Mongoid.  We
+will have to take a more hands on approach to working with the database when using Riak.
+
+\section{Setup}
+If you have not already done so, create a new working directory called `\texttt{riak}' in your home directory on your EC2 server.
+Inside that directory, clone your github repository (e.g.: \texttt{git clone git@github.com:username/db3.git}).  Then, create
+a new branch with the command \texttt{git branch -b riak}.  This creates a new branch called `\texttt{riak}' ans switches to it.
+
+Next, open your \texttt{Gemfile} and add the following lines to it. 
+
+\emph{file:  Gemfile}
+
+\begin{verbatim}
+  gem 'riak-client'
+  gem 'hashie'
+\end{verbatim}
+
+Note that we will leave the line including the \texttt{sqlite3} gem in our Gemfiles for now.  This will allow us 
+to replace and test the database code in small increments rather than taking an all or nothing approach.  For this 
+reason you also need to invoke \texttt{rake db:migrate} even though we don't intend to use the Sqlite database it
+creates.
+
+\section{Creating the user model}
+Our intent is to create a \texttt{User} object model that only concerns itself with presenting user data to the application.
+Database persistence will be handled by the \texttt{UserRepository} class below.  This means that our \texttt{User} class can be quite simple.  We will use the \texttt{HAshie::Dash} library to help organise our model and to handle JSON serialisation and deserialisation.
+
+Our \texttt{User} model needs to store 
+ 
+\begin{itemize}
+	\item email
+	\item name
+	\item password
+	\item blurb
+	\item follows
+	\item followers
+\end{itemize}
+
+We decided last week that we would use email addresses as our keys, and that follows and followers are both lists of keys (email
+ addresses).
+
+So, our new \texttt{User} class looks like this:
+
+\emph{app/models/user.rb}
+
+\begin{verbatim}
+class User < Hashie::Dash
+  property :email
+  property :name
+  property :password
+  property :blurb
+  property :follows
+  property :followers
+end
+\end{verbatim}
+
+Now we need a new class to handle moving user data to and from the data store.  In the past this was handled by libraries we used,
+but in this case we need to write that ourselves.  We will do this by writing a companion class for our \texttt{User} class called
+\texttt{UserRepository}.
+
+To see what method our \texttt{UserRepository} will implement, we look at the \texttt{UsersController} class to see how 
+we access our data store.  We see that our repository needs \texttt{find}, \texttt{save}, \texttt{update}, and \texttt{delete}
+methods. There are some additional methods that we need, but we will start with this list.
+
+Start by creating a skeleton for our \texttt{UserRepository} class:
+
+\emph{file:  app/models/user\_repository.rb}
+
+\begin{verbatim}
+class UserRepository
+  BUCKET = 'users'
+
+  # sets up our connection to the Riak db
+  def initialize(client)
+    @client = client
+  end
+
+  def all
+
+  end
+
+  def delete(user)
+
+  end
+
+  def find(key)
+
+  end
+
+  def save(user)
+
+  end
+
+  def update(user)
+
+  end
+end
+
+\end{verbatim}
+
+We will start by defining \texttt{save} and \texttt{find} so that we can create a new user and then see it.
+
+Our \texttt{save} will take a \texttt{User} object as an argument.  It should check to see that the user record
+does not already exist and save the record if it does not.  The resulting method looks like this:
+
+\begin{verbatim}
+def save(user)
+  users = @client.bucket(BUCKET)
+  key = user.email
+
+   unless users.exists?(key)
+     riak_obj = users.new(key)
+     riak_obj.data = user
+     riak_obj.content_type = 'application/json'
+     riak_obj.store
+   end
+end
+
+\end{verbatim}
+
+Our \texttt{find} method is pretty simple.  It gets the data from the database and populates a \texttt{User} object with it.
+This initial version is a little brittle, since it will not recover gracefully if we ask for a nonexisitent user.
+
+\begin{verbatim}
+def find(key)
+  riak_obj = @client.bucket(BUCKET)[key]
+  user = User.new
+  user.email = riak_obj.data['email']
+  user.name = riak_obj.data['name']
+  user.password = riak_obj.data['password']
+  user.blurb = riak_obj.data['blurb']
+  user.follows = riak_obj.data['follows']
+  user.followers = riak_obj.data['followers']
+  user
+end
+\end{verbatim}
+
+Note that there are some issues with the follows/followers properties that we will defer until next time.
+
+Our controller methods need some modification as well.  The \texttt{create} method will create a \texttt{User} object,
+and then save it with a \texttt{UserRepository} object.
+
+\begin{verbatim}
+def create
+  @user = User.new
+  @user.email = params[:email]
+  @user.name = params[:name]
+  @user.password = params[:password]
+  @user.blurb = params[:blurb]
+
+  db = UserRepository.new(Riak::Client.new)
+  if db.save(@user)
+     render json: @user, status: :created, location: @user
+  else
+      render json: "error", status: :unprocessable_entity
+  end
+end
+\end{verbatim}
+
+Our show method is straightforward:
+
+\begin{verbatim}
+def show
+  db = UserRepository.new(Riak::Client.new)
+  @user = db.find(params[:id])
+  render json: @user
+end
+\end{verbatim}
+
+Once you have these methods working correctly, try to implement \texttt{all}, \texttt{update}, and \texttt{delete}.  You will
+probably need to consult the \texttt{riak-client} information at https://github.com/basho/riak-ruby-client.
+
+
+\end{document}
