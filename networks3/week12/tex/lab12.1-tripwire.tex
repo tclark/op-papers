@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 12.1 Tripwire\\ IN715 Networks Three}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+An important principle of security is \emph{defense in depth}.  We use firewalls to protect the perimeter of our networks.  We use network IDSs to monitor the interior of our networks.  In this lab we will set up \emph{tripwire} to monitor the integrity of individual machines. Tripwire works by monitoring filesystems and notifying us when files that should not change without warning (e.g., system binaries) do change.  Tripwire runs on nearly any POSIX-compliant system, like BSD, Linux and most proprietary unicies.
+
+\section{Prerequisites}
+Before you install tripwire on one of your BSD systems, be sure that the system has proper Internet connectivity.  Then install needed packages with the commands
+
+\begin{verbatim}
+ pkg_add wget
+ pkg_add bzip2
+\end{verbatim}
+
+Change your working directory to \texttt{/usr/src} and download and unzip the tripwire code with the commands
+
+\begin{verbatim}
+  wget http://kate.ict.op.ac.nz/~tclark/tripwire.tar.bz2
+  tar -xjf tripwire.tar.bz2
+\end{verbatim}
+
+\section{Build and install tripwire}
+Move into the new directory, {tripwire-2.4.2.2-src} and run the following commands
+
+\begin{verbatim}
+ ./configure --prefix=/usr/local
+ make 
+ make install
+ \end{verbatim}
+
+These commands, especially the \texttt{make} will take a little time. The install script will prompt you for site and local passwords to use with tripwire.  In our case it is acceptable if they are both the same.
+
+This process will install the tripwire binaries, configuration, and other resources under \texttt{/usr/local}
+
+\section{Initial setup}
+Tripwire works by comparing the filesystem with a snapshot taken when the system was in a known good state.  For this reason, it's good to set up tripwire when a system is initially deployed.
+
+First, we create our scan policies by editing the file \texttt{usr/local/etc/twpol.txt}.
+
+Look for a section named ``Mount Points''. In that rule, comment out the lines with \texttt{cdrom} and \texttt{floppy}. We don't have those.  Change the policy for 
+\texttt{home} to be ``\texttt{Dynamic}'' since we expect that filesystem to change frequently.  Add policy lines for \texttt{/usr/X11R6}, \texttt{/usr/local}, \texttt{/usr/obj}, and \texttt{/usr/src}.  Set their scan policies to ``\texttt{Readonly}". Also, look for policies referring to \texttt{/stand} and \texttt{/var/msgs/bounds} and comment them out. Save and close the file.
+
+Tripwire doesn't use this file directly.  Instead it uses a crytpographically signed policy file that we generate with the command
+
+\begin{verbatim}
+/usr/sbin/twadmin -m P /usr/local/etc/tripwire/twpol.txt
+\end{verbatim}
+
+Best practice it the remove the unsigned \texttt{twpol.txt} and \texttt{twcfg.txt} files once they have been processed, but do not delete them until you're sure the configuration and policies are correct.  Once the policy is processed, run a baseline scan with the cammand
+
+\begin{verbatim}
+tripwire -m i
+\end{verbatim}
+
+This will take a few minutes as it captures the baseline snapshot of your system.  Once this is done you can run a scan with the command
+
+\begin{verbatim}
+tripwire -m c
+\end{verbatim}
+
+Since there should not have been any suspicious changes to your filesystems, the report should come back clean.  To see a report with a result, change something in a filesystem that should be static.  For example, use the command \texttt{touch /usr/bin/monkeys} to create a new file in \texttt{/usr/bin}.  Run a new scan and note that your are notified of the change to \texttt{/usr/bin}.
+
+
+\section{Running reports}
+You can run reports from the command line whenever you want to check things, but it also makes sense to run tripwire as a \texttt{cron} job to produce daily reports.
+
+\end{document}
