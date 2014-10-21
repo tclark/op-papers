@@ -57,7 +57,7 @@ Look for a section named ``Mount Points''. In that rule, comment out the lines w
 Tripwire doesn't use this file directly.  Instead it uses a crytpographically signed policy file that we generate with the command
 
 \begin{verbatim}
-/usr/sbin/twadmin -m P /usr/local/etc/tripwire/twpol.txt
+/usr/local/sbin/twadmin -m P /usr/local/etc/twpol.txt
 \end{verbatim}
 
 Best practice it the remove the unsigned \texttt{twpol.txt} and \texttt{twcfg.txt} files once they have been processed, but do not delete them until you're sure the configuration and policies are correct.  Once the policy is processed, run a baseline scan with the cammand
