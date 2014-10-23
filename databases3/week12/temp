@@ -1,0 +1,54 @@
+file:  app/models/splatt.rb
+
+class Splatt < Hashie::Dash
+  property :id
+  property :body
+  property :created_at
+end
+
+
+file app/models/splatt_repository.rb
+
+class SplattRepository
+
+  def initialize(client, user)
+    @client = client
+    @bucket = user.email
+  end
+
+  def save(splatt)
+  splatts = @client.bucket(@bucket)
+  key = splatt.id
+
+   unless splatts.exists?(key)
+     riak_obj = splatts.new(key)
+     riak_obj.data = splatt
+     riak_obj.content_type = 'application/json'
+     riak_obj.store
+   end
+  end
+end
+
+
+file:  app/controllers/splatts_controller.rb
+
+ # POST /splatts
+  # POST /splatts.json
+  def create
+    @splatt = Splatt.new
+    @splatt.id = SecureRandom.uuid
+    @splatt.created_at = Time.now
+    @splatt.body = params[:body]
+    client = Riak::Client.new
+    user = UserRepository.new(client).find(params[:user])
+    db = SplattRepository.new(client, user)
+
+
+
+    if db.save(@splatt)
+      render json: @splatt, status: :created, location: @splatt
+    else
+      render json: @splatt.errors, status: :unprocessable_entity
+    end
+  end
+
