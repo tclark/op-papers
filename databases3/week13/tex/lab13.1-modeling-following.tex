@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 13.1: Modeling Following/Followers\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Now that we have our Riak data store in place and our models started, today we will work on adding the following/followers relationship.  Each user mainatains a list of users followed and a list of users who follow it.  Adding a following relationship between to users, where \emph{User A} follows \emph{User B} consists of adding \emph{User B} to \emph{User A's} \texttt{follows} list and adding \emph{User A} to \emph{User B's} \texttt{followers} list.  Deleting the relationship is a matter of deleting the respective users from each others' lists.
+
+One additional consideration is that in some cases we are creating a new list (when a user has not yet followed or been followed by anyone) and in other cases we are appending to an exisiting list.
+
+\section{Implementing the follows relationship}
+We will add this functionality from the outside in by first writing our controller's \texttt{add\_follows} method.  The basic plan is to
+
+\begin{enumerate}
+	\item Get the following and followed user;
+	\item Append the user id's to the appropriate lists (creating the list if it does not exisit);
+	\item Update both users.
+\end{enumerate}
+
+The \texttt{add\_follows} method looks like this:
+
+\emph{file:  app/controllers/users\_controller.rb}
+
+\begin{verbatim}
+ # POST /users/follows
+ def add_follows
+   db = UserRepository.new(Riak::Client.new)
+   @follower = db.find(params[:id])
+   @followed = db.find(params[:follows_id])
+
+   if db.follow(@follower, @followed)
+     head :no_content
+   else
+     render json: "error saving follow relationship" , status: :unprocessable_entity
+   end
+ end
+
+\end{verbatim}
+
+We can see that we need to add the \texttt{follow} method to the \texttt{UserRepository} class.
+
+\emph{file:  app/models/user\_repository.rb}
+
+\begin{verbatim}
+def follow(follower, followed)
+  if follower.follows
+    follower.follows << followed.email
+  else
+    follower.followed = [followed.email]
+  end
+
+  if followed.followers
+    followed.followers << follower.email
+  else
+    followed.followers = [follows.email]
+  end
+  
+  update(followed)
+  update(follwer)
+end
+
+\end{verbatim}
+
+Unfollowing is basically a mirror image of the \texttt{follow} method and is left as an exercise.  The \texttt{show\_follows} method also needs modification to work with Riak but is also straightforward.
+
+
+\end{document}
