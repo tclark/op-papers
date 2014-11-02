@@ -1,0 +1,95 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 14.1: Setting up Postgresql\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+We did our initial application development using SQLite.  This is a common practice and lets us 
+defer setting up a database server until it is needed.  A small, lightly used application could use
+SQLite as a prodeuction database, but most applications need the performance and scalability 
+supplied by a proper DBMS.
+
+In this lab we will install PostgreSQL, one of the most widely used DBMSs.  We will configure our 
+Rails application to use PostgreSQL and create our database for it.
+
+\section{Install and configure PostgreSQL}
+Installing PostgreSQL on our EC2 servers is easy.  Just enter the command
+
+\texttt{sudo apt-get install postgresql}
+
+We will also need some client libraries for our Rails application.  Install these as well
+
+\texttt{sudo apt-get install libpq-dev}
+
+Now we will create a user for our application's database.  PostgreSQL users \emph{peer based authentication} for typical admin operations.  If you are logged into the server under a particular account, and if that account has the correct database privileges, then you are allowed to exectute the operations.  The 
+default database admin user is called \texttt{postgres} so we will switch to that system user and then
+create our new database account for the appliction.
+
+\texttt{sudo su - postgres}
+
+Now we are able to use the command \texttt{createuser}.
+
+\texttt{createuser -P -d sqrawler}
+
+This creates a database user named \texttt{sqrawler}. The \texttt{-d} option means that this user can create databases, and the \texttt{-P} option tells \texttt{createuser} to prompt us for a password for the new user.
+
+Since Postgres uses peer based authentication by default, we need to modify the server configuration before our news user account will work with our Rails application.  We have to add a line to the PostgreSQL server's configuration file.
+
+\emph{File:  /etc/postgresql/9.3/main/pg\_hba.conf}
+
+\begin{verbatim}
+
+local   all             sqrawler                                md5
+local   all             all                                     peer # <-this line aleady exists
+
+\end{verbatim}
+
+Restart the database server with the command \texttt{sudo service postgresql restart}.
+
+\section{Configuring Rails to use PostgreSQL}
+You need to do this work on the master branch of your git repository.  You could either clone a fresh copy or work in one
+of your current working directories.
+
+First, you need to edit your \texttt{Gemfile} to include the needed Postgres library.  Add the line
+
+\texttt{gem 'pg'}
+
+and then run
+
+\texttt{bundle install}
+
+to load the needed gem.
+
+Now edit the \texttt{config/database.yml} file.  Modify the production settng to look like this
+
+\emph{File:  config/database.yml}
+
+\begin{verbatim}
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: sqrawler
+  pool: 5
+  username: sqrawler
+  password: sqrawl2014
+\end{verbatim}
+
+Once this is done you will be able to create the database and its tables with the commands
+
+\texttt{rake db:create RAILS\_ENV=production}
+
+\texttt{rake db:migrate RAILS\_ENV=production}
+
+Commit your changes and push them to Github.  Then, pull the new code into your live working directory, use \texttt{git pull} to retrieve your new code, and restart the web server.  You will now be serving your application using your new (but empty) PostgreSQL database.
+\end{document}

@@ -1,0 +1,121 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Puppet Configuration}
+
+\author[IN705]{Databases 3}
+\institute[Otago Polytechnic]{
+  School of Information Technology \\
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{The plan}
+ During this last part of the semester we will 
+ \begin{itemize}
+  \item Learn about the duties of a \emph{Database Administrator};
+  \item Practice some core DBA tasks;
+  \item Prepare for and perform a Skills Based Assessment about database administration.
+  \end{itemize}
+
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Database Administrator (DBA)}
+ 
+ \begin{itemize}
+  \item Job title
+  \item The role sits between Systems Administration and Development
+  \item Involves operating DBMS servers and working with application developers
+  \item Consistently in demand for employment
+  \end{itemize}
+
+  
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{DBA duties}
+ 
+ \begin{itemize}
+  \item Install DBMS software
+  \item Configure (and reconfigure) DBMS software
+  \item Administer DB user accounts
+  \item Consult with developers about DB design
+  \item Write SQL queries
+  \item Perform backup and recovery of databases
+  \item Perform performance tuning
+  \item Handle DBMS security
+  \end{itemize}
+
+  
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Database platform expert}
+ 
+  Basically, for a large class of IT projects, the database
+  is the critical component in terms of 
+
+ \begin{itemize}
+  \item Performance
+  \item Functionality
+  \item Value
+  \end{itemize}
+
+  You can change the code, you can even break the code, but as long as the DB
+  is in good shape you will be ok.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{DBA skills/knowledge}
+ 
+ \begin{itemize}
+  \item Understanding of operating systems
+  \item Knowledge of database theory
+  \item Some programming/scripting skills
+  \item SQL skills
+  \item Knowledge and experience with particular DBMSs
+  \end{itemize}
+
+  
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Practical}
+ 
+ \begin{itemize}
+  \item Install PostgreSQL on your EC2 servers
+  \item Create a database account for your Rails app
+  \item Configure Rails
+  \item initialise the database
+  \end{itemize}
+
+  
+
+\end{frame}
+
+\end{document}
