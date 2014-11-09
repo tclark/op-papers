@@ -1,0 +1,51 @@
+1.  load sample db
+
+curl http://www.commandprompt.com/ppbook/booktown.sql > booktown.sql
+
+sudo su posgres
+
+
+psql < booktown.sql
+
+ignore warnings
+
+psql booktown
+
+select title, last_name, first_name from books as b inner join authors as a on (b.author_id=a.id) where last_name='Geisel'
+
+explain analyze
+
+analyse books
+analuze authors
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
+~                                                                                                                                  
