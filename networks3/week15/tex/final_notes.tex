@@ -1,0 +1,74 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\author{IN705 Networks 3}
+\title{Final Theory Exam and SBA Study Guide}
+\begin{document}
+
+\maketitle
+
+\section*{Theory Exam Topic Outline}
+The theory exam will consist of short answer and multiple choice questions.
+\begin{enumerate}
+\item DNS
+  \begin{itemize}
+    \item Be able to explain the distributed, hierarchical nature of DNS
+    \item Be able to explain how a DNS query is resolved, step-by-step
+    \item Know the different types of DNS resource records and their functions
+    \item Be able to read and interpret a DNS zone file
+  \end{itemize}
+\item DHCP
+  \begin{itemize}
+    \item Be able to explain the process by which a DHCP client receives a lease from a server
+    \item Know the common elements of a DHCP configuration
+    \item Be able te read and interpret ISC DHCP configuration
+    \item Know the purpose of a DHCP relay 
+  \end{itemize}
+\item Security
+  \begin{itemize}
+    \item Be able to explain the basic function of a packet filtering firewall
+    \item Be able to explain what a stateful firewall rule does
+    \item Describe the purpose and function of an intrusion detection system
+    \item Be able to read and explain a pf firewall rule
+  \end{itemize}
+
+\end{enumerate}
+\pagebreak 
+\section*{Skills Based Assessment Topics}
+For the SBA you may use notes, books, online references.  
+You cannot, however, do anything that disrupts other students taking the SBA.  You will be given the IP Addresses and login credintials for virtual servers.  You will log onto those servers and carry out a set of network administration tasks.  When you complete each task you will have me check and sign off on it.
+
+\subsection*{SBA Topics}
+You should be prepared to do tasks on the following topics.
+\begin{enumerate}
+\item DNS (BIND on OpenBSD)
+  \begin{itemize}
+    \item Modify a zone file by adding or changing resource records
+    \item Modify \texttt{named.conf} to set up a new zone
+    \item Troubleshoot errors in a zone file
+    \item Use \texttt{dig} to get information about a zone.
+   \end{itemize}
+ \item DHCP (ISC DHCPD on OpenBSD)
+   \begin{itemize}
+     \item Create or modify a network configuration in \texttt{dhcpd.conf}
+     \item Create a reservation to issue a fixed address to a machine
+   \end{itemize}
+ \item DHCP Server (Windows Server 2012)
+   \begin{itemize}
+     \item Create a DHCP network configuration on Windows Server
+   \end{itemize}
+ \item pf  Firewall on OpenBSD
+   \begin{itemize}
+     \item Create or modify firewall rules
+     \item Inspect the currently active firewall rules
+   \end{itemize}
+ \item nmap
+   \begin{itemize}
+     \item Perform a network scan and interpret the results.
+   \end{itemize}
+\end{enumerate}
+
+\end{document}
