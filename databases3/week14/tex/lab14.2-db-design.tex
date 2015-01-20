@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 14.2: Database Design and Performance\\ IN705 Databases Three}
+\date{}
+\maketitle
+
+\section*{Introduction}
+When we are seeking to optimise the performance of our database applications
+we know that the most productive place to look for performance gains is in the database 
+itself.  One way to improve performance is to pay attention to these issues in database design.
+
+\section{Table size}
+In modern software development we don't typically worry about the volume of data
+we store since storage space is plentiful on typical machines.  However, there is
+some performance value in keeping the size of our database tables small.  This is 
+becasue a smaller table that may be held entirely in our server's RAM can be 
+accessed more quickly than one that must be retrieved from disk.  For tables
+that can't be stored in RAM, it is desirable that their indexes (see below) can be.
+
+We can only do so much to control the size of our data, since we don't control the
+real-world information that we model.  Two ways to do this are:
+
+\begin{itemize}
+	\item Choose appropriate column types
+	\item Design tables carefully
+\end{itemize}
+
+As an example of the second, suppose that we store data about system users.  Some
+information is accessed frequently, e.g. name, password, email address.  Other
+items may be accessed only infrequently.  It may be worthwhile to split the data into two
+smaller tables in this case.
+
+\section{Column types}
+Choosing column types wisely can help application performance.
+
+\subsection{Character types}
+This one is tricky.  PostgreSQL, like most database systems, has three
+character types.
+
+\begin{itemize}
+	\item character, for fixed-width strings
+	\item character varying, for variable length strings
+	\item text, for large variable length strings
+\end{itemize}
+
+
+\end{document}
