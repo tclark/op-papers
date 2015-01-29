@@ -1,0 +1,182 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+
+
+
+
+\begin{document}
+
+\begin{figure}
+\includegraphics[width=30mm]{../../../resources/images/oplogo.png}
+\end{figure}
+
+\title{Course Directive\\IN618 Security\\Semester One, 2015}
+\date{}
+\maketitle
+
+\section*{Description}
+If we were to survey a sample of IT professionals all, or very nearly all, of them would say that 
+security is a critically important property for IT systems.  If we then asked them how we can
+build and operate secure systems their responses would be less clear.  This is because security 
+is a hard problem. Basically, a secure system is one that \emph{doesn't} suffer from a huge class
+of design and implementation flaws.  This means that we're in the impossible position of trying to 
+prove not just one, but in fact many negatives. Security is hard, and perfect security is completely 
+out of the question.
+
+The news isn't all bad, however. There are concrete things we can do to avoid vulnerabilities and
+reduce risk. In the process of exploring those things we hope to gain some experience and insight
+to help us deal with other security problems that may present themselves in the future. That is
+our plan for this paper. We will not become security experts in this paper.  Instead, we will
+try to introduce some sensible security practices that you can use in your IT work.
+
+
+\section*{Course Information}
+\begin{itemize}
+  \item 15 Credits
+  \item No prerequisites
+\end{itemize}
+
+\section*{Lecturer}
+\begin{tabular}{lr}
+
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  Tom Clark &    \\
+     Office: & D311 \\
+     Phone: & 470 4356 \\
+     Email: & \texttt{tom.clark@op.ac.nz} \\
+     GitHub: & \url{https://github.com/tclark} 
+\end{tabular}
+
+\section*{Course Dates}
+\begin{tabular}{ll}
+Term 1 (7 weeks) & 16 February - 2 April\\
+Term 2 (9 weeks) & 20 April - 19 June\\
+\end{tabular}
+
+\newpage 
+
+\section*{Learning Outcomes}
+On completion of this paper you will be able to:
+\begin{enumerate}
+  \item Assess IT security risks and prioritise risk reduction and
+	  mitigation measures;
+  \item Understand common software and system security vulnerabilities;
+  \item Write computer programs in a manner that avoids introducing 
+	  vulnerabilities;
+  \item Deploy IT systems according to security best practices.
+\end{enumerate}
+
+\section*{Resources}
+\begin{itemize}
+	\item Course notes, lecture slides, and lab documents are availble in a GitHub 
+		repository published at \\ \url{https://github.com/tclark/op-papers}.
+	\item Although it is not a required text, much of the material covered in this paper is 
+		adapted from the book \emph{24 Deadly Sins of Software Security: Programming Flaws and 
+		How to Fix Them} by Michael Howard, David LeBlanc, and John Viega.
+	\item Another interesting book on the topic is \emph{Engineering Security} by Peter Gutmann.
+		It is available in draft form at 
+		\url{https://www.cs.auckland.ac.nz/~pgut001/pubs/book.pdf}.
+\end{itemize}
+
+%\pagebreak
+
+\section*{Course Content and Schedule}
+This schedule is subject to change based on the needs of the class.
+
+
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|c|l|l|}
+\hline
+ Week & Week Start & Monday             & Thursday         \\ \hline
+ 1    & 16 Feb     & Introduction       & Risk Analysis    \\ \hline
+ 2    & 23 Feb     & Password Hashing   & Authentication   \\ \hline
+ 3    &  2 Mar     & XSS                & XSS        \\ \hline
+ 4    &  9 Mar     & XSS                & XSS     \\ \hline
+ 5    & 16 Mar     & XSRF               & XSRF     \\ \hline
+ 6    & 23 Mar     & Otago Ann. Day     & Other Web Vulnerabilities       \\ \hline
+ 7    & 30 Mar     & SQL Injection      & SQL Injection       \\ \hline
+ H1   &  6 Apr     & Holiday            & Holiday \\ \hline
+ H2   & 13 Apr     & Holiday            & Holiday \\ \hline
+ 8    & 20 Apr     & Buffer Overflows   & Buffer Overflows        \\ \hline
+ 9    & 27 Apr     & ANZAC Holiday      & Error Handling         \\ \hline
+ 10   &  4 May     & Information Leakage & Information Leakage          \\ \hline
+ 11   & 11 May     & Protecting Data     &  Protecting Data      \\ \hline
+ 12   & 18 May     & Securing Network Traffic  & Securing Network Traffic      \\ \hline
+ 13   & 25 May     & Server Hardening   &  Server Hardening      \\ \hline
+ 14   &  1 Jun     & Queen's Birthday   &  Incident response  \\ \hline
+ 15   &  8 Jun     & Forensic Analysis  &  Forensic analysis  \\ \hline
+ 16   & 15 Jun     & Vulnerability Reporting & Vulnerability Information \\ \hline
+\end{tabular}
+
+\newpage 
+
+\section*{Assessment}
+Your assessment for this paper is comprised of a set of lab assignments, approximately one each week.  Each lab will be 
+marked on a ten point scale and will be averaged over the semester to determine your overall mark.  Programming labs
+will contribute 60\% of your final mark while systems administration labs will contribute the remaining 40\%
+
+\section*{Criteria for Passing}
+You must earn an overall average mark of 50\% or better to pass this paper.
+
+\section*{Course Requirements and Expectations}
+\subsection*{Attendance}
+\begin{itemize}
+ \item Students are expected to attend all classes, both lectures and labs.
+ \item If you miss a class you should get notes from another student.
+ \item If you cannot attend for two or more consecutive sessions, contact the lecturer.
+ \item You must be present for assessments on the due date at the correct time.
+\end{itemize}
+
+\subsection*{Communication}
+Important announcements and discussions about the course, assessments, and scheduling may take place during class sessions.  It is your responsibility to be informed about them.  If you cannot attend a class session, be sure to check with another student.
+
+Your student email is an official communication channel. It is your responsibility to regularly check your student email for important course related material, including changes to class scheduling or assessment details. Not checking will not be accepted as an excuse.
+
+You can manage your email at the Student Hub and download the instructions for forwarding your email at \url{http://www.op.ac.nz/students/student-hub/}
+
+\subsection*{Polytechnic Closure}
+In the event that the Polytechnic is closed or has a delayed opening because of snow or bad weather, you should not attempt to attend class if it is unsafe to do so. It is possible that your instructor will not be able to attend either, so classes will not physically be meeting. However, this does not become a holiday. Rather, material will be available on the Cisco Academy web site covering the material for classes affected by the closure. You are responsible for any material presented in this manner. Information about closure will be posted on the Otago Polytechnic facebook page \url{https://www.facebook.com/OtagoPoly}.
+
+\subsection*{Group Work and Originality}
+Students in the Bachelor of Information Technology degree are expected to hand in original work.  Students are encouraged to discuss
+assignments with their fellow students.  However, all assignments are to be completed as individual works unless group work is explicitly involved.
+Failure to submit your own unique work will be treated as plagiarism.
+
+\subsection*{Referencing}
+Appropriate referencing is required for all work.  Referencing standards will be specified by your instructor.
+
+\subsection*{Plagiarism}
+Plagiarism is submitting someone else's work as your own.  Plagiarism offences are taken seriously and an
+assessment that has been plagiarised may be awarded a zero mark.  A definition of plagiarism is in the Student Handbook,
+available online or at the school office.
+
+\subsection*{Submission Requirements}
+All assignments are to be submitted by the time, date, and method given when the assignment is issued.
+
+\subsection*{Extensions}
+Extensions are only available for unusual circumstances.  These must be applied for, and approved, prior to the submission deadline.
+
+\subsection*{Impairment}
+In case of sickness contact your lecturer or year co-ordinator as soon as possible, preferably before the test or
+assignment is due.  The policy regarding the granting of a mark that considers impaired performance requires a medical
+certificate and a medical practitioners signature on a form. You may should refer to the guide on impaired performance
+on the student handbook.
+
+\subsection*{Appeals}
+If you are concerned about any aspect of your assessment, please approach the lecturer in the first instance.  We support
+an open door policy and aim to resolve issues promptly.  Further support is available from the Programme
+Manager and Head of School. Otago Polytechnic has a formal process for academic appeals if necessary.
+
+\subsection*{Other Documents}
+Regulatory documents relating this course can be found on the Polytechnic website.
+
+\subsection*{Special Resources and Requirements}
+If you have any special needs, whether they relate to the course material, the exercises, the assessment, or anything in the course -
+then \textit{please} let your instructor know as soon as possible.
+
+\end{document}
