@@ -18,7 +18,7 @@
 \maketitle
 
 \section*{Introduction}
-The Operations Report Card at \url{http://opsreportcard.com} is a list of 32 yes/no questions that help gauge the strength of an operations team's practices. Basically, the more ``yes'' answers, the better you're doing. In this paper we'll use the report card to help guide and set the standard for our work. It’s not expected that you'll be able to answer every question ``yes'' by the end of the semester (and some don't apply to us), but you should be able to do so for many of the questions.
+The Operations Report Card at \url{http://opsreportcard.com} is a list of 32 yes/no questions that help gauge the strength of an operations team's practices. Basically, the more ``yes'' answers, the better you're doing. In this paper we'll use the report card to help guide and set the standard for our work. It's not expected that you'll be able to answer every question ``yes'' by the end of the semester (and some don't apply to us), but you should be able to do so for many of the questions.
 
 \section{Public Facing Practices}
 
@@ -310,32 +310,6 @@ Here are some canary techniques:
 This procedure can be done manually but if you use a configuration management system, the ability to do canaries should be ``baked in'' to the system.
 
 \section{Fleet Management Processes}
-\subsection{Is there a database of all machines?}
-Every site should know what machines it has. The database should store at least some basic attributes: OS, RAM, disk size, IP address, owner/funder, who to notify about maintenance, and so on.
-
-Having a database of all machines enables automation across all your machines. Being able to run a command on precisely the machines with a certain configuration is key to many common procedures.
-
-This data should be automatically collected, though a very small site can make due with a spreadsheet or wiki page.
-
-Having an inventory like this lets you make decisions based on data and helps you prevent problems.
-
-I know a small university in New Jersey that could have prevented a major failure if they had better inventory: They tried to upgrade all of its PCs to the latest version of Microsoft Office. The executive council was excited that there would finally be a day when version incompatibilities didn't make every interaction an exercise in frustration. Plus look at all these new features! Oh, how enthusiasm turned into resentment as the project collapsed. It turned out that one third of the machines on campus didn't have enough RAM or disk space. Random segments of the university couldn't get any work done due to botched upgrades. The executive council was not only upset but is now very risk adverse. It will be a long time before any new upgrades will happen. All of this would have been prevented if a good asset management system was in place. A simple query would have produced a list of machines that needed upgrades. Budgeting and work estimates could have been provided as part of the upgrade program.
-
-\subsection{Is OS installation automated?}
-Automated OS installations are faster, more consistent, and let the users do one more task so you don't have to.
-
-If OS installation is automated then all machines start out the same. Fighting entropy is difficult enough. If each machine is hand-crafted, it is impossible.
-
-If you install the OS manually, you are wasting your time twice: Once when doing the installation and again every time you debug an issue that would have been prevented by having consistently configured machines.
-
-If two people install OSs manually, half are wrong but you don't know which half. Both may claim they use the same procedure but I assure you they are not. Put each in a different room and have them write down their procedure. Now show each sysadmin the other person's list. There will be a fistfight.
-
-Users see inconsistency as incompetence. If new machines always arrive with a setting that isn't to their liking they know how to change that setting and are happy. If half the time that setting is one way and half the time it is another way, they lose confidence in the system administrators. What bozos are installing this stuff?
-
-If you can re-install the OS automatically, so can the users. Now you have one less thing to do. Automation that saves you time is great. Automation that lets other people do a task is even better.
-
-Not being able to easily wipe and reload a machine is a security issue. A machine should be wiped and reloaded when a ``hand me down'' computer moves from one user to another. If this process isn't ``friction free'' there is temptation to ``save time'' by not doing it.
-
 \subsection{Is there a database of all machines?}
 Every site should know what machines it has. The database should store at least some basic attributes: OS, RAM, disk size, IP address, owner/funder, who to notify about maintenance, and so on.
 
