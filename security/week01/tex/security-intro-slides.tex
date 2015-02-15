@@ -24,17 +24,253 @@
   \titlepage
 \end{frame}
 
-%----------- slide --------------------------------------------------%
+\section {Scary stories}
+
 \begin{frame}
-  \frametitle{Security is important}
+	\frametitle{Anthem breach}
 
- \begin{itemize}
-  \item stuff
-  \end{itemize}
+	About two weeks ago the health insurance company Anthem 
+	announced a security breach that exposed sensitive personal
+	information about up to 80 million people.  Costs to Anthem 
+	are projected to exceed \$100 million USD.
 
+	\vspace{10mm}
+	\url{http://www.zdnet.com/article/anthem-data-breach-cost-likely-to-smash-100-million-barrier/}
 
+	\vspace{10mm}
+	\url{http://www.databreachtoday.com/anthem-health-hit-by-massive-breach-a-7876}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Target credit card leak}
+
+	During the Christmas shopping season, the American retailer Target's
+	credit card payment system was compromised.  Target's costs related
+	to this event are expected to be in the billions of dollars.
+
+	\vspace{10mm}
+	Interestingly, Target had a strong security system in place at the time.
+
+	\vspace{10mm}
+	\url{http://www.bloomberg.com/bw/articles/2014-03-13/target-missed-alarms-in-epic-hack-of-credit-card-data}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Not so new vulnerabilities}
+
+	A 15 year old bug present in all versions of Windows allows 
+	remote execution of malicious code.
+
+	\vspace{10mm}
+	\url{http://arstechnica.com/security/2015/02/15-year-old-bug-allows-malicious-code-execution-
+	in-all-versions-of-windows/}
+
+	\vspace{10mm}
+	\url{https://technet.microsoft.com/en-us/library/security/ms15-011.aspx}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Campaign privacy breach}
+
+	In an effort to demonstrate his use of technology, former
+	Florida governor Jeb Bush accidentally released the personal
+	details of 12,000 people.
+
+	\vspace{10mm}
+	\url{https://technet.microsoft.com/en-us/library/security/ms15-011.aspx}
 
 \end{frame}
 
-% tesla photo: https://www.flickr.com/photos/alabut/
+\begin{frame}
+	\frametitle{Facebook API flaw}
+
+	A programmer identified a vulnerability in a Facebook API
+	that allowed remote deletion of any photos.
+
+	\vspace{10mm}
+	Facebook paid a \$12,500 USD bounty and fixed the bug.
+
+	\vspace{10mm}
+	\url{http://www.7xter.com/2015/02/how-i-hacked-your-facebook-photos.html}
+\end{frame}
+\section{Course information}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Course goals}
+
+ \begin{itemize}
+  \item This paper will not make you a security expert.
+  \item Instead, we're trying to acquire a baseline level of \emph{security literacy}
+	  that every IT professional should have.
+  \item To put it very prosaically, this paper is about ``what you need to 
+	  know about security to avoid screwing up your third year project.''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Course delivery}
+	
+	We will examine a set of security vulnerabilities.
+	
+	\begin{itemize}
+		\item We will see how to exploit them.
+		\item We will determine their causes.
+		\item We wiil see how to fix them.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Course delivery}
+
+	\begin{itemize}
+		\item We can't look at every possible security problem.
+		\item Our intention is to get some experience thinking about
+			and solving security issues.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Assessments}
+
+	\begin{itemize}
+		\item Your assessments will be a series of assignments issued 
+			approximately weekly.
+		\item There is about a 60/40 split between programming and
+			sysadmin assigments.
+		\item In some cases  the distinction will seem a bit arbitrary.
+			Life is funny that way.
+	\end{itemize}
+\end{frame}
+
+\section{The problem of security}
+
+\begin{frame}
+    \frametitle{Start at the beginning}
+    \begin{itemize}
+	    \item Suppose that you're working on a IT development project.
+	    \item What is the process you will follow?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item \textbf{Maintenance?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item \textbf{Acceptance testing?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item \textbf{Code review?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item Code review
+		\item \textbf{Unit testing?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item Code review
+		\item Unit testing
+		\item \textbf{Coding?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item Code review
+		\item Unit testing
+		\item Coding
+		\item \textbf{Specification?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Where, in your project lifecycle, does security come in?
+
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item Code review
+		\item Unit testing
+		\item Coding
+		\item Specification
+		\item \textbf{Requirements analysis?}
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{What about security?}
+
+	Security is a consideration at \emph{every} phase of the project
+	lifecycle, and this means that \emph{everybody} needs to be 
+	security literate.
+	\begin{itemize}
+		\item Maintenance
+		\item Acceptance testing
+		\item Code review
+		\item Unit testing
+		\item Coding
+		\item Specification
+		\item Requirements analysis
+	\end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Security as a feature}
+
+    ``Engage in security early and often and be sure to have it included in your definition of done.''
+
+    \vspace{10mm}
+    -- Laura Bell
+    \end{frame}
+\begin{frame}
+	\frametitle{Getting started with security}
+
+	Make security part of your project from the start by identifying risks.
+
+	\begin{itemize}
+		\item Look for components of the project where
+			failures would be particularly harmful.
+		\item Look for processes in your project where security
+			problems are more likely.
+	\end{itemize}
+\end{frame}
+
 \end{document}
