@@ -1,0 +1,187 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Managing Risk}
+
+\author[IN618]{Security}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{How secure can we be?}
+	
+	Last time we said that perfect security is not possible.
+        Given that, we need a way to talks about how secure we are
+        or can be.  
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Security trade offs}
+
+	You don't get security for free.  You always
+	have to trade away something to get it.
+
+	\begin{itemize}
+		\item Money
+		\item Time
+		\item Convenience
+		\item Capability
+	\end{itemize}
+
+	Often we give up some combination of all of these.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Are we getting a good deal?}
+
+	\begin{itemize}
+		\item Once we recognise that security has a cost,
+			the question isn't really, ``How secure 
+			can we be?''
+		\item Instead, the question is, ``How much are
+			we willing to trade away in return for 
+			some security?''
+		\item The thing is, people are not very good at 
+			assessing their security trade-offs.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Risk}
+
+	\begin{itemize}
+		\item In our daily lives we may be able to 
+			tolerate our less than ideal decision making.
+		\item In a business setting we need to do better.
+		\item The name for this thing we need to measure is \emph{risk}.
+		\item Risk has a standard unit of measure.  It's dollars per year.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Quantitative risk analysis}
+
+	\begin{itemize}
+		\item One way to assess risk is to perform \emph{quantitative risk analysis}.
+		\item Full risk analysis is the work of specialists, but we can
+			perform some basic analysis on our own.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Elements of risk analysis}
+
+	To analyse our risk, we consider
+
+	\begin{itemize}
+		\item Assets - We assign a dollar value to them.
+		\item Threats to those assets and the probability that
+			the threatened harm will occur.
+		\item Countermeasures that guard against the threatened harm
+			or that reduce the amount of harm.  These
+			have a cost that we measure in dollars.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Am example}
+	Suppose our business has a warehouse/shipping facility
+	that ships orders to our customers at a rate of 
+	\$1000 of revenue per hour.
+
+	\begin{itemize}
+		\item Asset:  There is a computer system that the staff
+			use to process orders.
+		\item Threat:  A power cut would take the system down.
+		\item Countermeasure:  We could get a UPS and backup generator.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Doing the numbers}
+
+	\begin{itemize}
+		\item The value of the asset is \$1000 per hour.
+		\item Suppose we can expect 2 hours of power cuts in a typical year.
+		\item Our risk (cost per hour of downtime) * (expected downtime per year)
+			or \$1000 * 2 = \$2000
+		\item This is called our \emph{annual loss expectancy}, or ALE.
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Doing the numbers}
+
+	\begin{itemize}
+		\item Now suppose we can install and operate
+			a backup power system for \$6000.
+		\item The system is expected to last for 5 years.
+		\item Our annual cost is \$6000/5 = \$1200
+		\item We call this the \emph{annual cost of control}, or ACC
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Doing the numbers}
+
+	\begin{itemize}
+		\item Now we can look at the cost/benefit.
+		\item (ALE without backup) - (ALE with backup) - (Cost of backup)
+		\item \$2000 - 0 - \$1200 = \$800
+                \item In other words, backup power reduces a \$2000 risk to 
+			an \$800 risk. It's a good trade off.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Another example}
+
+	Suppose that your boss comes in on Monday morning after having heard 
+	about cryptolocker-like malware attacks, in which an attacker encrypts
+	all your files and then demands a ransom, say \$25,000 in return for the
+	encryption key.  Your boss is in a near panic and insists on strong
+	protective measures.
+\end{frame}
+\begin{frame}
+	\frametitle{Determine the risk}
+
+	\begin{itemize}
+		\item Your research shows that the probability of 
+			this malware intrusion event is only 
+			0.0001 per week.
+		\item This means that your risk exposure, or ALE is
+			(cost of intrusion event) * (probability per week) * (52 weeks)
+		\item ALE = \$25,000 * 0.0001 * 52 = \$130
+		\item In other words the risk is very low.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{However...}
+
+	Control measures for this risk include anti-malware software and
+	backup/recovery systems.  So, the \$130 of risk exposure in this case
+	can be added to a larger risk exposure suite when determining the budget 
+	for malware protection and backup.
+\end{frame}
+
+\end{document}
