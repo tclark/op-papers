@@ -62,7 +62,7 @@
 \end{frame}
 
 \begin{frame}
-	\framtitle{Assessments}
+	\frametitle{Assessments}
 	\begin{itemize}
 		\item Weekly labs (p/f): 25\%
 		\item Project: 45\%
@@ -72,7 +72,7 @@
 
 
 
-\section{OO Principles}
+\section{OO Design}
 \begin{frame}
 	\frametitle{Real programming}
 	\begin{itemize}
@@ -85,7 +85,165 @@
 			knows how everything works.
 		\item We need reliable, \emph{widely recognised} design
 			patterns 
-\section{Task One}
+	\end{itemize}
+\end{frame}
 
+\begin{frame}
+	\frametitle{The value of good design}
+	\begin{itemize}
+		\item The classic literature on OO design and 
+			patterns talks about ``code reuse'' and 
+			the need to decouple functionality from 
+			implementation.
+		\item This a largely predicated on the notion that 
+			``programming is hard''.
+		\item The problem with this view is that while bending 
+			over backwards to avoid locking us into a 
+			concrete implementation of a type, we write 
+			unreadable code\footnote{I'm looking at you,
+			abstract factory pattern.}.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{The value of good design}
+	\begin{itemize}
+		\item The thing is, writing code is not the hard part.
+		\item \emph{Reading} code is hard, and it turns out
+			to be the more important part. Nearly everything
+			that we've taught you about coding so far is about
+			writing it to be read by people.
+		\item Done well, good OO design should lead to more readable
+			code.
+		\item When adhering to established design patterns doesn't 
+			help readability, then it's time to chuck it over the 
+			side.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Readability and quality}
+
+         More succinctly, readability may be the strongest indicator of
+	 quality design and code.
+ \end{frame}
+
+ 
+\section{Core OO Principles}
+\begin{frame}
+	\frametitle{Five big ideas}
+	\begin{enumerate}
+		\item Encapsulation
+		\item Inheritance
+		\item Composition
+		\item Association
+		\item Polymorphism
+	\end{enumerate}
+\end{frame}
+\begin{frame}
+	\frametitle{Encapsulation}
+
+	Encapsulation is the idea that an object exposes
+	an \emph{interface} without exposing its \emph{implementation}.
+\end{frame}
+\begin{frame}
+	\frametitle{Encapsulation}
+
+	\begin{itemize}
+		\item Suppose you want to represent a circle on a plane.
+		\item You could store the radius and the coordinates
+			of the centre.  Everything else (e.g., area,
+			circumference) can be calculated on the fly.
+		\item On the other hand, you could determine and save those values
+			when the object is created.
+		\item A user of your class would just call its \texttt{area()}
+			function without regard to how it works.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Inheritance}
+
+	\begin{itemize}
+		\item Inheritance captures an ``is-a'' relationship.
+		\item For example, we could have a \texttt{Person} class that 
+			encapsulates all of the behaviours common to people.
+		\item Then we could have \texttt{Student} and \texttt{Staff} classes
+			that inherit from \texttt{Person}. 
+		\item We don't need to re-code the functionality that is implemented in \texttt{Person}
+			within the child classes.
+		\item The child classes \emph{extend} the parent class by adding behaviours specific
+			to \texttt{Student} or \texttt{Staff}.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Inheritance in practice}
+	\begin{itemize}
+		\item Although inheritance is often considered to be OO's
+			killer feature, inpractice its utility is limited.
+		\item I have found there are two patterns in which inheritance is 
+			used effectively:
+			\begin{enumerate}
+				\item The parent class implements almost everything needed
+					and child classes extend it in minor ways.
+				\item The parent class implements a small core feature set,
+					with almost all of the ``real'' work done by the child classes.
+			\end{enumerate}
+		\item TL;DR: use inheritance carefully and deliberately only when a true ``is-a'' 
+			relationship exists - and sometimes not even then.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Composition}
+	\begin{itemize}
+		\item Often we \emph{compose} objects out of smaller
+			objects by including them as fields of the larger object.
+		\item For example, in the past I mave modelled ski fields by composing them 
+			from objects that respresent trails and chair lifts.
+		\item In a Composition relationship, the smaller objects only exist in 
+			the context of the larger aboject that is composed of them.
+		\item A lot of situations that look like uses for inheritance turn out 
+			to be better suited to composition.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Association}
+	\begin{itemize}
+		\item Association is very similar to Composition.  
+		\item In the code, often there is no difference.
+		\item In an Association relationship, one object 
+			knows about another object, but the second object is not a 
+			part of the first.
+		\item Example: Cars in a carpark.  The carpark ``knows'' about
+			the cars parked within it, but the cars are not part of the 
+			carpark.
+		\item Notice that if we close the carpark, the cars still exist.
+        \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Polymorphism}
+	\begin{itemize}
+		\item Polymorphism is usually thought of in connection with
+			inheritance \emph{but it doesn't have to be.}
+		\item The key idea is that we will call a method, but the 
+			exact method called is not known until run time.
+		\item Example:  Suppose we have a set of objects that model various 
+			polygons of different types.  Each one implements an \texttt{area()}
+			method. For a given polygon \texttt{p} we call \texttt{p.area()}, but
+			the precise method called depends on the type of polygon.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{A quick aside: type vs. class}
+
+	In many contexts, we use the terms \emph{type} and
+	\texttt{class} as if they were the same thing. They
+	are not.  Discuss.
+\end{frame}
+
+\section{Task One}
+\begin{frame}
+
+	Blackjack
+
+\end{frame}
 % tesla photo: https://www.flickr.com/photos/alabut/
 \end{document}
