@@ -1,0 +1,168 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Introduction to Python}
+
+\author[IN710]{Object Oriented System Design}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\section{Introduction}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Python}
+
+ \begin{itemize}
+    \item Python is a widely used, object-oriented high level language.
+    \item It is an expressive language that facilitates rapid development.
+    \item The language syntax supports the Python community's stated goal
+	    of producing readable code.
+    \item Python is supported on many operating systems.
+    \item Python is used at top-tier technology organisations like Google, NASA, Red Hat, 
+	    and Rackspace.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Python style}
+
+	\begin{itemize}
+		\item The Python language has a set of
+			universal language-wide style guidelines.
+		\item The style guidelines are published in the 
+			\emph{Python Enhancement Proposal} (PEP) 8 at
+			\url{https://www.python.org/dev/peps/pep-0008/}.
+		\item In this class we will follow the PEP 8 style guidelines.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The Python interpreter}
+	\begin{itemize}
+		\item Python is an interpreted language.
+		\item You can intereact with the interpreter directly.
+		\item This can be really useful when you are developing because you 
+			can test little segments of code directly.
+	\end{itemize}
+\end{frame}
+
+\section{Variables, types, and values}
+\begin{frame}
+	\frametitle{Variables}
+	\begin{itemize}
+		\item Python variable do not have types associated with them.
+		\item They are not declared before use.
+		\item To create a variable, just assign it a value.
+		\item Python variable are references to objects.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Types}
+	\begin{itemize}
+		\item Python values are strongly types and they are all objects.
+		\item Numeric, string, and boolean types behave in the ways you would generally expect.
+		\item There is no character type.  A character is just a short string.
+		\item Python's collection types are powerful and flexible. Many problems that
+			might require a class in other languages can be solved with a 
+			basic collection in Python.
+			\begin{itemize}
+				\item List
+				\item Tuple
+				\item Dictionary
+				\item Set, Frozenset
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+\section{Control flow}
+\begin{frame}
+	\frametitle{White space}
+
+	\begin{itemize}
+		\item People who are new to Python are surprised by the 
+			significant white space.
+		\item The surprise wears off quickly.
+		\item Statements are generally terminated by a line ending.
+		\item Code blocks are denoted by indentation.
+	\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{Conditionals}
+
+	\begin{verbatim}
+    if(a > 0):
+        print("positive")
+    elif(a < 0):
+        print("negative")
+    else:
+        print("zero")
+
+	\end{verbatim}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{For loops}
+
+	\texttt{for} loops over anything that implements a sequence.
+	\begin{verbatim}
+    for i in xrange(10):
+        print(i)
+
+    for char in "spam":
+        print(char)
+	\end{verbatim}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{While loops}
+
+	\begin{verbatim}
+    while(stop != "y"):
+        print("One more time.")
+        stop = input("Go again? ")
+
+	\end{verbatim}
+\end{frame}
+\section{Functions and classes}
+\begin{frame}
+	\frametitle{Functions}
+	\begin{itemize}
+		\item Define functions with the \texttt{def} keyword.
+		\item Functions can return one or more values.
+		\item Functions lacking an explicit return return the 
+			special value \texttt{None}.
+		\item Functions in Python are first-class.
+	\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{Functions}
+
+	\begin{verbatim}
+    def times_two(x):
+        return 2 * x
+	\end{verbatim}
+\end{frame}
+\begin{frame}
+	\frametitle{Classes}
+	\begin{itemize}
+		\item Define classes with the \texttt{class} keyword.
+		\item Classes support inheritance, including multiple inheritance.
+		\item Classes include class variables, instance variables, and
+			methods.
+	\end{itemize}
+\end{frame}
+\end{document}
