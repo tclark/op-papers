@@ -1,0 +1,121 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Exception Handling}
+
+\author[IN710]{Object Oriented System Design}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Introduction}
+
+ \begin{itemize}
+	 \item Things can go wrong in our programs.
+	 \item Consider ex1.py in the example code on GitHub.
+	 \item You can anticpate ways to break it before you even run it.
+	 \item Run it anyway.  Break it and see what happens.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exceptions}
+	\begin{itemize}
+		\item When something goes wrong in a Python program
+			it \emph{raises an exception}.
+		\item If the exception isn't handled the program terminates.
+		\item Sometimes this is unavoidable or even desirable,
+			but we don't want this to happen all the time.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Guarding against exceptions}
+	\begin{itemize}
+		\item When we're programming we can usually identify
+			places in our code where exceptions are likely 
+			to occur.
+		\item Consider ex2.py.  We use an \texttt{if-elif-else} 
+			structure to guard against likely problems.
+		        Run it and see if you can get it to crash.\footnote{I can.}
+		\item This version is far more robust, but there is a cost. 
+			There are only three lines of code that do what we
+			really want mixed in with five lines of code that
+			protect those three.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Exception handling}
+	\begin{itemize}
+		\item Python, like many languages, allows you to
+			handle excetions in your code and avoid
+			crashing.
+		\item Consider ex3.py
+		\item We still have more error handling code than
+			``normal'' code, but we have seperated the two
+			so that the main code path is clear.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exception handling - mixed approach}
+	\begin{itemize}
+		\item It's best to use exception handling for 
+			cases that are truly \emph{exceptional}.
+		\item Consider ex4.py. We use a \texttt{while} to 
+			handle the more common user error.  We use
+			\texttt{try/except} to handle what we think is a less
+			common error.
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Practical exercise}
+	\begin{enumerate}
+		\item Write a function called \texttt{oops} that 
+			explicitly raises an \texttt{IndexError}
+			exception when called. Then write another 
+			function that calls oops inside a \texttt{try/except}
+			statement to catch the error. What happens if you 
+			change oops to raise \texttt{KeyError} instead of 
+			\texttt{IndexError}?
+
+		\item Change the \texttt{oops} function you just wrote to 
+			raise an exception you define yourself, 
+			called \texttt{MyError}, and pass an extra data item along 
+			with the exception. Then, extend the \texttt{try} 
+			statement in the catcher function to catch 
+			this exception and its data in addition to 
+			i\texttt{IndexError}, and print the extra data item.
+		\item Modify your \texttt{MyError} exception class so that it
+			inherits from \texttt{IndexError} instead of
+			\texttt{Exception}.  What happens when it is thrown?
+	\end{enumerate}
+
+	Save your code examples in a directory called \texttt{exceptions} and
+	push it to your GitHub repository.
+\end{frame}
+
+
+\end{document}

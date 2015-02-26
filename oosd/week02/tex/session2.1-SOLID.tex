@@ -1,0 +1,132 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Core OOSD: SOLID}
+
+\author[IN710]{Object Oriented System Design}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Background}
+
+ \begin{itemize}
+  \item OO Programming emerged in the 1980's qnd 1990's.
+  \item By the early 2000's programmers were building larger programs and started to recognise 
+	  design problems.
+  \item Robert Martin (``Uncle Bob'') identified five key principles that have become known
+	  by the acronym SOLID.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Guidlelines}
+
+	\begin{itemize}
+		\item It's a bit of a clich\'{e} that almost any question in an advanced
+			programming class can be answered, ``It depends.''
+		\item How closely should you follow the guidlelines we will discuss
+			this morning?  It depends.
+		\item You should try to follow them. When you do find yourself breaking them,
+			it should be because you've made a deliberate choice to do so.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{SOLID}
+	\begin{itemize}
+		\item \textbf{S}ingle responsibility principle
+		\item \textbf{O}pen/closed principle
+		\item \textbf{L}iskov substitution principle
+		\item \textbf{I}nterface substitution principle
+		\item \textbf{D}ependency inversion principle
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Single responsibility principle}
+	\begin{itemize}
+		\item A class should do only one thing.
+		\item You should be able describe a class' purpose with
+			one \emph{concise} sentence.
+		\item When specifications change, a class should have only
+			one reason to change.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example: Card class}
+	\begin{itemize}
+		\item What is the job of the playing card?
+		\item Should it report its numeric score value for blackjack?
+		\item This would mean that the cards would need to
+			know about blackjack rules.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Open/closed principle}
+	\begin{itemize}
+		\item Classes should be \emph{open} to extension, but \emph{closed} 
+			to modification.
+		\item This means that consumers of a class can rely on its
+			methods remaining available, i.e., changes to the class
+			won't hurt current uses of the class.
+		\item We can extend a class so that it can do more, but we never
+			take away or modify exisiting functionality.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Example: Deck class}
+	\begin{itemize}
+		\item I wrote my \texttt{Deck} class to use one 52 card deck.
+		\item Casinos usually use multiple decks to make card counting harder.
+		\item But if I \emph{modify} the deck class to use more decks,
+			I may break exisiting uses of the class.
+		\item However, I could \emph{extend} the class, for example by 
+			supplying an alternate constructor, without breaking 
+			preexisiting uses.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Liskov substitution principle}
+	\begin{itemize}
+            \item Objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Interface segregation principle}
+	\begin{itemize}
+            \item Many client-specific interfaces are better than one general-purpose interface.
+	    \item Clients should not be forced to depend upon methods they do not use.
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Dependency inversion principle}
+	\begin{itemize}
+            \item High level modules should not depend on low-level modules.
+	    \item Both should depend upon abstractions.
+	\end{itemize}
+\end{frame}
+
+\end{document}
