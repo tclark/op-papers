@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Cross Site Scripting: Introduction\\ IN618 Security}
+\date{}
+\maketitle
+
+\section*{Introduction}
+I discussed this paper with an industry security consultant who told me that 
+\emph{cross site scripting} (XSS) was the most important topic we would cover this 
+semester. This is because mistakes leading to XSS vulnerabilities are easily
+and frequently made, and because they are easily exploited. 
+
+\section*{Examine a vulnerable system}
+Go to the web site at \url{http://xss.sqrawler.com} and try out the web 
+pages there.  View the HTML source and do anything else you want to 
+do to explore the site.
+
+1. Do you see any potential vulnerabilities here?  Document your
+suspicions below:
+
+\vspace{60mm}
+
+2. Now enter \url{http://xss.sqrawler.com/pg2.php?secure=<script>alert(`pwned')</script>}.  What happens?  Why?
+
+\vspace{60mm}
+
+3. Can you think of any other ways to exploit this?  Try some and 
+document this below.
+
+\vspace{60mm}
+
+
+
+4. Now go to \url{http://xss.sqrawler.com/trouble.html}.  Follow the 
+link and see what happens.  Explain what you observe below.
+
+\vspace{90mm}
+
+5. Source code for this example is in the \texttt{week03} directory on GitHub.
+Inspect the source and be prepared to discuss it.
+\end{document}
