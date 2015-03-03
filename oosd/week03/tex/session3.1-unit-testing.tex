@@ -121,41 +121,38 @@
 	\end{itemize}
 \end{frame}
 
-%\begin{frame}[fragile]
-	%\frametitle{Example}
-%
-%\begin{verbatim}
-%import random
-%import unittest
-%
-%class TestSequenceFunctions(unittest.TestCase):
-%
-    %def setUp(self):
-        %self.seq = range(10)
-%
-    %def test_shuffle(self):
-        %# make sure the shuffled sequence does not lose any elements
-        %random.shuffle(self.seq)
-        %self.seq.sort()
-        %self.assertEqual(self.seq, range(10))
-%
-        %# should raise an exception for an immutable sequence
-        %self.assertRaises(TypeError, random.shuffle, (1,2,3))
-%
-    %def test_choice(self):
-        %element = random.choice(self.seq)
-        %self.assertTrue(element in self.seq)
-%
-    %def test_sample(self):
-        %with self.assertRaises(ValueError):
-        %random.sample(self.seq, 20)
-        %for element in random.sample(self.seq, 5):
-        %self.assertTrue(element in self.seq)
-%
-%if __name__ == '__main__':
-    %unittest.main()
-    %\end{verbatim}
-    %\end{frame}
+\begin{frame}
+	\frametitle{Example}
 
+	\url{https://gist.github.com/tclark/2c32445d65e3ed9a63cc}
 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Running your tests}
+
+	\begin{itemize}
+		\item You can run one test script using the command \texttt{python your-script-name.py}.
+		\item You can run all the test scripts in a directory with the command \texttt{python -m 
+			unittest discover your-directory-name}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{More information}
+
+	\begin{itemize}
+		\item Read the \texttt{unittest} section on the Python testing pdf on the I: drive.
+		\item See \url{https://docs.python.org/2/library/unittest.html}
+	\end{itemize}
+
+	Read these before the next class.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Today's exercise}
+
+	Write at least one test class that covers one of your blackjack classes completely.  Be prepared 
+	to show it to the group at the and of the hour.
+\end{frame}
 \end{document}
