@@ -1,0 +1,161 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Unit Testing}
+
+\author[IN710]{Object Oriented System Design}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{We are bad coders and we should feel bad}
+
+ \begin{itemize}
+  \item Here in the BIT there are two things that we are gnerally bad at:
+	  \begin{enumerate}
+		  \item Documentation
+		  \item Testing
+	  \end{enumerate}
+  \item I don't have any great ideas about documentation.  You just
+	  have to suck it up.
+  \item Testing is a different matter.  We must get better at testing. The
+	  good news is that there are plenty of tools and methods to help us.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Types of testing}
+	\begin{itemize}
+		\item Unit testing
+		\item Integration testing
+		\item Functional testing
+		\item Performance testing
+		\item Penetration testing
+		\item Acceptance testing
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Things we do instead of testing}
+	\begin{itemize}
+		\item We write a lot of code in one go - maybe the whole assignment.
+		\item When things don't work, we stare at the code and
+			try to figure out why.
+		\item We throw in some print statements.
+		\item We use a debugger.
+		\item We write throwaway examples to test things.
+		\item In short we waste time.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{What we want to do.}
+	\begin{itemize}
+		\item We will write tests that cover all our code.
+		\item We will cleanly seperate test modules from 
+			application code.
+		\item We will write tests that \emph{document} our
+			code.
+		\item We will write tests that run automatically.
+		\item We will run our tests whenever we make a 
+			change to be sure nothing was broken.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Unit tests}
+
+	\begin{itemize}
+		\item Testing starts with \emph{unit tests}.
+		\item Unit tests are written and run by developers.
+		\item They test code at the lowest level of functionality.
+		\item Basically, every function has a set of tests.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Test Driven Development}
+
+	Suppose you want to add a new feature to a class.
+	If you are practicing TDD, you
+
+	\begin{enumerate}
+		\item Write tests that test the new feature.
+			(They should fail.)
+		\item Write code that passes the tests.
+		\item \emph{Refactor}, or clean up your code.
+	\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Unit testing tools}
+	\begin{itemize}
+		\item There are heaps of libraries and 
+			frameworks for writing unit testing modules.
+		\item There is a family of testing tools that 
+			are collectively called ``xUnit'' that are
+			all based on Smalltalk's SUnit.
+		\item This means that there is a common approach
+			to unit testing that applies to many languages.
+		\item Python's standard testing library, \texttt{unittest},
+			is part of the xUnit family.  We will use it this week.
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]
+	%\frametitle{Example}
+%
+%\begin{verbatim}
+%import random
+%import unittest
+%
+%class TestSequenceFunctions(unittest.TestCase):
+%
+    %def setUp(self):
+        %self.seq = range(10)
+%
+    %def test_shuffle(self):
+        %# make sure the shuffled sequence does not lose any elements
+        %random.shuffle(self.seq)
+        %self.seq.sort()
+        %self.assertEqual(self.seq, range(10))
+%
+        %# should raise an exception for an immutable sequence
+        %self.assertRaises(TypeError, random.shuffle, (1,2,3))
+%
+    %def test_choice(self):
+        %element = random.choice(self.seq)
+        %self.assertTrue(element in self.seq)
+%
+    %def test_sample(self):
+        %with self.assertRaises(ValueError):
+        %random.sample(self.seq, 20)
+        %for element in random.sample(self.seq, 5):
+        %self.assertTrue(element in self.seq)
+%
+%if __name__ == '__main__':
+    %unittest.main()
+    %\end{verbatim}
+    %\end{frame}
+
+
+\end{document}
