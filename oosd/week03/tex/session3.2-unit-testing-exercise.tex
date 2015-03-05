@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+
+
+
+\begin{document}
+
+\begin{figure}
+\includegraphics[width=30mm]{../../../resources/images/oplogo.png}
+\end{figure}
+
+\title{Unit Testing Exercises\\IN710 Object Oriented System Development}
+\date{}
+\maketitle
+
+\section*{Description}
+These exercises will give you some practice applying unit testing and TDD principles
+in Python. Push your code to your GitHub repository by the first class of next week.
+Be prepared to present your code in class.
+
+Get started on this exercise by pulling down the \texttt{unit\_testing\_exercises} subdirectory
+in the \texttt{week03} directory on the lecturer's GitHub.
+
+\section{Person class}
+The exercises include a stub of a \texttt{Person} class along with a complete 
+\texttt{TestPerson} unittest test case.  The tests in \texttt{TestPerson} 
+effectively define what the \texttt{Person} class should do.  Based on the 
+tests, code up a complete \texttt{Person} class so that all the tests pass.
+
+\section{MySet class}
+Suppose that there was no built-in set type in Python and we wanted
+to implement one.  Do this by implementing the methods in the 
+\texttt{MySet} class.  Implement a full set of tests in the \texttt{TestMySet}
+class.
+
+Tip:  Start by implementing the constructor so that it handle and empty list
+as an argument.  Later, go back and handle the case where the list passed to
+the constructor is nonempty.
+
+\end{document}
