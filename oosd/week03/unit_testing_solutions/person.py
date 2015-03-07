@@ -14,3 +14,6 @@ class Person:
         except AttributeError:
             self.age = 1
         return self.age
+
+    def kill(self):
+        self.dead = True
