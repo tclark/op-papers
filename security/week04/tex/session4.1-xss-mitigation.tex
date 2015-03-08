@@ -1,0 +1,83 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Mitigating XSS Risk}
+
+\author[IN618]{Security}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{The problem}
+	\begin{itemize}
+		\item We saw last week that XSS vulnerabilities happen when:
+			\begin{enumerate}
+				\item We trust user input to be valid and safe;
+				\item We output unsafe data to the browser without 
+					processing it.
+			\end{enumerate}
+		\item We can also make the vulnerability worse by being too accepting
+			of various types of HTTP requests.
+	\end{itemize}
+
+	It's important to recognise these patterns so that you know when to be 
+	on the alert for XSS vulnerabilities.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Vulnerable code}
+	\begin{verbatim}
+    <p> Hi, <?php echo($_COOKIE['user']); ?> </p> 
+    <p><img src="picard.jpg" /></p>
+    <p> <?php echo($_REQUEST['secure']); ?> </p>`
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Step one: processing output}
+
+	\begin{itemize}
+		\item Much of the problem comes from outputting things
+			like unwanted``\texttt{<script>}'' tags to the browser.
+		\item Usually, we don't want to pass any HTML from user input
+			back to the browser.
+		\item It turns out that characters like ``\texttt{<}'' and
+			``\texttt{>}'' have alternative representations.
+		\item For eample, ``\texttt{<}'' can be represented as 
+			``\texttt{\&gt;}''.
+		\item These representations are safer to send to the users' browser.
+	\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{In PHP:}
+	Instead of 
+	\begin{verbatim}
+    <?php echo($unsafe-data); ?> 
+	\end{verbatim}
+	Use
+	\begin{verbatim}
+    <?php echo(htmlentities($unsafe-data)); ?> 
+	\end{verbatim}
+\end{frame}
+
+
+\end{document}
+
