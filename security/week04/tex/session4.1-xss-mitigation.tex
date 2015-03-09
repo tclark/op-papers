@@ -127,7 +127,7 @@
 	\begin{verbatim}
     function legal_username($name) {
         $length_ok = strlen($name) < 33;
-        $format_ok = preg_match("/^[a-zA-Z-_]+/$/", $name);
+        $format_ok = preg_match("/^[a-zA-Z-_]+$/", $name);
         return $length_ok and $format_ok;
     }
 	\end{verbatim}
