@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Cross Site Scripting: Lab Exercise\\ IN618 Security}
+\date{}
+\maketitle
+
+\section*{Introduction}
+The marketing manager got a copy of \emph{Head First PHP \& MySQL} last week
+and now he thinks he's a programmer.  His first project is a product review
+page that allows visitors to your company's web site to submit reviews.
+
+Appeals to higher-ups for sanity have failed, so now your team must
+add this feature to the web site.  You have been given the task of 
+reviewing the code and correcting security mistakes before the pages
+go live.
+
+\section{Tasks}
+The initial code is available in the IN618 directory on the I: drive in a file 
+named \texttt{xss-assignment.zip}. Get of copy of the code and assess its
+vulnerabilities to XSS exploits.  Modify it so that
+
+\begin{enumerate}
+	\item Vulnerabilities to XSS exploits are removed;
+	\item Input data is sanitised appropriately.
+\end{enumerate}
+
+You can reasonably determine data validity criteria by inspecting the code.
+
+\section{Submission}
+Upload your completed code to your \texttt{public\_html} directory on 
+\texttt{sec-student.sqrawler.com}.  Your files must be in a subdiectory
+named \texttt{xss-assignment}. Leave the filenames as they are in the 
+original source files you received.  Failure to follow these instructions
+will interfere with testing your work and will result in a loss of marks.
+
+Your code must be uploaded and ready for testing by 1:00 PM on Monday,
+16 March.
+
+\section{Resources}
+You should already have an account on the web server at \texttt{sec-student.sqrawler.com}.
+Upload your code there for testing and final submission.
+
+\newpage
+
+\section{Marking}
+
+There are 10 marks for this exercise:
+
+\begin{itemize}
+	\item Sucessfully resisting XSS attacks performed by the lecturer: 5 marks;
+	\item Correctly handling and sanitising user input data: 4 marks;
+	\item Well formatted and readable code: 1 mark.
+\end{itemize}
+
+\end{document}
