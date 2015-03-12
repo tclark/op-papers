@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+
+
+
+\begin{document}
+
+\begin{figure}
+\includegraphics[width=30mm]{../../../resources/images/oplogo.png}
+\end{figure}
+
+\title{Design Pattern Exercise\\IN710 Object Oriented System Development}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this exercise you reuse your \texttt{Card} and \texttt{Deck} classes.  
+You will modify \texttt{Deck} to use the \emph{Strategy} 
+pattern for shuffling and then measure the effectiveness of different 
+shuffling methods.
+
+\section{Shuffling}
+In your \texttt{Deck} class you have a list of \texttt{Card}s, and at some 
+point you need to shuffle them.  There are a number of ways to do this.
+
+\begin{enumerate}
+	\item by using the \texttt{random.shuffle()} function;
+	\item exchange each card in the deck with one at a 
+		randomly selected index;
+	\item for each evenly numbered card position, exchange
+		it with a randomly chosen odd position;
+	\item swap two randomly chosen card positions 52 or more times.
+\end{enumerate}
+
+You can probably come up with others.
+
+\section{Task 1}
+Implement the various shuffling algorithms as \emph{strategies} that can be
+plugged into your \texttt{Deck} class.  Then write a simple program that
+creates one deck for each strategy and applies the appropriate shuffle.
+
+\section{Task 2}
+Now we want to test teh effectiveness of each shuffling method.  To do this,
+we will shuffle the decks 520 times with each shuffling method and record the results.
+If a shuffling method is perfect, then every card should occur in every deck postion
+10 times.
+
+To record the results, make a Python dictionary using the card values as keys and whose
+values are lists showing the positions (0 - 51) that a card occupies in each shuffled deck.
+
+We can use a chi-squared test to evaluate the quality of each shuffle.  The general 
+chi-squared formula is
+
+\vspace{5mm}
+$\chi^2 = \sum_{i=0}^{n} (a_{i} - e_{i})^2/e_{i}$
+\vspace{5mm}
+
+Where $a_{i}$ is the observed card position frequency  and $e_{i}$ is the expected
+frequency (10 in our case).
+
+Write a chi-squared function that takes a results dictionary and ruturns the 
+corresponding value.
+
+\end{document}
