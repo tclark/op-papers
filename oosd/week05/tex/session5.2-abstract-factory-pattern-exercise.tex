@@ -1,0 +1,138 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+
+
+
+\begin{document}
+
+
+\title{Abstract Factory Pattern Exercise\\IN710 Object Oriented System Development}
+\date{}
+\maketitle
+
+\section*{Introduction}
+The \emph{Abstract Factory Pattern} can be used to create factories 
+that produce families of related objects.
+
+In this exercise you will implement an abstract factory pattern 
+to represent postal addresses and phone numbers in the USA and the
+UK.
+
+section{The problem}
+We want to model personal contact information for people in various counries,
+for now we'll focus on the US and UK.  We will store and represent postal addresses
+and phone numbers.  This means that our classes will need to adapt to the 
+data and display formats of the two countries.  When we create a US contact, 
+we want a US address and a US phone number.  For UK contacts, we will use UK 
+addresses and phone numbers.  This mean that right now we have four classes 
+in two groups on our hands.
+
+\begin{itemize}
+	\item US addresses and US phone numbers
+	\item UK addresses and UK phone numbers
+\end{itemize}
+
+We need to create the right set of objects at runtime based on the 
+locations of particular contacts.  This is the kind of situation
+where the \emph{Abstract Factory Pattern} works well.
+
+\section{The task}
+You need to define \texttt{AbstractPhoneNumber} and 
+\texttt{AbstractPostalAddress} classes.  classes.  From these, derive 
+\texttt{UKPhoneNumber}, \texttt{USPhoneNumber}, \texttt{UKAddress},
+and \texttt{USAddress} Classes.  These derived classes will validate
+their data and need to supply \texttt{print} methods that print their
+data in the correct formats.
+
+Then, define an \texttt{AbstractContactFactory} class that provides
+two public methods, \texttt{create\_phone\_number} and 
+\texttt{create\_address}.  From this, derive the classes 
+\texttt{UKContactFactory} and \texttt{USContactFactory} that implement
+create methods that return the right kinds of contact objects.
+
+Don't forget to write appropriate unit tests.
+
+\subsection{Abstract classes in Python}
+
+Abstract bases classes are not often used in Python.  In the absence
+of compile-time type checking they are less important than they are in language
+like Java or C++.  But they still have some value, in part in defining the
+interface derived classesa are expected to support. There are a couple of ways 
+you could define an abstract class.
+
+Example 1:
+
+\begin{verbatim}
+
+class FooClass:
+
+  def bar():
+      pass
+
+  def quux(a):
+      pass
+\end{verbatim}
+
+\newpage
+Or, if you want to enforce the abstract nature a bit more,
+
+Example 2:
+
+\begin{verbatim}
+
+class FooClass:
+
+  def bar():
+      raise NotImplementedError()
+
+\end{verbatim}
+
+\subsection{Phone numbers}
+
+US phone numbers are 10 digits long. The first three digits are the area code.
+The next three are the prefix and the remaining four are the number.  Display them 
+with a hyphen between each part, e.g., 206-555-1212.
+
+UK phone numbers are 10 or 11 digits long.  They begin with a three to six
+digit area code that begins with a zero.  Next is an optional prefix that is three or four digits long.
+The remaining digits are the individual number. Display them with brackets around
+the area code, e.g., (020) 3221 8735.
+
+\subsection{Addresses}
+US addresses have the following format:
+
+\begin{verbatim}
+  recipient
+  organisation (optional)
+  address line 1
+  address line 2 (optional)
+  city, state post code
+  \end{verbatim}
+
+The state/territory field is a two letter abbreviation.  Postcodes
+are nine digits long.
+
+UK addresses have the following format:
+
+\begin{verbatim}
+
+  recipient
+  organisation (optional}
+  building name (optional)
+  address line 
+  locality (optional)
+  city
+  post code
+  \end{verbatim}
+
+UK post codes are seven alphanumeric characters, e.g., SO31 4NG.
+
+Note that these address specifications are somewhat simplified.  Real world
+addresses are horribly messy.
+
+\end{document}
