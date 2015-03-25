@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{User Enumeration\\ IN618 Security}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this lab we will explore a simple vulnerability that is easily overlooked, \emph{user enumeration}.
+
+\section{Probe for the vulnerability}
+Examine the web site at \url{http://in618.sqrawler.com/users/}.  There are 
+about one thousand registered user names, all common first names (in lowercase).  
+They also have an easily guessed password.  Attempt to log into the site with 
+various usernames and make note of what heppens.
+
+1.  Try the user name \texttt{fred} with password \texttt{123}. What
+happens?
+
+\vspace{15mm}
+
+2. Try the user name \texttt{joe} with password \texttt{123}.  What happens?
+
+\vspace{15mm}
+
+3.  Find three other valid user names on this system and write them below.
+
+\vspace{30mm}
+
+4.  What is the significance of your findings above?  How does this create a 
+security vulnerablity?
+
+\newpage     
+
+5.  How would you modify the login code to remove the vulnerability?
+
+
+
+\end{document}
