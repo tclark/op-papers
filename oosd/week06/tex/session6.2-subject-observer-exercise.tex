@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+
+
+
+\begin{document}
+
+
+\title{Subject Observer Pattern Exercise\\IN710 Object Oriented System Development}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this exercise you will build an application that models the follower relationship
+used by services like Twitter.
+
+\section{The problem}
+Your application will allow an individual to enter short messages.  It needs to
+model two other individuals who ``follw'' the first one.  Whenever the first one
+enters a new message, the message feeds of the other two must update to include 
+newly entered message.  This kind of relationship can be modelled with a 
+\emph{subject-observer} pattern.
+
+\section{The task}
+Write a PyQT application that does the following:
+
+\begin{itemize}
+	\item It will provide a text entry box in which a user
+		can enter a short message.
+	\item It will include two text area boxes that display
+		the message feeds of two other people.
+	\item When a new message is entered, that message
+		will be prepended to the message feeds
+		in the text area boxes.
+	\item Each message is to be prefaced with a sensibly
+		formatted timestamp.
+	\item These behaviours are to be implemented with a 
+		\texttt{User} class that supports a 
+		follower/followed relationship.
+	\item Include an appropriate unit test suite
+		for your \texttt{User} class.
+\end{itemize}
+
+Commit your code and push it to your GitHub account.  We will
+discuss your solutions in class next week.
+
+\end{document}
