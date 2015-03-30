@@ -1,0 +1,96 @@
+The nagios 3 package should be installed on your mgmt server.
+
+Set up web auth:
+
+sudo htpasswd -c /etc/nagios3/htpasswd.users nagiosadmin
+
+Now log in.  Loook in particular at Hosts and Hostgroups.  Nagios is configured
+to monitor the local machine (mgmt) and nothing else.
+
+We want to be able to monitor the db server.  We will modify and add files to
+our nagios-server puppet modules config class
+
+1.  Create a contact for yourself in contacts_nagios2.cfg
+
+nagios_contact { 'tclark':
+              target => '/etc/nagios3/conf.d/ppt_contacts.cfg',
+              alias => 'Tom Clark',
+              service_notification_period => '24x7',
+              host_notification_period => '24x7',
+              service_notification_options => 'w,u,c,r',
+              host_notification_options => 'd,r',
+              service_notification_commands => 'notify-service-by-email',
+              host_notification_commands => 'notify-host-by-email',
+              email => 'root@localhost',
+  }
+
+
+We will change that email address in a later lab.
+
+
+ nagios_contactgroup { 'sysadmins':
+               target => '/etc/nagios3/conf.d/ppt_contactgroups.cfg',
+               alias => 'Systems Administrators',
+               members => 'tclark', 
+  }
+
+
+
+Now we will define a nagios host for our db server
+
+ nagios_host { 'db.sqrawler.com':
+                 target => '/etc/nagios3/conf.d/ppt_hosts.cfg',
+                 alias => 'db',
+                 address => '10.25.1.18',
+                 check_period => '24x7',
+                 max_check_attempts => 3,
+                 check_command => 'check-host-alive',
+                 notification_interval => 30,
+                 notification_period => '24x7',
+                 notification_options => 'd,u,r',
+                 contact_groups => 'sysadmins',
+              }
+
+You'll have to change the IP address 
+
+Now define your service:
+
+nagios_service {'MySQL':
+              service_description => 'MySQL DB',
+              hostgroup_name => 'db-servers',
+              target => '/etc/nagios3/conf.d/ppt_mysql_service.cfg',
+              check_command => 'check_mysql',
+              max_check_attempts => 3,
+              retry_check_interval => 1,
+              normal_check_interval => 5,
+              check_period => '24x7',
+              notification_interval => 30,
+              notification_period => '24x7',
+              notification_options => 'w,u,c',
+              contact_groups => 'sysadmins',
+  }
+
+
+And finally, define a host group
+
+nagios_hostgroup{'db-servers':
+              target => '/etc/nagios3/conf.d/ppt_hostgroups.cfg',
+              alias => 'Database Servers',
+              members => 'db.sqrawler.com',
+  }
+
+
+
+Other steps:
+
+sudo chown root:puppet /etc/nagios3/conf.d
+sudo chmod 775 /etc/nagios3/conf.d 
+
+Have puppet config your server and verify that the right files are in conf.d
+
+sudo chmod 644 /etc/nagios3/conf.d/* 
+
+If you have done everything right, your db server will appear to be up in Nagios,
+but the MySQL service will appear to be down.
+
+
