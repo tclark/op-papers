@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{SQL Injection Remediation\\ IN618 Security}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this lab we will take an application with SQL injection vulnerabilities and 
+modify it to remove them.  From the \texttt{I:} drive, download and extract
+the file \texttt{SQLInjectionRemediation.zip}.  It contains a Visual Studio 
+project that we will use for this exercise.
+
+Recall that there are four things we identified last time that reduce
+vulnerability to SQL injections:
+
+\begin{enumerate}
+	\item sanitise inputs;
+	\item use parameterised queries;
+	\item set correct DBMS permissions;
+	\item control unecessary error message output.
+\end{enumerate}
+
+Of these, we will focus on the first two.  Our SQLite database doesn't
+have a strong permissions model and our error messages would be handled
+when we deploy a production version of our application.
+
+\section{Verify the vulnerability}
+This application has the same SQL injection vulnerability that the example
+application we saw last time does. We can verify this by insepcting the source code
+and by trying the exploit. The easiet way to exploit this application is by inputting 
+your attack code in the ``Last Name'' text box and performing a search.
+
+\section{Sanitise your inputs}
+Initially, the application makes no effort to sanitise its inputs before
+using them in database queries.  Sanitising inputs for SQL is a bit hard, but there
+are some things we can do:
+
+\begin{itemize}
+	\item Limit the length of input strings to appropriate values.  You 
+		can use the C\# \texttt{Substring} method for this.
+	\item Remove inappropriate characters from the inputs.  You can
+		use the C\# \texttt{Remove} or \texttt{Replace} methods
+		for this.
+\end{itemize}
+
+\newpage
+
+\section{Parameterised queries}
+Last time we discussed parameterised queries.  Here is an example of
+a parameterised query prepared for SQLite in C\#:
+
+\begin{verbatim}
+
+SQLiteCommand command = new SQLiteCommand(db_connection);
+string sql = "select * from items where item_type=@type";
+command.CommandText = sql;
+command.Prepare();
+command.Parameters.AddWithValue("@type", "B");
+SQLiteDataReader reader = command.ExecuteReader();
+\end{verbatim}
+
+This code will find items whose \texttt{type} is ``\texttt{B}''.
+
+Using this technique, modify your application to use parameterised queries.
+
+\section{Submission}
+Commit your modified code to your SVN repository before the next class meeting.  To show
+that you are using SVN properly, your commit history for this exercise should have at least 
+three commits: one when you begin work before modifying any code, one when you have added input
+sanitisation, and one when you add parameterised queries.
+
+\end{document}
