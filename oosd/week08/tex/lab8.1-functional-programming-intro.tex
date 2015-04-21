@@ -1,0 +1,254 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Introduction to Functional Progamming}
+\author[IN710]{OOSD}
+\institute[Otago Polytechnic]{
+  School of Information Technology \\
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{What is object-oriented programming?}
+
+  Typically prgramming can be thought of as managing \emph{state}.
+\begin{itemize}
+  \item We have some variables that hold values.
+  \item Those values change over time as the program is executed.
+  \item Our programs are sets of instructions on how to change state.
+  \item The value of those variables at any point in time characterises the
+	  program's state.
+\end{itemize}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{What is object-oriented programming?}
+
+  The difficulty with this type of programming in that it is often 
+  difficult to reason about a program's state.
+\begin{itemize}
+  \item A bug in a program occurs when a variable doesn't hold the
+	  corect value.  The program's state is incorrect.
+  \item In OO programming, we use \emph{objects} to encapsulate state.
+  \item Objects protect their states and provide methods to control changes 
+	  to their states.  
+\end{itemize}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{What is functional programming?}
+
+  The aim of functional programming is to allow us to program without state.
+  Instead of supplying instructions about how to change state, our programs
+  describe to desired solution in terms of the application of functions.
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming principles}
+
+   1.  Immutable data:  Once we assign a value to a variable we avoid 
+   changing that value, since that gets us back to managing state.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming principles}
+
+   2. Pure functions:  Pure just functions take arguments and return a values. 
+   They are \emph{deterministic}, meaning they always return the same values when 
+   given the same arguments.  Pure functions avoid \emph{side effects}, since
+   side effects generally involve state.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming principles}
+
+   3.  First class functions: Functions are just values that can be passed around 
+   just like we pass around an integer value in a program.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming principles}
+
+   4.  Higher order functions: We write fuctions that operate on other 
+   functions.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Example}
+
+ 
+\begin{Verbatim}[commandchars=\\\[\]]
+    def doubler(f):
+        def tmp(x):
+            return 2 * f(x)
+        return tmp
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Why bother with FP}
+
+  \begin{itemize}
+	  \item Functional programming facilitates very rapid development
+		  since fuctional code is typiclaly very expressive.
+	  \item Functional programs have fewer bugs and are easier to debug.
+  \end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming languages}
+
+If our goal is to do functional programming, then there are languages 
+that implement these principles and facilitate programming functionally.
+\begin{itemize}
+	\item Lisp
+	\item Haskell
+	\item Clojure
+	\item Scheme
+	\item Erlang
+	\item and many others
+\end{itemize}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional programming in Python}
+
+  We can also write functional programs in Python.  The language
+  provides features that facilitate this.  We can write purely functional
+  programs, but more commonly we use a mix of OO and functional constructs
+  as appropriate.
+  \vspace{5mm}
+
+  If we simple realise that managing state is difficult and we learn to do it 
+  in a careful and deliberate way, we get some of the benefits of FP without
+  having to discard OO.
+  \end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Functional tools: Lambda}
+
+  In FP we often write short, and frequently anonymous functions. 
+  \emph{Lambda expressions} are useful for this.
+
+  The following are equivalent.
+ 
+\begin{Verbatim}[commandchars=\\\[\]]
+    addone = lambda x: x + 1
+
+    def addone(x):
+        return x + 1
+
+\end{Verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Functional tools: List operations}
+
+  When we program without state, we can't have loops anymore.  Instead,
+  we operate (recursively) on lists, often with higher-order functions.
+  Three important one are
+
+  \begin{itemize}
+	  \item map
+	  \item filter
+	  \item reduce
+  \end{itemize}
+  \end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Functional tools: map}
+
+  \texttt{map} takes a function and a list and returns a new list
+  produced by applying the function to each element in the original
+  list.  
+\begin{Verbatim}[commandchars=\\\%\%]
+  map(f, [1, 2, 3]) -> [f(1), f(2), f(3)]
+
+  map(lambda x: 2 * x, [1, 2, 3]) # returns [2, 4, 6]
+  \end{Verbatim}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Functional tools: filter}
+
+  \texttt{filter} takes a boolean function and a sequence and returns a new list
+  that contains the elements of the original sequence whose members satisfy the 
+  boolean condition.
+  \begin{Verbatim}[commandchars=\\\!\!]
+
+ filter(lambda x: x % 2 == 0, range(10)) #returns [2, 4, 6, 8]
+  \end{Verbatim}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Functional tools: reduce}
+
+  \texttt{reduce} is used to reduce a list of values down to a single value. It
+  takes a function of two values and a sequence and returns the result obtained by successively
+  applying the function to items in the sequence and the previously computed value.
+  \begin{Verbatim}[commandchars=\\\!\!]
+
+  reduce(lambda x, y : x + y, range(10)) #returns 45
+  \end{Verbatim}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Functional tools: reduce}
+
+  \texttt{reduce} has an optional 3rd argument that is an initial value to
+  use in the reduction function.
+  \begin{Verbatim}[commandchars=\\\!\!]
+
+  reduce(lambda x, y : x + y, range(10)) #returns 45
+  reduce(lambda x, y : x + y, range(10), 5) #returns 50
+  \end{Verbatim}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exercises}
+	\begin{enumerate}
+		\item Write a lambda expression that computes factorials.
+			(Use \texttt{reduce}.)
+		\item Write a function that takes a string and a character
+			and returns a new string that is the original string with
+			all occurences of the character removed.
+		\item Write a function that is similar to the one above, but 
+			that returns the number of occurences of the character.
+		\item Write a function that takes a string and a character
+			and returns the number of words that start with the
+			character.
+		\item Write a function that takes a string and a character
+			and returns a new string that is the original string with
+			all occurences of the character in uppercase.
+		\item Write your own version of \texttt{map} (call it
+			\texttt{mymap}) using a loop.
+		\item Rewrite \texttt{mymap} using recursion.
+	\end{enumerate}
+\end{frame}
+\end{document}
