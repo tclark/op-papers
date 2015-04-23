@@ -1,0 +1,173 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Closures and Generators}
+\author[IN710]{OOSD}
+\institute[Otago Polytechnic]{
+  School of Information Technology \\
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{This works}
+
+ 
+\begin{Verbatim}[commandchars=\\\[\]]
+    x = 4
+    def f():
+        return x
+
+    f()   # returns 4
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Closures}
+
+  ``closures (also lexical closures or function closures) are a 
+  technique for implementing lexically scoped name binding in 
+  languages with first-class functions.'' (Wikipedia)
+
+  Basically, they are a way of taking the previous example
+  and exploiting first class functions to do something useful.
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Constant function generator}
+
+ 
+\begin{Verbatim}[commandchars=\\\[\]]
+    def constant_builder(cval):
+        def f():
+            return cval
+        return f
+
+   four = constant_builder(4) 
+       
+\end{Verbatim}
+
+Kind of interesting, but not that useful...
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{A counter}
+
+  
+\begin{Verbatim}[commandchars=\\\%\%]
+    def counter_builder(start):
+        count = [start]
+        def f():
+            val = count[0]
+            count[0] += 1
+            return val
+        return f
+
+   counter = counter_builder(1)
+       
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Memoisation}
+
+  
+\begin{Verbatim}[commandchars=\\\%\%]
+    def factorial(n):
+        if n == 0:
+            return 1
+        else
+            return n * factorial(n-1)
+       
+\end{Verbatim}
+Suppose we use this to compute 50!, and then we later 
+compute 51!.  Wouldn't it be nice if we could have
+saved the earlier result?
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Memoisation}
+
+  
+\begin{Verbatim}[commandchars=\\\%\%]
+    def fact_builder():
+        memo = [1, 1]
+        def f(in):
+            try:
+                return memo[n]
+            except IndexError:
+                result = n * f(n-1)
+                memo[n] = result
+                return result
+        return f
+
+   factorial = fact_builder()
+       
+\end{Verbatim}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Generator functions}
+
+	Often we need an arbitrarily long sequence of values, like the counter function 
+	we saw earlier.  We saw that we can produce these with closures, but it's a
+	common enough situation so that Python provides \emph{generator functions}
+	to handle this.
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Generator example}
+
+  
+\begin{Verbatim}[commandchars=\\\%\%]
+    def counter(n):
+        count = 0
+        while count < n:
+            yield count
+            count += 1
+
+\end{Verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Exercises}
+	\begin{enumerate}
+		\item Write a function that computes the nth \emph{Fibonacci number}.
+		\item Use a closure to write a memoised version of your Fibonacci function.
+			Use the \texttt{timeit} module to compare the speeds of your functions.
+		\item Take the function below and reimplement it as a generator function.
+	\end{enumerate}
+\begin{Verbatim}[commandchars=\\\%\%]
+from math import sqrt
+def primes(n):
+    if n == 0:
+        return []
+    elif n == 1:
+        return [1]
+    else:
+        p = primes(int(sqrt(n)))
+        no_p = {j for i in p for j in range(i*2, n, i)}
+        p = {x for x in range(2, n) if x not in no_p}
+        return p
+\end{Verbatim}
+\end{frame}
+\end{document}
