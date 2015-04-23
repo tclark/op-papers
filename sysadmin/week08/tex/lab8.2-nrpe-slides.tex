@@ -1,0 +1,108 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Nagios Checks with NRPE}
+%\subtitle{So Your Stuff Can look Nifty}
+\author[IN719]{Systems Administration}
+\institute[Otago Polytechnic]{
+  School of Information Technology \\
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Three kinds of Nagios Checks}
+
+
+\begin{enumerate}
+  \item Local services
+  \item Network exposed services
+  \item Remote services
+\end{enumerate}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Remote Services}
+
+
+\begin{itemize}
+  \item Sometimes we want to monitor remote services that are not exposed on a network
+  \item There are a few ways to handle this, each with its pros and cons
+  \item We'll consider one way, using \emph{NRPE}
+\end{itemize}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{NRPE}
+
+The approach
+\begin{itemize}
+  \item We install the NRPE daemon on the remote host we want to monitor
+  \item We also install the desired monitoring plugins on the remote host
+  \item On the Nagios server, we use the NRPE plugin to send the check request
+        to the remote host
+  \item On the remote host, the NRPE daemon runs the check and reports the results
+        back to the Nagios server
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Install the NRPE daemon}
+
+On the remote server you want to monitor
+\begin{itemize}
+	\item install \texttt{nagios-nrpe-server}
+  \item Edit \texttt{/etc/nagios/nrpe.cfg}
+  \item Add \texttt{mgmt} to the \texttt{allowed\_hosts} values
+  \item Add the following command to the commands section \\
+   \texttt{command[check\_disk]=/usr/lib/nagios/plugins/check\_disk -w 20\% -c 10\%}
+
+  \item Restart the NRPE server
+\end{itemize}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{On the Nagios server}
+
+  \begin{itemize}
+	  \item Define a service that checks remote disks over nrpe.
+	  \item Define a new hostgroup.
+	  \item Put the remote servers on which we want to monitor disk
+		  space in the host group.
+  \end{itemize}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Monitoring Windows Hosts}
+
+This done with a tool that is similar to NRPE
+\begin{itemize}
+  \item On the Windows host, we install NSClient++
+  \item On the Nagios server, we use the \texttt{check\_nt} plugin to communicate with
+        the Windows host
+\end{itemize}
+\end{frame}
+
+\end{document}
