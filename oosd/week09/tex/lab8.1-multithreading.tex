@@ -1,0 +1,213 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Multithreading}
+\author[IN710]{OOSD}
+\institute[Otago Polytechnic]{
+  School of Information Technology \\
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Enter and run this program}
+\begin{Verbatim}[commandchars=\\\[\]]
+import threading
+import time
+
+ def timer(name, delay, repeat):
+     print("Timer " + name + " starting.")
+     for i in xrange(repeat):
+         time.sleep(delay)
+         print(name + " " + time.ctime(time.time()))
+     print("Timer " + name + " finishing.")
+
+ if __name__ == "__main__":
+     t1 = threading.Thread(target=timer, args=("Timer 1", 2, 5))
+     t2 = threading.Thread(target=timer, args=("Timer 2", 4, 5))
+     t1.start()
+     t2.start()
+ 
+     print("Main complete")
+
+\end{Verbatim}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Threads}
+
+	\begin{itemize}
+		\item Threads are the smallest unit that can be
+			scheduled by the operating system.
+		\item Every process has at least one thread.
+		\item Threads can share memory
+	\end{itemize}
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Syncronisation with \texttt{join}}
+\begin{Verbatim}[commandchars=\\\[\]]
+   t1 = threading.Thread(target=timer, args=("Timer 1", 2, 5))
+   t2 = threading.Thread(target=timer, args=("Timer 2", 4, 5))
+   t1.start()
+   t2.start()
+   print("Do stuff while threads run")
+   t1.join()
+   t2.join()
+   print("All threads complete")
+
+\end{Verbatim}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Uses for threads}
+
+	\begin{itemize}
+		\item \emph{Parallel processing}: We can break a 
+			task into parts that can be performed in 
+			parallel.  This can speed up the process.
+		\item emph{Asynchonous processing}: We carry out a
+			time consuming task in a seperate thread while
+			the main process remains responsive.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Thread class}
+
+	In the following examples we will use the \texttt{Thread}
+	class from the \texttt{threading} module. We do this to 
+	create objects that run in their own threads.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Parallelisation example}
+\begin{Verbatim}[commandchars=\\\[\]]
+import os, re, threading
+
+class PingCheck(threading.Thread):
+    received_packages = re.compile(r"(\d) received")
+
+    def __init__ (self,ip):
+        threading.Thread.__init__(self)
+        self.ip = ip
+        self._successful_pings = -1
+
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Parallelisation example}
+\begin{Verbatim}[commandchars=\\\%\%]
+def run(self):
+    ping_out = os.popen("ping -q -c2 "+self.ip,"r")
+    while True:
+        line = ping_out.readline()
+        if not line: break
+        n_received = re.findall(self.received_packages,line)
+        if n_received:
+            self._successful_pings = int(n_received[0])
+
+
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Parallelisation example}
+\begin{Verbatim}[commandchars=\\\[\]]
+def status(self):
+    if self._successful_pings == 0:
+        return "no response"
+    elif self._successful_pings == 1:
+        return "alive, but 50 % package loss"
+    elif self._successful_pings == 2:
+        return "alive"
+    else:
+        return "shouldn't occur"
+
+
+\end{Verbatim}
+
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Parallelisation example}
+\begin{Verbatim}[commandchars=\\\%\%]
+if __name__ == "__main__":
+    check_results = []
+    for suffix in range(1,255):
+        ip = "10.25.1."+str(suffix)
+        current = PingCheck(ip)
+        check_results.append(current)
+        current.start()
+
+    for el in check_results:
+       el.join()
+       print "Status from ", el.ip,"is",el.status()
+
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Asynchronous processing example}
+\begin{Verbatim}[commandchars=\\\[\]]
+class FileSaver(threading.Thread):
+    def __init__(self, text, filename):
+        threading.Thread.__init__(self)
+        self.text = text
+        self.filename = filename
+
+    def run(self):
+        f = open(self.filename, 'w')
+        f.write(self.text)
+        f.close()
+        time.sleep(10)
+
+\end{Verbatim}
+
+\end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Asynchronous processing example}
+\begin{Verbatim}[commandchars=\\\%\%]
+if __name__ == "__main__":
+    files = []
+    for i in xrange(3):
+        msg = raw_input("Enter some text: ")
+        fname = "file" + str(i) + ".txt"
+        save = FileSaver(msg, fname)
+        save.start()
+        files.append(save)
+
+    for f in files:
+        f.join()
+        print(f.filename + " was saved.")
+
+\end{Verbatim}
+
+\end{frame}
+
+
+\end{document}
