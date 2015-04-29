@@ -1,0 +1,118 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 9.1: Advanced Buffer Overflows\\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+Last time we looked at a fairly simple example of a buffer overflow.  From it, I hope
+you got a basic idea of how a buffer overflow works. You did not, however, see the full
+power of a successful overflow works.  You also didn't see how to prepare a realistic 
+overflow attack.
+
+In this lab you will execute a ``real'' buffer overflow attack.  It will not be easy.
+There are many steps and a lot of little details.  It will take some time.  It's also not
+a lab you can do a portion of and then come back and complete later - at least not on a lab
+machine.  But if you stick with it you will do something that very few people have actually done.
+In fact, very few people even understand how to do it.
+
+You can do this lab on your own machine.  It shouldn't cause any problems.  However, I recommend that 
+you use a lab machine.
+
+\section{Setup}
+Create the directory \texttt{C:\\bufferlab}.  We will keep all of our files for the lab there.  
+Find the \texttt{Buffer-Overflow-Lab} folder on the I drive and copy its contents into this new 
+directory. 
+
+Copy mingw-get-setup.exe from I: and run it to install MinGW. After it downloads the installation manager, click ``continue'' to run it.  From the package selection menu, select mingw-developer-toolkit, mingw32-base, and  msys-base.  Go to Installation $\rightarrow$ Apply changes.  This will take a while to complete.
+
+When it does complete you will need to modify your path.
+\begin{itemize}
+	\item From the Start Menu, Right-click Computer $\rightarrow$ Properties.
+	\item Select advanced system settings.
+	\item Select environment variables.
+	\item Under system variables, find ``Path'' and edit it adding
+		``\texttt{;C:\\MinGW\\bin}'' to the end of the path string.
+\end{itemize}
+
+While you're waiting, run the nasm-2.11.08 installer.  Untick the three optional components when the 
+menu comes up.
+
+Once the MinGW installer completes, compile and run \texttt{vulnerable.c}:
+\begin{itemize}
+	\item Open a \texttt{cmd} window.
+	\item \texttt{cd C:\\bufferlab}
+	\item \texttt{gcc -o vulnerable vulnerable.c}
+	\item Run the program by typing \texttt{vulnerable.exe aaaabbbbcccc\ldots yyyyzzzz}.
+	\end{itemize}
+
+The program should crash, showing that it's vulernable to a buffer overflow.
+
+\section{Prepare the attack}
+We are going to have to analyse the vulernable program using a special debugger, OLLYDBG.  Extract
+the \texttt{odbg110.zip} file and run the OLLYDBG debugger that is unpacked. (Click ``yes'' to 
+the dll message.)
+
+\begin{itemize}
+	\item Go to File $\rightarrow$open.
+	\item Choose vulnerable.exe.
+	\item In the Arguments box, enter aaaabbbbcccc\ldots yyyyzzzz.
+	\item Push F9 once or twice to advance the debugger until the top left window 
+		goes blank.
+\end{itemize}
+Look in the ``Registers'' window for the value of the EIP register.  In mine I found 
+71707070 - hex for ``qppp''. Now we know what part of our string is overwriting the return address. See figure1.png for an example.
+
+If we count the characters in the argument string, we see that we write 64 of them before we overflow 
+the buffer.  This means that we have 64 bytes in which we can enter our malicious code.  After that, we will use the next four bytes to change the return address to the base address of our malicious code.
+
+Now, in your \texttt{cmd} window, run the \texttt{arwin} utility to find the address of two 
+Windows functions.
+
+\begin{itemize}
+	\item Run \texttt{arwin.exe kernel32.dll WinExec} \\
+		I found 0x75462ff1.
+	\item Run \texttt{arwin.exe kernel32.dll ExitProcess} \\
+		I found 0x753e79d8.
+\end{itemize}
+
+The addresses you find will be different.  Note the addresses. Our malicious code is written in assembly language in the file exploit.asm.  Edit that file, placing the addresses you just found in the appropriate places. You should be able to tell where from the comments.
+
+Now we will compile the exit code and then partially disassemble it to get the actual bytes of the executable code.  The steps to do this in your cmd window are:
+
+\begin{itemize}
+	\item \texttt{cd C:\\Program Files (x86)\\nasm}
+	\item \texttt{nasm.exe  -f elf C:\\bufferlab\\exploit.asm}
+	\item \texttt{cd C:\\bufferlab}
+	\item \texttt{ld -o exploit.bin exploit.o}
+	\item \texttt{objdump -d exploit.bin}
+\end{itemize}
+
+From the output we get the bytes of our malicious code that we will write into the buffer.  See figure2.png for an example. Before we begin the attack, we need to find the address of the buffer in memory.  Run \texttt{vulnerable.exe} again in OLLYDBG to find the address. Click F9 about twice until you can find the hex digits of our long input sting in memory and not the address.  See figure3.png for an example.  In this example, the buffer is at
+0028fef0.  There's actually one byte - the first `a' - in the word above. When we write these bytes in our buffer overflow we will reverse the byte order and write the address as f0 fe 28, omitting the zeroes.
+
+Now we have enough information to prepare our attack. We know:
+\begin{itemize}
+	\item The number of bytes we need to write to overflow the buffer.
+	\item The bytes of malicious code that we will place in the buffer.
+	\item The value of the return address we will write into the bufer.
+\end{itemize}
+
+We will write a short C program to launch our attack.  That program is already in the file \texttt{attack.c}, but you will need to adjust some values to match the information you found. In particular, you'll need to change the \texttt{ret} address to the one that you found, and you will need to change the \texttt{code} string to match your exploit code.
+
+In \texttt{attack.c} notice that the exploit code has been padded with a number of \texttt{\\90} bytes. This is because the exploit code is only 42 bytes long, and we need to write more bytes to overflow the buffer.  \texttt{\\90} is a no-op instruction. You may need to do a little trial and error to get the right number of bytes.
+
+Compile and run this code to execute your attack.
+
+Compile and run 
+
+
+\end{document}
