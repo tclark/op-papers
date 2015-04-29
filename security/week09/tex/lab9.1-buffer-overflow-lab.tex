@@ -28,7 +28,7 @@ You can do this lab on your own machine.  It shouldn't cause any problems.  Howe
 you use a lab machine.
 
 \section{Setup}
-Create the directory \texttt{C:\\bufferlab}.  We will keep all of our files for the lab there.  
+Create the directory \texttt{C:\textbackslash{}bufferlab}.  We will keep all of our files for the lab there.  
 Find the \texttt{Buffer-Overflow-Lab} folder on the I drive and copy its contents into this new 
 directory. 
 
@@ -40,7 +40,7 @@ When it does complete you will need to modify your path.
 	\item Select advanced system settings.
 	\item Select environment variables.
 	\item Under system variables, find ``Path'' and edit it adding
-		``\texttt{;C:\\MinGW\\bin}'' to the end of the path string.
+		``\texttt{;C:\textbackslash{}MinGW\textbackslash{}bin}'' to the end of the path string.
 \end{itemize}
 
 While you're waiting, run the nasm-2.11.08 installer.  Untick the three optional components when the 
@@ -49,7 +49,7 @@ menu comes up.
 Once the MinGW installer completes, compile and run \texttt{vulnerable.c}:
 \begin{itemize}
 	\item Open a \texttt{cmd} window.
-	\item \texttt{cd C:\\bufferlab}
+	\item \texttt{cd C:\textbackslash{}bufferlab}
 	\item \texttt{gcc -o vulnerable vulnerable.c}
 	\item Run the program by typing \texttt{vulnerable.exe aaaabbbbcccc\ldots yyyyzzzz}.
 	\end{itemize}
@@ -89,9 +89,9 @@ The addresses you find will be different.  Note the addresses. Our malicious cod
 Now we will compile the exit code and then partially disassemble it to get the actual bytes of the executable code.  The steps to do this in your cmd window are:
 
 \begin{itemize}
-	\item \texttt{cd C:\\Program Files (x86)\\nasm}
-	\item \texttt{nasm.exe  -f elf C:\\bufferlab\\exploit.asm}
-	\item \texttt{cd C:\\bufferlab}
+	\item \texttt{cd C:\textbackslash{}Program Files (x86)\textbackslash{}nasm}
+	\item \texttt{nasm.exe  -f elf C:\textbackslash{}bufferlab\textbackslash{}exploit.asm}
+	\item \texttt{cd C:\textbackslash{}bufferlab}
 	\item \texttt{ld -o exploit.bin exploit.o}
 	\item \texttt{objdump -d exploit.bin}
 \end{itemize}
@@ -112,7 +112,6 @@ In \texttt{attack.c} notice that the exploit code has been padded with a number 
 
 Compile and run this code to execute your attack.
 
-Compile and run 
 
 
 \end{document}
