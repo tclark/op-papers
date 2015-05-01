@@ -10,7 +10,7 @@ class Locker(threading.Thread):
         self.name = name
     def run(self):
         self.num_threads[0] += 1
-        print("Thread {0} running. I am number {1}. ".format(self.name, self.num_threads[0])
+        print("Thread {0} running. I am number {1}. ".format(self.name, self.num_threads[0]))
         self.num_threads[0] -= 1
 
 if __name__ == "__main__":
