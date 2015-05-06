@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 10.1: Information Flow \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+We can use the Bell-LaPadula Model to organise our applications into areas of greater and lesser security levels. Then we plan the information flow of our application to be ensure that information does not move from the higher security areas to lower security areas.
+
+\section{Order and payment processing}
+Suppose we are building an online retail application and we need to implement the order processing functions.  We need to do the following:
+\begin{enumerate}
+	\item Get the quantities and types of items ordered;
+	\item Determine total cost;
+	\item Get the ccustomer's saved payment information;
+	\item Make a request of a payment processing service (this is an outside 3rd party service).
+	\item Record the order.
+\end{enumerate}
+
+Using diagrams, identify the relative security levels of these functions and any data stores they access.  Label flows of data between them and ensure that your model follows Bell-LaPadula principles.
+
+\newpage
+
+\section{Patient information}  
+Consider this system to make and track appointments in a physicians' office:
+\begin{enumerate}
+	\item Office staff can create and modify appointments for doctors.
+	\item Doctors record when they meet with patients and enter diagnostic and treatment information in patient medical records.
+	\item Billing staff recieve information about appointments that have occurred so that they can issue invoices for payment.
+\end{enumerate}
+
+Draw a diagram showing the relative security levels of these functions and track information flows to ensure that Bell-LaPadula principles are followed.
+
+\newpage
+
+\section{Twtter API}
+Suppose that we are building an API for a Twitter-like service. Authentication is handled in the following way: 
+
+\begin{enumerate}
+	\item End users log directly onto Twitter.
+	\item Users request an authentication token.
+	\item Users enter those tokens into their third-party apps.
+	\item The application accesses the users' Twitter feeds and
+	timelines.
+\end{enumerate}
+
+Diagram the seurity levels and information flows.  Are Bell-LaPadula conditions satisfied?
+
+\end{document}
