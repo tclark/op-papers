@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 9: Buffer Overflow Questions \\ IN618 Security}
+\maketitle
+
+\section*{Instructions}
+Answer the questions below and submit a hard copy in class on Monday, 11 May.
+
+\begin{enumerate}
+	\item When we performed our buffer overflow tests, why did we use ``aaaabbbbccccdddd... yyyyzzzz'' for our input string?  Why not just use a string with one repeated character?
+	\vspace{40mm}
+	\item When we performed our attack, why did we use the bytes produced by compiling and loading our
+	assembly language code?
+	\vspace{40mm}
+	\item In our exploit input, what was the significance of the \texttt{\textbackslash{}x90} characters?
+	\vspace{40mm}
+	\item We overwrote the return address value as part of our exploit.  What was located at the addess we inserted?
+\end{enumerate}
+
+
+
+\end{document}
