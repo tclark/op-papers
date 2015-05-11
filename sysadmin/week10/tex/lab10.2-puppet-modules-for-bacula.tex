@@ -7,52 +7,84 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 10.2:  Configuring a Backup Job\\ IN719 Systems Administration}
+\title{Lab 10.2:  Puppet Modules for Bacula\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
 \maketitle
 
+\section*{Preface}
+You must complete lab 10.1 before starting on this task. 
+
 \section*{Introduction}
-In the last lab we performed a simple backup and restore to familiarise ourselves with the Bacula tools and processes.  Configuring a ``real" backup job is a bit more involved, however.  Much of the necessary configuration required involves getting the various components to communicate over the network\footnote{You will need to have your hosts files properly set up in order for this lab to work.}.
+In the previous lab we performed a minimal installation of Bacula on our \texttt{mgmt} servers so that we could try out a backup/restore process. In this lab we're going to start preparing our Puppet modules to manage a complete Bacula installation across our systems. We will create three modules in this lab:
 
-In this lab we will configure a job to backup files on our \texttt{mgmt} servers.  After completing this lab you should be ready to cofigure backup jobs on all of your Linux servers.
+\begin{itemize}
+	\item \texttt{bacula-director} will install and manage the Bacula Director service.  We will apply this module to our \texttt{mgmt} servers.
+	\item \texttt{bacula-file} will install and manage the Bacula File Daemon (client) service. We will apply this module to every Linux server.
+	\item \texttt{bacula-storage} will install and manage the Bacula Storage Daemon.  We will apply this module to our \texttt{storage} server.
+\end{itemize}
 
-\section{Configure Bacula-fd on mgmt}
-\begin{enumerate}
-  \item Install the \texttt{bacula-client} package on \texttt{mgmt}.
-  \item Modify the configuration file \texttt{/etc/bacula/bacula-fd.conf}.
-  \begin{enumerate}
-    \item In the \emph{Director} section, change the name to \texttt{backup-dir} (or whatever your 
-          Bacula Director's name is configured to be).  Change the password value to something you can
-	  remember and copy accurately later.
-    \item In the \emph{FileDaemon} section, change the FDAddress to the IP address of your \texttt{mgmt}
-          server.  If your hosts file is set up properly, then you may be able to use your server's
-	  fully qualified name instead.
-    \item In the \emph{Messages} section, change the name of the name of the director.
-  \end{enumerate}
-  \item Restart the \texttt{bacula-fd} service after modifying the configuration.
-  \item Create the directory \texttt{/home/bacula/restores} and make sure that it is owned by bacula.
-\end{enumerate}
+\section{Module Structure}
+We will lay out each of our three modules using the same structure we have used in the past.  Each module will be placed in a subdirectory of \texttt{/etc/puppet/modules}.  Each module diectory will have three subdirectories: \texttt{files}, \texttt{manifests}, and \texttt{templates}.  Inside the \texttt{manifests} subdirectory we will create the files \texttt{init.pp}, \texttt{install.pp}, \texttt{config.pp}, and \texttt{service.pp}. We will place copies of the appropriate configuration files in the \texttt{files} subdirectory.
 
-\section{Configure Bacula-sd on backup}
-Right now our Bacula storage daemons are not configured to listen on the network.  We need to make one small change to \texttt{/etc/bacula/bacula-sd.conf} on our \texttt{backup} servers.
+\section{Installation}
+Our three modules will need to install the following packages:
 
-In the \emph{Storage} section, change the \texttt{SDAddress} to the ip address or hostname of your \texttt{backup} server.  Restart the \texttt{bacula-sd} service.
+\begin{itemize}
+	\item The \texttt{bacula-director} module will install the packages \texttt{bacula-server} and \texttt{bacula-console}.
+	\item The \texttt{bacula-file} module will install the \texttt{bacula-fd} package.
+	\item The \texttt{bacula-storage} module will install the \texttt{bacula-sd} package.
+\end{itemize}
 
-\section{Configure the Bacula director on backup}
-Make the following changes in \texttt{/etc/bacula/bacula-dir.conf}.
-\begin{enumerate}
-  \item Find the \emph{Storage} section that defines your \texttt{File} storage.  Modify the \texttt{Address} property to use the IP address or hostname of your backup server.
-  \item Create a new Client definition for your \texttt{mgmt-fd} file daemon.  The \texttt{Name} value should be \texttt{mgmt-fd}, the \texttt{Address} should match your \texttt{mgmt} server address, and the \texttt{Password} should match the password value from the bacula-fd.conf file on your \texttt{mgmt} server.
-  \item Create a new \emph{FileSet} definition to identify the files you want backed up on \texttt{mgmt}.  Set the \texttt{File} property to \texttt{/etc/puppet} so that your Puppet configuation is backed up.  You can add additional \texttt{File} properties to the set as well.
-  \item Create a new \emph{Job} definition for a backup job on \texttt{mgmt}.  Set the \texttt{JobDefs} poperty to \texttt{DefaultJob} to inherit the default properties.  Then you just need to override the ones that need to change.  Override the \texttt{Name}, \texttt{FileSet}, and \texttt{Client} properties to give your new job a unique name, to use the new FileSet you defined, and to use the \texttt{mgmt-fd} client.
-  \item Restart the \texttt{bacula-director} service after changing the configuration.
+The installation code will go in the \texttt{install.pp} file in each module.  For example, the \texttt{bacula-file} module will have an install.pp file like this:
 
-\end{enumerate}
+\begin{verbatim}
+  class bacula-file::install {
+    package { 'bacula-fd', 
+        ensure => present,
+    }
+  }
+\end{verbatim}
 
-\section{Try your new backup job}
-Using \texttt{bconsole} on \texttt{backup}, try running your new backup job to be sure that it works.  Then try a restore of that backup.  Note that the restore process will copy the restored files to \texttt{/home/bacula/restores} on \emph{the server from which the files were backed up} by default with our configuration.
+Then, put the following code in the module's \texttt{init.pp} file:
 
-Once this is done you are prepared to create backup jobs on all of your Linux servers following the same process described here.
+\begin{verbatim}
+  class bacula-file {
+    include bacula-file::install,
+  }
+\end{verbatim}
+
+Set up each of your modules and write the code to install the appropriate packages for them.  Leave the config and service files empty for now.  Apply your modules to their target servers and make sure they function correctly before proceeding.
+
+\section{Configuration}
+Every Bacula component has its own configuration file that we need to manage.  
+
+\begin{itemize}
+	\item The \texttt{bacula-director} module needs to manage the files \texttt{/etc/bacula/bacula-dir.conf} and \texttt{/etc/bacula/bconsole.conf.}
+	\item The \texttt{bacula-fd} module will manage the file \texttt{/etc/bacula/bacula-fd.conf}.
+	\item The \texttt{bacula-storage} module will manage the file \texttt{/etc/bacula/bacula-sd.conf}.
+\end{itemize}
+
+You can get initial copies of each of these files from servers on which you performed the installations in the previous step. Set up the appropriate file resources in your modules' respective \texttt{config} classes, and add the config classes to the modules' \texttt{init.pp} file.  For example, the \texttt{bacula-file} module's \texttt{init.pp} should look like this:
+
+\begin{verbatim}
+class bacula-file {
+include bacula-file::install, bacula-file::config,
+}
+\end{verbatim}
+
+Test your module additions by applying them to to your servers before continuing.
+
+\section{Services}
+One you have the installation and configuration incorporated into your Puppet modules, you need to add service resources.
+\begin{itemize}
+	\item The \texttt{bacula-director} module will ensure that the \texttt{bacula-director} service is running on \texttt{mgmt}
+	\item The \texttt{bacula-storage} module will ensure that the \texttt{bacula-sd} module is running on \texttt{storage}
+	\item The \texttt{bacula-file} module will ensure that the \texttt{bacula-fd} service is running on every Linux server.
+\end{itemize}
+
+Once you have the service classes implemented in your Puppet modules you can add \texttt{Notify} clauses to the configuration classes so that the services will be restarted when configuration changes.
+
+Once these modules are prepared and applied we can begin modifying the configurations to support our backup and restore jobs.
 \end{document}
