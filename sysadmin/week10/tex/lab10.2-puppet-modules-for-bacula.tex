@@ -41,7 +41,7 @@ The installation code will go in the \texttt{install.pp} file in each module.  F
 
 \begin{verbatim}
   class bacula-file::install {
-    package { 'bacula-fd', 
+    package { 'bacula-fd': 
         ensure => present,
     }
   }
