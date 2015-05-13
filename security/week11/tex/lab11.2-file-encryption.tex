@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 11.2: Encrypting messages with GNU Privacy Guard (GPG) \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+Earlier this week we saw how to manage file ownership and permission to protect data.  Sometimes these measures don't provide enough security for especially important data.  For these situations we use encryption.  Public key encryption tools like GNU Privacy Guard (GPG) can be used for this.
+
+Although the underlying principles of public key encryption are quite sophisticated, it is relatively easy to encrypt and decrypt files using tools like GPG. In this lab we will experiment with this software.
+
+\section{Procedure}
+\begin{enumerate}
+\item Install the gpg4win package available at \texttt{I:\textbackslash{}COURSES\textbackslash{}EAD\textbackslash{}AITEIT3\textbackslash{}BITY2\textbackslash{}IN618 Security\textbackslash{}GPG-Lab}
+
+\item Start the Kleopatra application you just installed.
+
+\item Create a new certificate by selecting File $\rightarrow$ New Certificate. In the dialogue, identify the certificate with your first and last name and your OP email address.
+
+\item Export your certificate by highlighting your certificate in the list (which should only contain your certificate right now) and clicking the ``Export Certificates'' button. Save your file in \texttt{M:\textbackslash{}ICT Students\textbackslash{}IN618 Security\textbackslash{}Certificates\textbackslash{}firstname.lastname.asc} (using your own name for the file).
+
+\item Create a plain text file using notepad or something similar. Type a short message in the file. Save it to your desktop.
+
+\item Encrypt the file by going to File $\rightarrow$ Sign/Encrypt Files. In the next dialogue box be sure that ``encrypt'' is chosen. In the next dialogue choose your key and hit the ``Add'' button. Then click ``Encrypt'' and note where the encrypted file is saved.
+
+\item Try opening the encrypted file with Notepad and observe that it is indeed encrypted.
+
+\item Now decrypt the encrypted file by going to File $\rightarrow$ Decrypt/Verify Files. Check your decrypted file.
+
+\item Now choose a partner. Click the ``Import Certificates'' button in Kleopatra and navigate to the Certificates folder on the \texttt{M:} drive. Find your partner’s file and import it.
+
+\item Now encrypt your message again, but this time use your partner's certificate. Email the encrypted (.gpg) file to your partner.
+
+\item Retrieve your own encrypted message from your email and use Kleopatra to decrypt it.
+\end{enumerate}
+
+\section{Reflection}
+Although we are able to send each other encrypted files and decrypt them, our process still has a major security weakness. What is it?
+\end{document}
