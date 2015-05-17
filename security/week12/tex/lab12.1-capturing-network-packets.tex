@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 12.1: Capturing Network Packets \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+In this paper we've learned a bit about how to write more secure software and how to secure our systems.  But our data frequently needs to travel over networks, and untrusted netnworks at that.  In this lab we will see how easy it us to extract sensitive data as it traverses a network.
+
+\section{Procedure}
+First, visit the web page at \url{http://in618.sqrawler.com/secure-login}.  Observe that you can log in with your Polytech user id and any password.  Return to the login page.
+
+Now we are going to repeat the login process, but we're going to capture the network packets as we do so.
+
+\begin{enumerate}
+	\item Start the Wireshark network packet analyser. From the interface list, select your computer's ehternet card and click start.
+	\item In your web browser, fill out and submit the login form with a valid user name.
+	\item Take a minute to enjoy the picture of the kitten.
+	\item Go to the wireshark window and stop the capture by clicking the red square in the top menu.
+	\item In the main window you now have a long list of logged network packets captured by wireshark. We will filter that list.  In the filter box at the top, enter ``http'' and then click apply. 
+	\item In the filtered list, look for packets where the source or destination address is \texttt{54.66.229.216}.  These are packets going to or coming from our web server.
+	\item Find the packet for which the info field contains ``\texttt{POST /secure-login/login.php}''. Highlight it.
+	\item In the detail pane below, find and expand the ``\texttt{HTML Form URL Encoded}'' item. In that field,
+	find the username and password you provided when you submitted the form.
+	\item Now inspect the next packet in the exchange, which will say ``\texttt{HTTP/1.1 302 Found}'' in the info column. Expand the Hypertext Transfer Protocol section in the detail pane below and find the names and values of the cookies the server sent.  Note those below
+	\vspace{20mm}
+	\item Inspect the other packets in the exchange.  In particular, examine the application payloads that come from the server.  We can see how any sensitive information that might be contained within is readable.
+\end{enumerate}
+
+\section{Reflection}
+The remarkable thing to note here is that we did not execute any sort of attack on the client or the server.  All we have to do is get access to any part of the network that carries the data.  What other sorts of network traffic may contain information that you would prefer to be kept private?
+
+\end{document}

@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 12.1: SSH Tunneling with Putty  \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+In the first part of the lab we saw how unencrypted network traffic is eaily captured, possibly revealing sensitive information. Sometimes we need to send data using an insecure protocol over an untrusted network.  One way we can do this more safely is to \emph{tunnel} our connection using ssh.  Since ssh is encrypted, this will protect our data.
+
+
+\section{Procedure}
+\begin{enumerate}
+	\item Start Putty. In the left side menu, click on Connection $\rightarrow$ SSH $\rightarrow$ Tunnels.
+	\item Find the ``Source Port'' box in the dialogue and enter \texttt{8000} in it.
+	\item In the ``Destination'' box enter \texttt{in618.sqrawler.com:80}.
+	\item Click ``Add''.
+	\item Now select ``Session'' in the left side menu.  Log into \texttt{in618.sqrawler.com} with the user name ``student'' and the password ``P@ssw0rd''.
+	\item Start a new Wireshark capture like we did earlier.
+	\item In your web browser, enter \texttt{localhost:8000/secure-login} in the address bar.  Complete your log in. Your http session is being forwarded through Putty on your local machine to the remote server using encryption.
+	\item Stop the Wireshark capture.  Use the filter to find ssh packets.  Inspect the packet data and note that you cannot read the encrypted payloads.
+\end{enumerate}
+
+
+\section{More on tunneling}
+SSH tunneling is a common tactic used to transport data safely over an untrusted network.  It can also be used to pass traffic that may be blocked by firewalls provided that the firewall allows SSH through (many do).  In this sense it can serve as a kind of ad-hoc VPN for technical users, but it's not really a solution for other users.
+\end{document}
