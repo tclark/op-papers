@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 11.1:  Bacula on Windows\\ IN719 Systems Administration}
+\title{Lab 12.1:  Bacula on Windows\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -17,12 +17,12 @@
 A Bacula File Daemon is available for Windows. It is confugured and used in a way that is very similar to the Linux/Unix version.
 
 \section{Install the Bacula File Daemon}
-An installer for the Bacula File Daemon is available on the I: drive in the Week11 directory.  Use it to install the File Daemon on your Windows server interactively.  Note that this sofware is proprietary and not licensed for your use outside of this paper.  Specify the correct name of your Bacula Director, an password, and the director's address.  Although we specify a password here, the installer doesn't seem to use it in the resulting configuration.  You will be able to select from several Bacula components in the installer, but we only require the File Daemon.
+An installer for the Bacula File Daemon is available on the I: drive.  Use it to install the File Daemon on your Windows server interactively.  Note that this sofware is proprietary and not licensed for your use outside of this paper.  Specify the correct name of your Bacula Director, a password, and the director's address.  Although we specify a password here, the installer doesn't seem to use it in the resulting configuration.  You will be able to select from several Bacula components in the installer, but we only require the File Daemon.
 
 The installer will also save a sample client configuration that can be copied into the bacula-dir.conf file on your backup server do define the Windows server client.
 
 \section{Configure the Bacula Director}
-Besides configuring the client in bacula-dir.conf, you will also need to configure a FileSet and a restore Job for your Windows server, since your exisiting configuration uses Linux specific file paths.
+Besides configuring the client in bacula-dir.conf, you will also need to configure a FileSet and a backup Job for your Windows server, since your exisiting configuration uses Linux specific file paths.
 
 \section{Test your configuration}
 After installing and configuring the Bacula for the Windows server and restarting the affected components, perform test backup and restore jobs to verify your setup.
