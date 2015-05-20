@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 12.1: SSH Tunneling with Putty  \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+Earlier this week we saw how easy it is to intercept and read unencypted web traffic.  In this lab we will configure Apache to use TLS/SSL to encrypt our web traffic.
+
+\section{Preliminaries}
+Obtain the ip address of your server from the lecturer.  Verify that the web site is serving our example page by visiting the web site at \url{http://<your-ip>/secure-login}.
+
+Use Putty to log in to your server and enter the commands below.
+
+
+\section{Procedure}
+\begin{enumerate}
+	\item \texttt{sudo a2enmod ssl}
+	\item \texttt{sudo openssl req -new -newkey rsa:2048 -nodes -keyout key.pem -out req.csr}
+	\item \texttt{sudo openssl x509 -req -days 365 -in req.csr -signkey key.pem -out server.crt}
+	\item \texttt{sudo mv server.crt /etc/ssl/certs/}
+	\item \texttt{sudo mv key.pem /etc/ssl/private/}
+	\item  Edit the Apache vhost configuration file at \texttt{/etc/apache2/sites-available/default-ssl.conf}.  If you're unfailiar with Linux, use the command \texttt{sudo nano /etc/apache2/sites-available/default-ssl.conf}.  Edit the \texttt{SSLCertificateFile} and \texttt{SSLCertificateKeyFile} entries to use the files we set up above.
+	\item \texttt{sudo a2ensite default-ssl}
+	\item \texttt{sudo service apache2 restart}
+	
+	
+
+\end{enumerate}
+
+
+\section{Viewing your site with HTTPS}
+Check that the procedure works by visiting \url{http://<your-ip>/secure-login} with your browser. Because you are using a self signed certificate you will get a warning message requiring your to accept it.
+
+Capture a login session with Wireshark to verify that the data is properly encrypted.
+
+\section{Getting a properly signed certificate}
+To make your web site ready for public use, you need to get your keys signed by a recognised certificate authority.  An example authority is Thawte.  Look at their web site and see the options for certificates they offer.  Note that this isn't a recommendation for any particular CA.  We are just using Thawte as an example. 
+
+\end{document}
