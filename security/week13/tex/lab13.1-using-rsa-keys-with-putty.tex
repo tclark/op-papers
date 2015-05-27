@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 13.1: Using RSA Keys With PuTTY \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+We regulary use PuTTY to connect to remote servers using SSH. SSH in an encrypted network protocol so we don't have to worry about a third party intercepting our packets and capturing data.  There is still a weakness, however, in the way we have used it. We send our password to the remote server for authentication.  Why is this an issue? Think about this so we can discuss it later.
+
+In this lab we will see how to create and use RSA keys to authenticate so that we do not have to use passwords.
+
+\section{Generate your keys}
+We will generate our RSA keys using the PuTTYgen utility.  If it is not on the lab machines, you can download it from \url{;http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html}. Carry out the following steps:
+
+\begin{enumerate}
+  \item Start the PuTTYgen utility;
+  \item For Type of key to generate, select SSH-2 RSA;
+  \item In the Number of bits in a generated key field, specify 2048 or 4096 (You can use more bits. A longer key is harder to break.);
+  \item Click the Generate button;
+  \item Move your mouse pointer around in the blank area of the Key section, below the progress bar to generate some entropy until the progress bar is full;
+  \item A private/public key pair has now been generated;
+  \item In the Key comment field, enter any comment you'd like, to help you identify this key pair, later (e.g. your e-mail address.) 
+  \item You can enter a passphrase that will be required when you use the keys, but for this lab leave the passphrase blank.
+  \item Click the Save public key button and name your file \texttt{id\_rsa.pub)}. 
+  \item Click the Save private key button and name it \texttt{id\_rsa} (You can save it in the same location as the public key, but it should be a location that only you can access and that you will not lose.);
+  \item Right-click in the text field labeled ``Public key for pasting into OpenSSH authorized\_keys file'' and choose Select All; Right-click again in the same text field and choose Copy.
+\end{enumerate}
+
+\section{Copy your public key on the server}
+To place your public key on the server, excute the following steps:
+
+\begin{enumerate}
+	\item Log onto the lab server as directed by the lecturer;
+	\item Create your \texttt{.ssh} directory in your home directory:
+	\begin{verbatim}
+	mkdir ~/.ssh
+	chmod 0700 ~/.ssh
+	touch ~/.ssh/authorized_keys
+	chmod 0644 ~/.ssh/authorized_keys
+	\end{verbatim}
+	\item You will copy your key into the \texttt{authorized\_keys} file;
+	\item Enter the command \texttt{vi ~/.ssh/authorized\_keys};
+	\item Tap the i key on your keyboard and right-click your mouse to paste;
+	\item Press escape, then enter \texttt{ZZ}.
+\end{enumerate}
+
+\section{Set up a profile in PuTTY}
+You can save session information in PuTTY so that it will use you keys and so that you don't have to reenter the same information all the time.
+
+\begin{enumerate}
+	\item Start PuTTY;
+	\item In the Host Name field, enter the IP address of our server; 
+	\item Enter 22 in the Port field;
+	\item Select SSH under Protocol;
+	\item Along the left-hand side of the window, select the Data sub-category, under Connection;
+	\item Specify your username in the Auto-login username field;
+	\item Expand the SSH sub-category, under Connection;
+	\item Highlight the Auth sub-category and click the Browse button, on the right-hand side of the PuTTY window;
+	\item Browse your file system and select your previously-created private key;
+	\item Return to the Session Category and enter a name for this profile in the Saved Sessions field;
+	\item Click the Save button for the Load, Save or Delete a stored session area.
+\end{enumerate}
+
+Now you can log in without entering a password.
+
+\section{Conclusions}
+If every user on a system is using RSA keys, then it's possible to disable password based logins entirely.  What are some advantages to this?
+
+\end{document}
