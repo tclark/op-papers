@@ -36,7 +36,7 @@ When you do this, the terminal will output the \emph{process id}, or \texttt{PID
 Verify that your program is running with the command
 
 \begin{verbatim}
-  telnet localhost 8080
+  telnet localhost 8085
 \end{verbatim}
 
 You should be served the contents of the \texttt{passwd} file you captured earlier. 
@@ -61,7 +61,7 @@ This technique, removing a malicious program's file after starting it, is an eas
 Our malicious script listens for network connections, so we can look for that as well with the \texttt{netstat} command. If we want to look for active network network connections we can use the command
 
 \begin{verbatim}
-  netstat -tu
+  netstat -ta
 \end{verbatim}
 
 to check for TCP and UDP activity.  In our case we see that we have something listening on port 8080, or \texttt{http-alt} that we don't expect.
