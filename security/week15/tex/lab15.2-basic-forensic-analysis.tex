@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 15.1: Some Basic Forensic Analysis \\ IN618 Security}
+\maketitle
+
+\section*{Introduction}
+If we suspect a system has been compromised we need to do a little forensic analysis to se if this has, in fact, happened.  This is complicated somehwat because a skillful attacker will modify system utilities to conceal his or her activity on the compromised host. On the other hand, if we can determine that these utilities are modified, that is strong evidence that a system is compromised.
+
+\section{``Compromise'' your system}  
+Log into your Linux server as instructed by the lecturer.  On that system, download and prepare our ``malicious code'' by carrying out the following steps:
+
+\begin{verbatim}
+  curl http://kate.ict.op.ac.nz/~tclark/malicious-server > malicious-server
+  chmod +x malicious-server
+  cat /etc/passwd > data
+\end{verbatim}
+
+Our \texttt{malicious-server} script is just a simple one-line shell script that echoes the contents of the file \texttt{data} out on a network socket. We're having it show the contents of \texttt{/etc/passwd}. Run your script in the background with the command.
+
+\begin{verbatim}
+  ./malicious-server &
+\end{verbatim}
+
+When you do this, the terminal will output the \emph{process id}, or \texttt{PID} of your running process.  Note that number here.  You will need it later.
+
+Verify that your program is running with the command
+
+\begin{verbatim}
+  telnet localhost 8080
+\end{verbatim}
+
+You should be served the contents of the \texttt{passwd} file you captured earlier. 
+
+Now, we'll cover our tracks a bit by removing our malicious script with the command
+
+\begin{verbatim}
+  rm malicious-server
+\end{verbatim}
+
+\section{Examining our system}
+\subsection{Find the flie}
+We deleted our malicious script.  Because it's still running, we can see where the file used to be.  The command \texttt{lsof} shows us all open files (and file-like objects) on the system.  Run the command. It shows a lot of output, and in a real situation we would have to go through it to find and investigate anything that looks suspicious. In our case, however, we can short circuit the process with the command.
+
+\begin{verbatim}
+  lsof | grep malicious-server
+\end{verbatim}
+
+This technique, removing a malicious program's file after starting it, is an easy way for an attacker to hide activity but since the process is still in memory we can still find the evidence.
+
+\subsection{Look for network connections}
+Our malicious script listens for network connections, so we can look for that as well with the \texttt{netstat} command. If we want to look for active network network connections we can use the command
+
+\begin{verbatim}
+  netstat -tu
+\end{verbatim}
+
+to check for TCP and UDP activity.  In our case we see that we have something listening on port 8080, or \texttt{http-alt} that we don't expect.
+
+Earlier this semester we also saw the we could use port scanning to look for open network sockets remotely.  There are at least two reasons why port scanning is advantageous in this situation.  Can you think of what they are?
+
+\subsection{Look for the malicious application}
+There are a few ways we can try to find our malicious server application while it is running.
+
+\texttt{ps} is a command that shows running processes. If we run \texttt{ps -A} we can see all the running processes and look for anything that is out of place.  In our case, our ``attacker'' chose a pretty suspicious sounding name for the malicious process.  Real atackers will probably be a litle more cunning. What are some ways we can identify suspicious processes.
+
+\texttt{top} is another tool that shows runnig processes.  It ususally runs interactively and updates every few seconds.  Try it and see if you can find your malicious process.  Often, \texttt{top} shows more data than can fit on one screen, so running \texttt{top -b -n 1} will give you a snapshot of output that you can inspect more easily.
+
+\texttt{ps} and \texttt{top} get their information by looking at the \texttt{proc} file system. There is a directory under \texttt{proc} for every running process, identified by the PID.  Find the \texttt{/proc} subdirectory for the PID of your malicious process and cd into it.  Use \texttt{ls -l} to list its contents and then use \texttt{cat status} to see information about the running process.
+
+Sometimes on a compromised system you may find a process under the \texttt{/proc} that doesn't show up in output from \texttt{top} or \texttt{ps}.  What might that mean?
+
+
+
+
+
+\end{document}
