@@ -3,7 +3,7 @@
 % Dec 2012
 
 \documentclass[10pt]{beamer}
-\usetheme{CambridgeUS}
+\usetheme{Dunedin}
 \usepackage{graphicx}
 \usepackage{fancyvrb}
 
@@ -11,7 +11,7 @@
 
 \title{A Quick Overview of IPv6}
 
-\author[IN715]{Networks Three}
+\author[IN715]{Networks Administration}
 \institute[Otago Polytechnic]{
   Otago Polytechnic \\
   Dunedin, New Zealand \\
@@ -94,7 +94,7 @@
 
  \begin{itemize}
   \item IPv6 addressed are 128 bits long.
-  \item The first 64 bits are used to identify the network.
+  \item The first 64 bits are typically used to identify the network.
   \item The second 64 bits are used for the host.
   \item Example:
         2001:0DB8:AC10:FE01:0000:0000:0000:01A6 \\
@@ -165,8 +165,8 @@
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Simplified Routing}
-   \includegraphics[scale=0.5]{nw.png}
-
+   %\includegraphics[scale=0.5]{nw.png}
+   The larger address space provided by IPv6 allows ISPs to aggregate their customers' networks with common prefixes and advertise one route.
 \end{frame}
 
 \end{document}
