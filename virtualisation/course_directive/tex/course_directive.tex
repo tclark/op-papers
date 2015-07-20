@@ -1,0 +1,163 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage[margin = 2.25cm]{geometry}
+\setlength\parindent{0pt}
+
+\begin{document}
+
+\begin{figure}
+\includegraphics[width=30mm]{../../../resources/images/oplogo.png}
+\end{figure}
+
+\title{Course Directive\\IN720 Virtualisation\\Semester Two, 2015}
+\date{}
+\maketitle
+
+\section*{Description}
+It has become the norm in IT operations to use virtual systems in a wide range of applications.  The original intention of this was to make efficient use of resources and this is still important.  However, we have also come to realise that virtual systems enable new kinds of deployment and operational practices that are changing the industry.
+
+In this paper we will learn about how to provide and consume virtual systems.
+
+\section*{Course Information}
+\begin{itemize}
+  \item 15 Credits
+  \item Prerequisite: IN719
+\end{itemize}
+
+\section*{Lecturer}
+\begin{tabular}{lr}
+
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  Tom Clark &    \\
+     Office: & D311 \\
+     Phone & 470 4356 \\
+     Email: & \texttt{tom.clark@op.ac.nz} \\
+\end{tabular}
+
+\section*{Course Dates}
+\begin{tabular}{lr}
+Term 1 (10 weeks) & 20 July - 25 September \\
+Mid semester break & 26 September - 11 October \\
+Term 2 (6 weeks) & 12 October - 20 November \\
+\end{tabular}
+
+
+\section*{Resources}
+We will use a couple of books for reference diring the semester and it is strongly recommended that you get your own copies.  The first one we will use is \emph{The Docker Book} by James Turnbull, available at \url{http://www.thedockerbook.com}.
+
+An OpenStack reference will be selected later in the semester.
+
+You will need to set up accounts on a few online services like GitHub, Docker Hub, and AWS.  We will deal with these as they come up in class.
+
+Lab documents, slides, and other material is available on Github at https://github.com/tclark/op-papers.
+
+\newpage 
+
+\section*{Course Content and Schedule}
+This schedule is subject to change based on needs of the class.
+
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|c|l|}
+\hline
+ Week & Week Start & \multicolumn{1}{c|}{Topics}             \\ \hline
+ 1    & 20 Jul     & Introduction, Containers                 \\ \hline
+ 2    & 27 Jul     & Docker                                   \\ \hline
+ 3    &  3 Aug     & Docker Images                            \\ \hline
+ 4    & 10 Aug     & Docker Registries, Docker Hub            \\ \hline
+ 5    & 17 Aug     & Container Orchestration                  \\ \hline
+ 6    & 24 Aug     & Container Orchestration                 \\ \hline
+ 7    & 31 Aug     & Work Time                               \\ \hline
+ 8    &  7 Sep     & Hosted Clouds                            \\ \hline
+ 9    & 14 Sep     & AWS                                      \\ \hline
+ 10   & 21 Sep     & AWS                                      \\ \hline
+ H1   & 28 Sep     & Holiday                                  \\ \hline
+ H2   &  5 Oct     & Holiday                                  \\ \hline
+ 11   & 12 Oct     & OpenStack                                \\ \hline
+ 12   & 19 Oct     & OpenStack                                \\ \hline
+ 13   & 26 Oct     & OpenStack                               \\ \hline
+ 14   &  2 Nov     & Work Time                               \\ \hline
+ 15   &  9 Nov     & Work Time                               \\ \hline
+ 16   & 16 Nov     & Revision and Exam                       \\ \hline
+\end{tabular}
+
+\section*{Assessment}
+
+Assessments are weighted as follows: \\
+\begin{tabular}{|l|c|}
+\hline
+Assessment                  &  Weighting \\ \hline
+Container Project           &  25\% \\ \hline
+AWS Project                 &  20\% \\ \hline
+OpenStack Project           &  25\% \\ \hline
+Theory Exam                 &  30\% \\ \hline
+\end{tabular}
+
+\section*{Criteria for Passing}
+You must receive and overall average mark of 50\% or higher to pass this paper.
+
+\newpage
+
+\section*{Course Requirements and Expectations}
+\subsection*{Attendance}
+This paper is composed of a mix of lectures and self-paced project work.  Attendence is at your discretion. 
+However, you are responsible for keeping up with events that take place in class and completing work on schedule. 
+
+\subsection*{Communication}
+Important announcements and discussions about the course, assessments, and scheduling may take place during class sessions.  It is your responsibility to be informed about them.  If you cannot attend a class session, be sure to check with another student.
+
+A private channel, \texttt{virtualisation}, is set up on the op-bit Slack at \url{https://op-bit.slack.com/}.  The channel is intended for general class discussion.  Important announcements may also be posted there, so you should join and monitor the channel.
+
+Your student email is an official communication channel. It is your responsibility to regularly check your student email for important course related material, including changes to class scheduling or assessment details. Not checking will not be accepted as an excuse.
+
+You can manage your email at the Student Hub and download the instructions for forwarding your email at http://www.op.ac.nz/students/student-hub/
+
+\subsection*{Proprietary software}
+Most of this class can be completed using free/open source software, but some labs may require the use of proprietary software.  In addition, lab machines use proprietary operating systems and applications.
+\subsection*{Polytechnic Closure}
+In the event that the Polytechnic is closed or has a delayed opening because of snow or bad weather, you should not attempt to attend class if it is unsafe to do so. It is possible that your instructor will not be able to attend either, so classes will not physically be meeting. However, this does not become a holiday. Rather, material will be available on the Cisco Academy web site covering the material for classes affected by the closure. You are responsible for any material presented in this manner. Information about closure will be posted on the Otago Polytechnic facebook page https://www.facebook.com/OtagoPoly.
+
+\subsection*{Group Work and Originality}
+Students in the Bachelor of Information Technology degree are expected to hand in original work.  Students are encouraged to discuss
+assignments with their fellow students.  However, all assignments are to be completed as individual works unless group work is explicitly involved.
+Failure to submit your own unique work will be treated as plagiarism.
+
+\subsection*{Referencing}
+Appropriate referencing is required for all work.  Referencing standards will be specified by your instructor.
+
+\subsection*{Plagiarism}
+Plagiarism is submitting someone else's work as your own.  Plagiarism offences are taken seriously and an
+assessment that has been plagiarised may be awarded a zero mark.  A definition of plagiarism is in the Student Handbook,
+available online or at the school office.
+
+\subsection*{Submission Requirements}
+All assignments are to be submitted by the time, date, and method given when the assignment is issued.
+
+\subsection*{Extensions}
+Extensions are only available for unusual circumstances.  These must be applied for, and approved, prior to the submission deadline.
+
+\subsection*{Impairment}
+In case of sickness contact your lecturer or year co-ordinator as soon as possible, preferably before the test or
+assignment is due.  The policy regarding the granting of a mark that considers impaired performance requires a medical
+certificate and a medical practitioners signature on a form. You may should refer to the guide on impaired performance
+on the student handbook.
+
+\subsection*{Appeals}
+If you are concerned about any aspect of your assessment, please approach the lecturer in the first instance.  We support
+an open door policy and aim to resolve issues promptly.  Further support is available from the Programme
+Manager and Head of School. Otago Polytechnic has a formal process for academic appeals if necessary.
+
+\subsection*{Other Documents}
+Regulatory documents relating this course can be found on the Polytechnic website.
+
+
+
+
+\subsection*{Special Resources and Requirements}
+If you have any special needs, whether they relate to the course material, the exercises, the assessment, or anything in the course -
+then \textit{please} let your instructor know as soon as possible.
+
+\end{document}
