@@ -23,17 +23,13 @@ Capabilities of modern Linux kernels allow us to create \emph{containers} that g
 In this lab we will use LXC on Ubuntu servers to create and experiment with some containers.
 
 \section{Setup}
-A virtual Ubuntu 14.04 server has been created for you on vCloud.  Use PuTTY or another ssh client to log into your server. The username is \texttt{user} and the password is \texttt{P@ssw0rd}. A list of IP addresses will be posted on the class Slack channel. We need to apply updates to our server and then install LXC, but because the servers don't seem to get a DNS server address, we must jump through a couple of hoops.
+A virtual Ubuntu 14.04 server has been created for you on vCloud.  Use PuTTY or another ssh client to log into your server. The username is \texttt{user} and the password is \texttt{P@ssw0rd}. A list of IP addresses will be posted on the class Slack channel. We need to apply updates to our server and then install LXC.
 
 \begin{enumerate}
-	\item Edit the file \texttt{/etc/resolv.conf}, adding a line that says \\
-	\texttt{nameserver 10.50.1.80}.
 	\item Apply updates with the commands \\
 	\texttt{sudo apt-get update} \\
 	\texttt{sudo apt-get dist-upgrade}
 	\item Reboot your server with the command \texttt{sudo reboot}.
-	\item When the system comes back up, log in again and add the nameserver line back into 
-	\texttt{/etc/resolv.conf}.
 	\item Now install LXC with the command \texttt{sudo apt-get install lxc}.
 \end{enumerate} 
 
