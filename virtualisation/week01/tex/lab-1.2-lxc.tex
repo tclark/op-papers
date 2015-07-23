@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Running Containers with LXC\\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Capabilities of modern Linux kernels allow us to create \emph{containers} that give us a lightweight and simple way to virtualise systems. We need user space tools to allow us to access these capabilities.  \emph{LXC} is a tool that allows us to create, run, and manage containers.
+
+In this lab we will use LXC on Ubuntu servers to create and experiment with some containers.
+
+\section{Setup}
+A virtual Ubuntu 14.04 server has been created for you on vCloud.  Use PuTTY or another ssh client to log into your server. The username is \texttt{user} and the password is \texttt{P@ssw0rd}. A list of IP addresses will be posted on the class Slack channel. We need to apply updates to our server and then install LXC, but because the servers don't seem to get a DNS server address, we must jump through a couple of hoops.
+
+\begin{enumerate}
+	\item Edit the file \texttt{/etc/resolv.conf}, adding a line that says \\
+	\texttt{nameserver 10.50.1.80}.
+	\item Apply updates with the commands \\
+	\texttt{sudo apt-get update} \\
+	\texttt{sudo apt-get dist-upgrade}
+	\item Reboot your server with the command \texttt{sudo reboot}.
+	\item When the system comes back up, log in again and add the nameserver line back into 
+	\texttt{/etc/resolv.conf}.
+	\item Now install LXC with the command \texttt{sudo apt-get install lxc}.
+\end{enumerate} 
+
+\section{Creating New Containers}
+Creating a container is easy.  Just enter
+\begin{verbatim}
+sudo lxc-create -t ubuntu -n container-01
+\end{verbatim}
+
+This creates a new container named \texttt{container-01} based on the latest Ubuntu template.  This will take a few minutes to complete as it downloads the needed packages to create the container.  When this is done, create a second Ubuntu container called \texttt{container-02} and you will see that this goes much more quickly.
+
+Even though the host system is running Ubuntu 14.04, the containers we created are running the latest Ubuntu version (It is possible to specify a particular version.) We aren't limited to Ubuntu containers, however.  Create a third container called \texttt{container-03} using the Debian template.
+
+To get a list of the containers on a host, use the command
+
+\begin{verbatim}
+sudo lxc-list
+\end{verbatim}
+
+\section{Running Your Containers}
+to use a container you will need to start it.  Then you cna attach a console to it to work within the container.  Start your \texttt{container-01} container with the command
+
+\begin{verbatim}
+sudo lxc-start -d -n container-01
+\end{verbatim}
+
+The \texttt{-d} tells LXC to start the container without attaching a console to it automatically, which is generally what we want.
+
+To get a console session on our container, we use the \texttt{lxc-console} command as follows:
+
+\begin{verbatim}
+sudo lxc-console -n container-01
+\end{verbatim}
+
+Within the container, we can make changes, install software, and run services. Use the \texttt{ifconfig} command to note our container's IP address. Containers get a private IP address, but it is possible to route traffic through the host system to our container so that it can provide network services.
+
+Hit \texttt{Ctrl-a q} to disconnect from the console.
+
+\section{Freezing and Stopping Containers}
+
+We can pause a running container with the command 
+
+\begin{verbatim}
+sudo lxc-freeze -n <container-name>
+\end{verbatim} 
+
+and later resume it with the corresponding \texttt{lxc-unfreeze} command.
+
+We can stop a container with the command
+
+\begin{verbatim}
+lxc-stop -n <container-name>
+\end{verbatim}
+
+\section{Container Storage}
+Containers data is stored by default in \texttt{/var/lib/lxc}. Each container has a directory containng its information.  A stopped container can be cloned with the command
+
+\begin{verbatim}
+sudo lxc-clone -o <original-container-name> -n <new container>
+\end{verbatim}
+
+\section{Conclusion} 
+LXC containers are useful and powerful, but some additional management tools will make them even more so. Next time we will start working with Docker, which builds on LXC.
+\end{document}
