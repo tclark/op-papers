@@ -1,0 +1,122 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Algorithm Analysis}
+
+\author[IN711]{Algorithms and Data Structures}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{What is ADS about?}
+
+  \begin{itemize}
+    \item This class is about writing quality code.
+    \item In OOSD we looked at larger scale architectural issues.
+    \item In ADS we will zoom in and look at the details of efficient 
+          code.
+  \end{itemize}
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+	\frametitle{Algorithms and Data Structures}
+	
+	\begin{itemize}
+		\item Algorithms are step-by-step instructions to perform a task.
+		\item Data structures are used to organise collections of data.
+		\item We will see that a good choice of data structure can help us use 
+		      a good algorithm.
+			
+	\end{itemize}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+	\frametitle{Evaluating Efficiency }
+	
+	\begin{itemize}
+		\item For a given algorithm, we count the number of ``primitive operations'' performed.
+		\item In general, this number is a function of the number of inputs into the algorithm.
+		\item An efficient algorithm is one for which the number of operations doen't increase too quickly.
+		\item We generally compare the function to well-known mathematical functions. 
+	\end{itemize}
+\end{frame}
+	
+%----------- slide --------------------------------------------------%
+\begin{frame}
+	\frametitle{Key Functions}
+	\begin{enumerate}
+		\item $f(x) = c$
+		\item $f(x) = \log_{2}(x)$
+		\item $f(x) = x$
+		\item $f(x) = x\log_{2}(x)$
+		\item $f(x) = x^{2}$
+		\item $f(x) = x^{k}, k > 2$
+		\item $f(x) = 2^{x}$
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Big-O, Informally}
+	
+	Suppose we analyse the number of primitive operations performed by an 
+	algorithm on a list of $n$ items and find that it is characterised by the 
+	function 
+	
+	$f(n) = 4n^{2} + 3n + 6$
+	
+	In this case we would say that the algorithm is Big-O of $x^{2}$, because in Big-O
+	analysis we ignore coefficients and lower order terms.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Big-O, Formally}
+	
+	Given function $f(n):\Bbb Z^{+}\rightarrow\Bbb R, g(n):\Bbb Z^{+}\rightarrow\Bbb R$, we say that 
+	$f(n)$ is $O(g(n))$ if there is a real constant $c>0$ and an integer $n_{0}$ such that
+	
+	\vspace{5mm}
+	
+	$f(n) \leqq cg(n)$, for $n \geqq n_{0}$
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exercises}
+	
+	R-3.22 through R-3.27
+	
+	C-3.36
+	
+	C-3.42
+	
+	C-3.45
+	
+	\vspace{5mm}
+	Submit your answers to these and be ready to discuss your solutions next time.
+	
+\end{frame}
+\end{document}
