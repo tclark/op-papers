@@ -3,7 +3,7 @@
 % Dec 2012
 
 \documentclass[10pt]{beamer}
-\usetheme{CambridgeUS}
+\usetheme{Dunedin}
 \usepackage{graphicx}
 \usepackage{fancyvrb}
 
@@ -11,7 +11,7 @@
 
 \title{A Quick Introduction to BSD}
 
-\author[IN715]{Networks Three}
+\author[IN715]{Network Administration}
 \institute[Otago Polytechnic]{
   Otago Polytechnic \\
   Dunedin, New Zealand \\
@@ -116,7 +116,21 @@
   \end{itemize}  
 \end{frame}
 
-
+%----------- frame  ----------------------------------------------%
+\begin{frame}
+	\frametitle{BSD Networking}
+	\begin{itemize}
+		\item One of the strengths of BSD is its network stack, including routing and firewalling.
+		\item Key config files:
+		\begin{itemize}
+			\item \texttt{/etc/hostname.<ifname>}
+			\item \texttt{/etc/myname}
+			\item \texttt{/etc/mygate}
+			\item \texttt{/etc/resolv.conf}
+		\end{itemize}
+		\item See \url{http://www.openbsd.org/faq/faq6.html}
+	\end{itemize}  
+\end{frame}
 
 %----------- frame  ----------------------------------------------%
 \begin{frame}
