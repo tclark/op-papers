@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Introduction to Docker\\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Last time we saw how we could use LXC to create and run containers on a host. While LXC is powerful and useful, its interface is a little low level. \emph{Docker} is a tool that builds on top of LXC and extends our abilities to create and manage containers.  In this lab we will 
+
+\section{Setup}
+Use the same server that you used for the LXC lab.  Install the Docker tools with the command
+
+\texttt{sudo apt-get install docker.io}
+
+After installing, check to see that your Docker server is running with the command 
+
+\texttt{sudo docker info}
+
+You should see output like the following:
+
+\begin{verbatim}
+content..Containers: 0
+Images: 0
+Storage Driver: aufs
+Root Dir: /var/lib/docker/aufs
+Dirs: 6
+Execution Driver: native-0.2
+Kernel Version: 3.13.0-59-generic
+WARNING: No swap limit support
+.
+\end{verbatim}
+
+\section{Creating and running a container}
+
+Create a new container with the command
+
+\texttt{sudo docker run -i -t --name fred ubuntu /bin/bash}
+
+This will create a new container named \texttt{fred} based on the ubuntu base image. We have told docker to run \texttt{bash} on the container, and the \texttt{-i} and \texttt{-t} options connect us to an interactive console on it.  
+
+Once the container is up you can interact with it normally.  A few things about your container environment are interesting. Run \texttt{top} to see what is running inside the container.  For comparison, you mnay want to run \texttt{top} on the host system when you exit the container.  Also, use \texttt{ip a} to inspect the container's network interfaces.
+
+Type \texttt{exit} to return to the host. Since this terminates the \texttt{bash shell} the container itself stops.
+
+On the host system, type \texttt{sudo docker ps -a} to list the containers on the system. (Without the \texttt{-a} it will only show running containers) You can get more information about your container with the command
+
+\texttt{sudo docker inspect fred}
+
+Now restart your container with the command 
+
+\texttt{sudo docker start fred}
+
+and run \texttt{sudo docker ps}.  You will see that the container is running, but we are not attached to the console.  You can attach to is with the command
+
+\texttt{sudo docker attach fred}
+
+\section{Next steps}
+We don't usually want to create containers that we have to deal with interactively.  To see how to create and use \emph{daemonized containers}, work through  Chapter 4, sections g-l of the text.
+
+
+
+
+\end{document}
