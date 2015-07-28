@@ -1,0 +1,69 @@
+\documentclass{article}
+
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Some Basic OpenBSD Configuration\\ IN715 Network Administration}
+\date{}
+\maketitle
+
+\section{Introduction}
+For the next two units in this paper we will be working with a set of vitual machines that includes four OpenBSD servers.  In this lab we will configure the network settings appropriately on these servers. This will also allow us to become more familiar with OpenBSD before starting on our next tasks.
+
+Consult \url{http://www.openbsd.org/faq/faq6.html} for documentation on how to configure your systems.
+
+\section{VMWare vCloud Access}
+First, be sure that you can log into our vCloud web interface at \url{https://cloud.ict.op.ac.nz} using your Polytech login. Once you log in you should see a vApp (A collection of virtual machines) that has been prepared for you.  Open the vApp and go to the ``Virtual Machines'' tab.
+
+Based on the information on this screen, prepare a network topology diagram. Note the network interfaces on each host and label each with the indicated IP address.
+
+\section{Router 1 Configuration}
+Configure the following on your \texttt{router 1} vm:
+
+\begin{itemize}
+	\item Configure the \texttt{em0} interface to use the Nic 0 address shown in the web view with netmask 255.255.0.0.
+	\item Configure the \texttt{em1} interface to use the address 172.16.5.2 with netmask 255.255.255.0.
+	\item Set the default gateway to 10.25.0.3.
+	\item Set the DNS servers to 10.50.1.80 and 10.50.1.82.
+	\item Enable IP forwarding as shown in section 6.2.7 of the reference web page.
+\end{itemize}
+
+\section{Router 2 Configuration}
+Configure the following on your \texttt{router 1} vm:
+
+\begin{itemize}
+	\item Configure the \texttt{em0} interface to use the address 172.16.5.3 with netmask 255.255.255.0.
+	\item Configure the \texttt{em1} interface to use the address 192.168.2.2 with netmask 255.255.255.0.
+	\item Set the default gateway to 172.16.5.2.
+	\item Set the DNS servers to 10.50.1.80 and 10.50.1.82.
+	\item Enable IP forwarding as shown in section 6.2.7 of the reference web page.
+\end{itemize}
+
+\section{BSD Server Configuration}
+Configure the following on your BSD server:
+
+\begin{itemize}
+	\item Configure the \texttt{em0} interface to use the address 172.16.5.3 with netmask 255.255.255.0.
+	\item Set the default gateway to 172.16.5.2.
+	\item Set the DNS servers to 10.50.1.80 and 10.50.1.82.
+\end{itemize}
+
+\section{BSD Relay Server Configuration}
+Configure the following on your BSD server:
+
+\begin{itemize}
+	\item Configure the \texttt{em0} interface to use the address 192.168.2.100 with netmask 255.255.255.0.
+	\item Set the default gateway to 192.168.2.2
+	\item Set the DNS servers to 10.50.1.80 and 10.50.1.82.
+\end{itemize}
+
+
+After configuring the servers, reboot them and verify that the settings are correct after the reboot.
+\end{document}
