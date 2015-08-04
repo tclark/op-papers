@@ -1,8 +1,7 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{wrapfig}
-\usepackage{inconsolata}
-\usepackage{enumerate}
+
 \usepackage{verbatim}
 \usepackage[parfill]{parskip}
 \usepackage[margin = 2.5cm]{geometry}
@@ -17,25 +16,25 @@
 \maketitle
 
 \section*{Introduction}
-For this assignment you will build a DHCP system for a small network that will include a DHCP server on OpenBSD, a secondary server on Windows Server 2012R2, and a DHCP relay server on OpenBSD.
+For this assignment you will build a DHCP system for a small network that will include a DHCP server on OpenBSD, a failover server on OpenBSD, and a DHCP relay server on OpenBSD.
 
-This assignment is due on Friday, 15 August at 6:00 PM.  It is worth 10\% of your overall mark in the paper.
+This assignment is due on Friday, 14 August at 6:00 PM.  It is worth 10\% of your overall mark in the paper.
 
 \section{DHCP server on OpenBSD}
 You will configure the ISC DHCP server on your OpenBSD server.  Your configuration will satisfy the following requirements:
 
 \begin{itemize}
-  \item It will configure nw3.sqrawler.com as the domain name;
-  \item It will give two addresses for DNS servers: The address of your OpenBSD server and the address of your Windows server;
+  \item It will use foo.org.nz as the domain name;
+  \item It will give two addresses for DNS servers: The address of your \texttt{bsd-server} and the address of your \texttt{bsd-relay-server};
   \item Your server will be authoritative;
-  \item It will use an address pool of 172.16.xxx.100 - 172.16.xxx.150\footnote{Substitute in the appropriate value for your subnet for ``xxx''}
+  \item It will use an address pool of 172.16.5.100 - 172.16.5.150
     \begin{itemize}
-      \item The gateway for this pool will be 172.16.xxx.1;
+      \item The gateway for this pool will be 172.16.5.2;
       \item The default lease time shall be 1 day;
-      \item The maximum lease time shall be 3 days;
+      \item The maximum lease time shall be 2 days;
     \end{itemize}
   \item On the same network as the pool above, reserve an address of
-        172.16.xxx.30 for your Linux client on that network;
+        172.16.5.30 for your Linux client on that network;
   \item It will use a second  address pool of 192.168.2.50 - 192.168.2.100
     \begin{itemize}
       \item The gateway for this pool will be 192.168.2.2
@@ -44,20 +43,17 @@ You will configure the ISC DHCP server on your OpenBSD server.  Your configurati
     \end{itemize}
 \end{itemize}
 
-\section{DHCP server on Windows Server}
-You will configure DHCP on your Windows server to act as a backup to the OpenBSD server.  Its configuration should be similar, except for the following:
 
-\begin{itemize}
-  \item This server shall not be authoritative;
-  \item The first address pool will be 172.16.xxx.151 - 172.16.xxx.200;  
-  \item The second address pool will be 192.168.2.101 - 172.16.xxx.150;
-  \item The default and maximum lease time shall both be 2 hours.  
-\end{itemize}
+\section{Failover setup}
+Set up the DHCP server on your \texttt{router1} system as well (same requirements as above), and configure \texttt{bsd-server} and \texttt{router1} as failover peers.  Your primary server will be \texttt{bsd-server} and \texttt{[router1} will be the secondary.
+
 
 \section{DHCP relay server}
-A relay server is required to serve DHCP on your internal subnet.  Configure your OpenBSD server on that subnet to relay DHCP betweenthe subnet and your primary DHCP server.
+A relay server is required to serve DHCP on your internal subnet.  Configure your \texttt{bsd-relay-server} on that subnet to relay DHCP between the subnet and your primary DHCP server.
 
 \section{Assignment submission}
-Perform the configurations above on your provided VMWare virtual systems by 6:00 PM on 15 August. Ensure that the clients on your virtual network are properly configured as DHCP clients.  The lecturer shall evaluate the configuration of the servers and test their functionality on each of the clients to be sure it satisfies the requirements. 
+Create a repository on your GitHub account named ``netadmin'' (We will use it for this and for one following assignment).  Commit your \texttt{dhcpd.conf} files (You will have two) to this repository on or before the due date and time.  Tag your commit ``assignment1'' so that it will be clear which one I will assess.
+
+After reviewing your files, the lecturer will test your DHCP implementation on your virtual machines.
 
 \end{document}
