@@ -1,0 +1,105 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{DHCP Failover}
+
+\author[IN715]{Networks Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{Need for failover}
+	\begin{itemize}
+	    \item It should be pretty clear that DHCP servers need to just work all the time.
+	    \item In general, they do.  If you're using something like the ISC DHCP server on BSD, there's virtually no chance that it's just going to go down without warning.
+	    \item For this reason, there hasn't been much failover capability in DHCP servers.
+	    \item However, there are still plenty of things that can break even if your software stack is very solid.
+	    \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The problem}
+	\begin{itemize}
+		\item The problem is that DHCP servers hold a lot of \emph{state} about the network.
+		\item In particular, they keep track of current leases\footnote{In \texttt{/var/db/dhcp.leases}}.
+			\item If we just run two DHCP servers side-by-side, their lease databases will conflict.
+			
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{The solution}
+	\begin{itemize}
+		\item If we're going to run two DHCP servers in a failover setup, they need to know about each other.
+		\item They need to sync their databases.
+		\item This capability was added to \texttt{dhcpd} in version 3\footnote{Little problem: You are running version 2.}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Primary server configuration}
+	\begin{verbatim}
+	failover peer "dhcp-failover" {
+	    primary; # declare ourselves primary
+	    address 172.16.5.10;
+	    port 520;
+	    peer address 172.16.5.2;
+	    peer port 520;
+	    max-response-delay 10;
+	    max-unacked-updates 10;
+	    load balance max seconds 3;
+	    mclt 1800;
+	    split 128;
+	}
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Secondary server configuration}
+	\begin{verbatim}
+	failover peer "dhcp-failover" {
+	    secondary; # declare ourselves secondary
+	    address 172.16.5.2;
+	    port 520;
+  	    peer address 172.16.5.10;
+	    peer port 520;
+	    max-response-delay 10;
+	    max-unacked-updates 10;
+	    load balance max seconds 3;
+	}
+	\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Addition to subnet configuration}
+	\begin{verbatim}
+	subnet 172.16.5.0 netmask 255.255.255.0 {
+	    failover peer "dhcp-failover";
+	    range 172.16.5.50 172.16.5.100;
+	}
+	\end{verbatim}
+
+\end{frame}
+\begin{frame}
+	Questions?
+\end{frame}
+\end{document}
