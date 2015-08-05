@@ -36,7 +36,7 @@ Build your image and launch a container called \texttt{vol\_lab\_1} from it.
 \section{Find your volume on the host system}
 In another ssh session, inspect your new container to find its volumes with the command
 
-\texttt{sudo docker inspect -f {{.Volumes}} vol\_lab\_1}
+\texttt{sudo docker inspect -f \{\{.Volumes\}\} vol\_lab\_1}
 
 Once you find the directory on the host that stores your volume, modify one of the files inside it.  Attach a terminal to \texttt{vol\_lab\_1} and see if the changes on the host system are visible inside the container.
 
