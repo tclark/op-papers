@@ -1,0 +1,108 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Docker Volumes}
+
+\author[IN720]{Virtualisation}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Union File Systems}
+
+ \begin{itemize}
+  \item Files in a Docker container are presented in a \emph{Union File System}
+  \item An image is stored as a set of read-only layers. 
+  \item Only the very top layer in a running container is read-write.
+  \item When we modify a file from an image, we copy it from a lower, read-only layer into the read-write layer.
+  \item The modified copy saved on the top layer masks the unmodified version on the lower layer.
+  \item When we destroy a container, the read-write layer associated with it is destroyed and our changes are lost.
+  
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Docker Volumes}
+	\begin{itemize}
+		\item Sometimes we want to persist data created inside a container, or we want to share data between containers.
+		\item A Docker \emph{volume} lets us do this.
+		\item Volumes are files or directories that sit outside the union file system and are saved directly on the host file system.
+		\item Other containers can access volumes, and we can delete a container without deleting its volumes.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Creating Volumes}
+	We can create volumes from the command line:
+	
+	\begin{Verbatim}[commandchars=\\\{\}]
+	sudo docker run -it --name vol-test \codeHighlight{-v /data} ubuntu /bin/bash
+	\end{Verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Creating Volumes}
+	We can create volumes from the in a Dockerfile:
+	
+	\begin{Verbatim}[commandchars=\\\{\}]
+	FROM ubuntu:14.04
+	\codeHighlight{VOLUME /data}
+	\end{Verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Creating Volumes}
+	We can mount volumes that are associated with another container:
+	
+	\begin{Verbatim}[commandchars=\\\{\}]
+	docker run -it --name vol-test-2 
+	\codeHighlight{--volumes-from vol-test} 
+	ubuntu /bin/bash
+	\end{Verbatim}
+	
+	Note that 
+	\begin{itemize}
+		\item The container \texttt{vol-test} \emph{doesn't have to be running}.
+		\item Changes to the volume are immediately visibile in both containers (and the host).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Creating Volumes}
+	We can create volumes from directories that already exist on the host:
+	
+	\begin{Verbatim}[commandchars=\\\{\}]
+	sudo docker run -it --name vol-test3 
+	\codeHighlight{-v /home/tclark/data:/data} 
+	ubuntu /bin/bash
+	\end{Verbatim}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Data-only containers}
+	
+	One application of containers with volumes is creating containers with the express purpose of establishing data volumes that are accessed by other containers.  These are called \emph{data-only containers} and they are described at \\
+	 \mbox{\url{http://container42.com/2014/11/18/data-only-container-madness/}}
+\end{frame}
+
+\end{document}
