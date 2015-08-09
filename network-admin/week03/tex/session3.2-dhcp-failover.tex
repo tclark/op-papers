@@ -93,8 +93,10 @@
 	\frametitle{Addition to subnet configuration}
 	\begin{verbatim}
 	subnet 172.16.5.0 netmask 255.255.255.0 {
-	    failover peer "dhcp-failover";
-	    range 172.16.5.50 172.16.5.100;
+	    pool{
+	        failover peer "dhcp-failover";
+	        range 172.16.5.50 172.16.5.100;
+	    }
 	}
 	\end{verbatim}
 
