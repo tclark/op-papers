@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Updating DHCP \\ IN715 Networks Administration}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+We saw last week that we would need to update our \texttt{dhcpd} to a newer version in order to use the newer failover and load balancing features.  In this lab we wiil make some changes to our network configuration to allow us to upgrade.
+
+\section{Configure NAT}
+We can't install a new version of \texttt{dhcpd} until we can connect our server to the Internet.  But since we are using a private address space\footnote{RFC 1918} we must configure \emph{Network Address Translation} (NAT) to do this.
+
+NAT will
+
+\begin{enumerate}
+	\item Track the state of outgoing packets;
+	\item Modify the source address of packets leaving our network;
+	\item Modify the destination address of response packets so that they can be routed correctly. 
+\end{enumerate}
+
+To track and modify packets we need to configure OpenBSD's \texttt{pf} firewall.  We need to add two rules to \texttt{/etc/pf.conf} on \texttt{router1} to get it to perform NAT.  Remember that our outside interface is \texttt{em0}, and suppose the IP address on that interface is 10.25.1.100.  Add the following lines to the end of the file
+
+\begin{verbatim}
+match out on em0 \
+    from 172.16.5.0/24  \
+    nat-to 10.25.1.100
+
+pass out on em0 \
+    from 10.25.1.100
+...
+\end{verbatim}
+
+The first rule performs the NAT and the second allows the NAT'ed packets to exit the network.  Load your new firewall rules into the system with the command
+
+\texttt{pfctl -f /etc/pf.conf}
+
+\section{Update your dhcpd}
+We can use OpenBSD's package system to install the new version of \texttt{dhcpd} with the command
+
+\texttt{pkg\_add isc-dhcp-server-4.2.5.1p0}  
+
+This will install the new \texttt{dhcpd} in \texttt{/usr/local/sbin}.  Now you just need to modify the init script at \texttt{/etc/rc.d/dhcpd}.  Change the ``\texttt{daemon}'' value to \texttt{/usr/local/sbin/dhcpd}.
+
+Now you can use failover peers in your \texttt{dhcpd.conf} as we discussed last week.  N.B.: Be sure your failover peer configuration appears before the subnet declarations in your file, like this:
+
+\begin{verbatim}
+failover peer "dhcp-failover" {
+    # relevant config ...
+}
+
+subnet 172.16.5.0 netmask 255.255.255.0 {
+    pool {
+        range 172.16.5.100 172.16.5.150;
+        failover peer "dhcp-failover";
+        }
+        ...
+}
+\end{verbatim}
+
+If you try to use the failover peer before it is defined in the file you will get errors when attempting to start \texttt{dhcpd}.
+
+\end{document}
