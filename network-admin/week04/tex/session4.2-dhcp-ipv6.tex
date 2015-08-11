@@ -1,0 +1,84 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{DHCP and IPv6}
+
+\author[IN715]{Networks Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}
+	\frametitle{The role of DHCP in IPv6}
+	\begin{itemize}
+	    \item There are a couple of options for network autoconfiguration in an IPv6 setting.
+	    \item DHCP is one option, and it works in basically the same way as it does in IPv4.
+	    \item Pros (relative to other IPv6 configuration options):
+	    \begin{itemize}
+	    	\item We can exercise explicit control over how hosts are configured.
+	    	\item We can distribute more items of information than other option allow. 
+	    \end{itemize}
+	    \item Cons:
+	    \begin{itemize}
+	    	\item We must explicitly configure and manage it (But no more than we have to for IPv4).
+	    \end{itemize}
+	    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+	\frametitle{Example configuration}
+	\begin{verbatim}
+	default-lease-time 600;
+	max-lease-time 7200; 
+
+	subnet6 2001:db8:0:1::/64 {
+	    # Range for clients
+	    range6 2001:db8:0:1::129 2001:db8:0:1::254;
+	    # Additional options
+	    option dhcp6.name-servers fec0:0:0:1::1;
+	    option dhcp6.domain-search "domain.example";
+	
+	    # Example for a fixed host address
+	    host specialclient {
+	        host-identifier option dhcp6.client-id 00:01:00:01:4a:1f:ba:e3:60:b9:1f:01:23:45;
+	        fixed-address6 2001:db8:0:1::127;
+	    } 
+	} 
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Combining IPv4 and IPv6}
+	\begin{itemize}
+		\item We can run two instances of \texttt{dhcpd} side-by-side on the same server.
+		\item Create to configuration files, e.g. \texttt{/etc/dhcpd.conf} and \texttt{/etc/dhcpd6.conf}
+		\item Start the IPv4 version normally.
+		\item Start the IPv6 version with the \texttt{-6} option and direct it to use the alternate configuration file.
+	\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+	Questions?
+\end{frame}
+\end{document}
