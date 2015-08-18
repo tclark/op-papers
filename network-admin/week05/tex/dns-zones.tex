@@ -3,7 +3,7 @@
 % Dec 2012
 
 \documentclass[10pt]{beamer}
-\usetheme{CambridgeUS}
+\usetheme{Dunedin}
 \usepackage{graphicx}
 \usepackage{fancyvrb}
 
@@ -11,7 +11,7 @@
 
 \title{DNS Zones}
 
-\author[IN715]{Networks Three}
+\author[IN715]{Networks Administration}
 \institute[Otago Polytechnic]{
   Otago Polytechnic \\
   Dunedin, New Zealand \\
@@ -24,8 +24,31 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+	\frametitle{First, some review}
+	
+	Last time we turned on BIND and saw how it could serve as a recursive resolver. 
+	We didn't have to do any additional configuration for this to work.  But how is it configured?
+	
+\end{frame}
 
-
+\begin{frame}[fragile]
+	\frametitle{The configuration}
+	
+	\emph{file: /var/named/etc/named.conf}
+	\begin{verbatim}
+	acl clients {
+	    localnets;
+	    ::1;
+	};
+	
+	options {
+	   listen-on    { any; };
+	   listen-on-v6 { any; };
+	   allow-recursion { clients; }; 
+	};
+	\end{verbatim}
+\end{frame}
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{DNS Zones}
@@ -40,13 +63,40 @@
 \end{frame}
 
 
+\begin{frame}[fragile]
+	\frametitle{Zone declarations}
+	In order to have BIND load a zone it must be declared.
+	
+	\emph{file: /var/named/etc/named.conf}
+	\begin{verbatim}
+	zone "foo.org.nz" {
+	    type master;
+	    file "master/foo.org.nz";
+	}
+	\end{verbatim}
+	
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{Slave zone declarations}
+	Slave zones get their zone information from a master.
+	
+	\emph{file: /var/named/etc/named.conf}
+	\begin{verbatim}
+	zone "foo.org.nz" {
+	    type slave;
+	    masters { 10.10.1.5; };
+	    file "master/foo.org.nz";
+	}
+	\end{verbatim}
+	
+\end{frame}
 %----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Zone file names}
 
  \begin{itemize}
   \item There is no particular requirement for how zone files are named.
-  \item Best practice is to indicate the domain name for the zone in the filename, e.g., \texttt{db.example.com} for the \emph{example.com} zone.
+  \item Best practice is to indicate the domain name for the zone in the filename, e.g., \texttt{example.com}.
  \end{itemize}
 
 \end{frame}
@@ -140,6 +190,17 @@
 
 \end{frame}
 
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+	\frametitle{Text (TXT) Records}
+	
+	TXT records let us put public comments is a zone.
+	\begin{verbatim}
+	example.com. IN TXT "v=spf1 +mx a:colo.example.com/28 -all"
+	\end{verbatim}
+	TXT records are used, among other things, for the Sender Policy Framework (SPF) \footnote{ https://tools.ietf.org/html/rfc7208}
+\end{frame}
+
 
 %----------- slide --------------------------------------------------%
 \begin{frame}[fragile]
@@ -169,75 +230,7 @@
 
 
 
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{}
 
- \begin{verbatim}
-   
- \end{verbatim}
-
-\end{frame}
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{Abbreviations}
- There are a few ways we can abbreviate resource records.
-
- 1.  @ Notation: If the domain name in a record is the same as the 
- \emph{origin}, it can be abbreviated with an @.
- \begin{verbatim}
-  example.com. IN SOA ns1.example.com. tech.somedomain.net. (
- 
-   is the same as 
- 
-  @ IN SOA ns1.example.com. tech.somedomain.net. (
-
-
-   
- \end{verbatim}
-
-\end{frame}
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{Appending domain names}
-
- You can leave the domain names off of the record names when they match the origin.
-
- \begin{verbatim}
-   fred.example.com. IN A  123.220.44.91
-
-   becomes
-
-   fred IN A  123.220.44.91
-
-
-   1.10.168.192.in-addr.arpa.  IN PTR pebbles.example.com.
-
-   becomes
-
-   1  IN PTR pebbles.example.com.
-   
- \end{verbatim}
-
-\end{frame}
-
-
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{Repeated names}
-
- You can omit repeated resource names used on multiple records.
- \begin{verbatim}
-   
-   barney.example.com. IN A 71.44.116.17
-                       IN A 123.211.16.100
- 
-\end{verbatim}
-
-\end{frame}
 
 
 \end{document}
