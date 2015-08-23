@@ -1,0 +1,148 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{DNS Zones 2: Abbreviations and Slaves}
+
+\author[IN715]{Networks Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+\section{Abbreviations}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Abbreviations}
+ There are a few ways we can abbreviate resource records.
+ 
+ The \emph{origin} of a zone is the fully qualified domain name name of that 
+ zone. 
+
+ @ Notation: If the domain name in a record is the same as the 
+ \emph{origin}, it can be abbreviated with an @.
+ \begin{verbatim}
+  example.com. IN SOA ns1.example.com. tech.somedomain.net. 
+ 
+  @ IN SOA ns1.example.com. tech.somedomain.net.
+    
+  example.com. IN MX 10 mailserver.example.com.
+   
+  @ IN MX 10 mailserver.example.com.
+   
+ \end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Origin directive}
+	
+	You can explicitly define the origin of a zone by including 
+	a directive as follows:
+	\vspace{5mm}
+	
+	\texttt{\$ORIGIN example.com.}
+	\vspace{5mm}
+	
+	This is optional since BIND can infer the value of \texttt{\$ORIGIN} 
+	from \texttt{named.conf}, but it does make your zone file more self-documenting.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Appending domain names}
+
+ You can leave the domain names off of the record names when they match the origin.
+
+ \begin{verbatim}
+   fred.example.com. IN A  123.220.44.91
+
+   becomes
+
+   fred IN A  123.220.44.91
+
+
+   1.10.168.192.in-addr.arpa.  IN PTR pebbles.example.com.
+
+   becomes
+
+   1  IN PTR pebbles.example.com.
+   
+ \end{verbatim}
+ 
+ Note that we don't use a trailing dot.  It is the absence of the dot that indicates that the 
+ orign domain should be appended.
+\end{frame}
+
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Repeated names}
+
+ You can omit repeated resource names used on multiple records.
+ \begin{verbatim}
+   
+   barney.example.com. IN A 71.44.116.17
+                       IN A 123.211.16.100
+ 
+\end{verbatim}
+
+\end{frame}
+
+
+
+\section{Slaves}
+\begin{frame}
+	\frametitle{What is a slave and why use one?}
+	
+	\begin{itemize}
+		\item We need to run multiple DNS servers for redundancy.
+		\item We could run multiple masters, but then we have to update zone information on each of them.
+		\item A better practice is to run one master server that distributes zone updates to slaves.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Master configuration}
+	
+	\emph{file: /var/named/etc/named.conf (on master)}
+	\begin{verbatim}
+	"example.com" {
+	    type master;
+	    file "master/example.com";
+	    notify yes;
+	    allow-transfer { 192.168.2.100; };
+	};
+	\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Slave configuration}
+	
+	\emph{file: /var/named/etc/named.conf (on slave)}
+	\begin{verbatim}
+	"example.com" {
+	    type slave;
+	    file "slave/example.com";
+	    masters { 172.16.5.10; };
+	};
+	\end{verbatim}
+\end{frame}
+\end{document}
