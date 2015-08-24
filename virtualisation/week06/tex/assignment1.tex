@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Assignment 1: Docker \\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this assignment you will create a set of Docker containers to operate a highly-available web site.  You will then deploy those containers to a CoreOS cluster running on AWS.
+
+This assignment is worth 25\% of your mark in this paper.
+
+\section{Create a data container}
+Your first container's role is to hold your web site code.  Create a container that mounts a \emph{volume} at \texttt{/var/www/html}. This directory just needs to hold a simple web page in a file named \texttt{index.html}. This container image will use a Docker Hub automated build so that we can easily get a new image any time we commit a change to its GitHub repository.
+
+\section{Create a web server container}
+Your second container will run your web server. Create a container from Ubuntu 14.04 with Apache installed on it. This container should mount the volume provided by your first one and will expose port 80.
+
+\section{Deployment}
+You will deploy your containers to a cluster of CoreOS machines running on AWS. Write Fleet service files that allow you to deploy data and web server containers on two machines in the cluster.  Note that you will need to ensure that the data and web server containers are deployed together on the same containers.
+
+You will deploy another container that runs a load balancing server on the third system in your cluster. This container image will be supplied by the lecturer, but you will need to write the Fleet service file to deploy it.
+
+Since your load balancer will need to find your web servers, you will need to set up \emph{sidekick services} that announce the presence of the webservers to etcd.
+
+Also, note that you will need to control the order in which Fleet deploys your containers.  The data containers need to deploy first and the web servers should deploy next. It doesn't actually matter when the load balancer deploys.  It will watch etcd and pick up the web servers as they appear.
+
+\section{Assignment submission and marking}
+Some of the assignment deliverables will be uploaded to your GitHub account.  Place all of these into a repository named \texttt{virtualisation\_assn1}.
+
+Specifically, your submission will include the3 following parts:
+
+\begin{description}
+	\item[Data container (25 marks)] You will commit your build context files to the GitHub repository mentioned above (You need to do this for the autobuild anyway.)  You will also have a corresponding container image on your Docker Hub.
+	\item[Web server container (15 marks)] This container image will also be placed on your Docker Hub.
+	\item[Fleet service files (25 marks)] Your Fleet service files will be commited into a directory in your GitHub repository named \texttt{fleet}.
+	\item[Deployment (35 marks)] When you are ready to deploy, contact the lecturer to receive details for your CoreOS cluster. You will then deploy your containers onto the cluster and demonstrate that they run. 
+\end{description}
+
+NB:
+\begin{itemize}
+	\item Be sure that your images have a proper maintainer.
+	\item Be sure that your images' \texttt{From} attributes specify a specific version.
+	\item Be sure that your images apply updates when they are built.  Note also that you need to use something like a ``last modified'' attribute to be sure this happens\footnote{Do you know why? Don't you think you should?} (See Turnbull)
+\end{itemize}
+
+This assignment is due at 9:00 AM on Monday, 8 September.  Tag both your GitHub repository and your Docker Hub images with the tag ``assignment1''.
+
+
+
+\end{document}
