@@ -1,8 +1,6 @@
 \documentclass{article}
 \usepackage{graphicx}
 \usepackage{wrapfig}
-\usepackage{inconsolata}
-\usepackage{enumerate}
 \usepackage{verbatim}
 \usepackage[parfill]{parskip}
 \usepackage[margin = 2.5cm]{geometry}
@@ -12,48 +10,53 @@
 
 \begin{document}
 
-\title{ Assignment 2 \\ DNS \\ IN715 Networks Three}
+\title{ Assignment 2 \\ DNS \\ IN715 Networks Administration}
 \date{\today}
 \maketitle
 
 \section*{Introduction}
-For this assignment you will deploy a DNS system for a small network that will include a BIND on OpenBSD and a slave server on Windows Server 2012R2.
+For this assignment you will deploy a DNS system for a small network that will include a BIND on OpenBSD and a slave server on a second OpenBSD server.
 
-This assignment is due on Friday, 19 September.  It is worth 20\% of your overall mark in the paper.
+This assignment is due on Friday, 9 September.  It is worth 20\% of your overall mark in the paper.
 
 \section{Requirements}
 You will set up two DNS servers;
   \begin{enumerate}
     \item Your primary server will run on your BSD server using BIND.
-    \item Your secondary server will run on your Windws server using the 
-          Windows DNS server.  It will act as a slave node for your primary.
+    \item Your second server will run on your BSD relay server on your inner network.  It will act as a slave node for your primary.
   \end{enumerate}
 
 On your primary server, you will provide the following:
 \begin{itemize}
     \item perform recursive lookups for client on your local networks only;
-    \item provide forward lookups for the \texttt{nw3.sqrawler.com} zone, 
+    \item provide forward lookups for the \texttt{foo.org.nz} zone, 
           including:
           \begin{itemize}
             \item A proper SOA record;
             \item Two NS records;
             \item An MX record;
             \item Correct A records for your hosts with static IP addresses;
-            \item A CNAME record that directs www.nw3.sqrawler.com to your
+            \item A CNAME record that directs www. to your
                   BSD server.
           \end{itemize}
     \item provide reverse lookups for your two networks.  For every A record 
           in your forward zone, there should be a corresponding PTR record 
           in the appropriate reverse zone.
 \end{itemize}
-Your secondary server should be configured as a slave for each of the three zones on your primary server.
 
-Configure your BIND DNS server and your ISC DHCP server to perform dynamic DNS updates of your forward and reverse zones so that your Windows client machines have correct forward and reverse records.
+In addition, your systems shall also satisfy the following requirements:
 
-Be sure that every system on your network in configured to use your DNS servers for name resolution.
+\begin{itemize}
+	
+    \item Your secondary server shall be configured as a slave for each of the three zones on your primary server.
+
+    \item Your BIND DNS server and your ISC DHCP servers shall perform dynamic DNS updates of your forward and reverse zones.
+
+    \item Every system on your network shall be configured to use your DNS servers for name resolution.
+\end{itemize}
 
 \section{Submission requirements}
-Have your servers configured and running by the end of the day on Friday, 19 September.  The lecturer shall mark your work by inspecting your running systems. Be sure that 
+Have your servers configured and running by the end of the day on Friday, 9 September.  Commit your \texttt{named.conf}, \texttt{dhcpd.conf}, and zone files to your netadmin repository on GitHub. The lecturer shall mark your work by inspecting your files and running systems. Be sure that 
   \begin{enumerate}
     \item everything functions properly;
     \item your configuration is correct, neatly formatted and commented;
