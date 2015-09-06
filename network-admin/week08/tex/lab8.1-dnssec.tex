@@ -10,7 +10,7 @@
 
 \begin{document}
 
-\title{ Lab 8.1 DNSSEC\\ IN715 Networks Three}
+\title{ Lab 8.1 DNSSEC\\ IN715 Networks Administration}
 \date{\today}
 \maketitle
 
@@ -29,7 +29,7 @@ Create keys with the following commands:
 
 \begin{verbatim}
  cd /var/named/etc
- dnssec-keygen -a RSASHA1 -b 2048 -n ZONE -f KSK nw3.sqrawler.com
+ dnssec-keygen -a RSASHA1 -b 2048 -n ZONE -f KSK foo.org.nz
 \end{verbatim}
 
 This will create public and private key files in our BIND configuration directory.  In particular, it creates 2048 bit key signing keys for our zone.
@@ -37,36 +37,33 @@ This will create public and private key files in our BIND configuration director
 Now we create zone signing keys with the command
 
 \begin{verbatim}
-dnssec-keygen -a RSASHA1 -b 1024 -n ZONE nw3.sqrawler.com
+dnssec-keygen -a RSASHA1 -b 1024 -n ZONE foo.org.nz
 \end{verbatim}
 
 \section{Signing the zone}
-We will use our keys top sign the \texttt{nw3.sqrawler.com} zone.  First, we include our keys in the zone file by adding these lines to the bottom of the zone file:
+We will use our keys top sign the \texttt{foo.org.nz} zone.  First, we include our keys in the zone file by adding these lines to the bottom of the zone file:
 
 \begin{verbatim}
-$INCLUDE Knw3.sqrawler.com.+005+10849.key ; KSK
-$INCLUDE Knw3.sqrawler.com.+005+58317.key ; ZSK
+$INCLUDE Kfoo.org.nz.+005+10849.key ; KSK
+$INCLUDE Kfoo.org.nz.+005+58317.key ; ZSK
 \end{verbatim}
 
 (Your key file names will be different.)
 
 Now you sign your zone with the following;
 \begin{verbatim}
-dnssec-signzone -o nw3.sqrawler.com -k Knw3.sqrawler.com.+005+10849 \
-  db.nw3.sqrawler.com Knw3.sqrawler.com.+005+58317.key
+dnssec-signzone -o foo.org.nz -k Kfoo.org.nz.+005+10849 \
+  db.foo.org.nz Kfoo.org.nz.+005+58317.key
 \end{verbatim}
 
 The -o option specifies the origin, or name, of the zone to sign, and the 
-``db.nw3.sqrawler.com is the name of the zone file.
+``db.foo.org.nz is the name of the zone file.
 
-If you are going to use DLV, you need to add an extra option;
 
-\texttt{-l dlv.isc.org}
 
-to indicate that you are using the ISC DLV service.
 
-You will now have a signed zone file, \texttt{db.nw3.sqrawler.com.signed}.  
-You will also get a DS or DLV record file.  
+You will now have a signed zone file, \texttt{db.foo.org.nz.signed}.  
+You will also get a DS record file.  
 
 You will need to re-sign the zone anytime you make changes, and you will need to resign the zones at least monthly since the key signatures expire in that time by default.
 
@@ -86,11 +83,11 @@ This will enable DNSSEC for your zone and for recursive queries.
 
 Reload your DNS server and test with the command
 
-\texttt{dig +dnssec www.nw3.sqrawler.com}
+\texttt{dig +dnssec www.foo.org.nz}
 
 
 \section{Notify the parent}
-To use DNSSEC, you must complete the process by registering your DS or DLV record with the appropriate party.  This is your registrar in the case of a DS record, or the ISC in the case of a DLV record.
+To use DNSSEC, you must complete the process by registering your DS record with your registrar. 
 
 
 \end{document}
