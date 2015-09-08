@@ -1,0 +1,25 @@
+user www-data;
+worker_processes 4;
+pid /run/nginx.pid;
+
+events {
+        worker_connections 768;
+         multi_accept on;
+	}
+
+
+http {
+  upstream webs {
+    {% for server in servers %}
+    server {{server}};
+    {% endfor %}
+    }
+
+  server {
+    listen 80;
+
+    location / {
+      proxy_pass http://webs;
+    }
+  }
+}
