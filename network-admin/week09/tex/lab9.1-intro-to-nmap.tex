@@ -11,7 +11,7 @@
 
 \begin{document}
 
-\title{ Lab 9.1 Introduction to Nmap\\ IN715 Networks Three}
+\title{ Lab 9.1 Introduction to Nmap\\ IN715 Networks Administration}
 \date{\today}
 \maketitle
 
@@ -31,16 +31,7 @@ Of course, they are also useful for reconnaissance in preparation for an attack.
 
 In this lab you will try out Nmap to get a sense of how the tool can be used for both good and bad purposes. Note that port scanning another party's hosts may be viewed as malicious activity, so use Nmap and similar tools responsibly.
 
-\section{Install Nmap}
-Install Nmap on your OpenBSD server with the command
 
-\texttt{pkg\_add nmap}
-
-Also, to run scans on your inner network (192.168.2.0/24) you amy need to set up a route on your BSD server with the command
-
-\texttt{route add -net 192.168.2.0/24 172.16.xx.254}
-
-substituting in the correct value for the third octet of your network.
 
 \section{Basic Nmap usage}
 In general we invoke Nmap in the following manner:
@@ -53,7 +44,7 @@ So, suppose we want to catalog all of the hosts on a network with a simple ping 
 
 In this example our \emph{scan type} is \texttt{-sn}, which is a simple ping sweep.  We use the \emph{option} \texttt{-e em1} to indicate that we want to use the \texttt{em1} network interface, and we have specified the network \texttt{192.168.2.2/24} as our target.
 
-Run this scan and a similar one to sweep your other (\texttt{172.16.xx.0}) network and see what hosts you find.  Did you find every host?  Why or why not?
+Run this scan on network and see what hosts you find.  Did you find every host?  Why or why not?
 
 
 Run Nmap with no arguments to get a brief list of common scan types and options. 
@@ -61,7 +52,7 @@ Run Nmap with no arguments to get a brief list of common scan types and options.
 \section{Target specifications}
 Nmap provides a number of ways to specify targets.  A single target can be specified by ip address or hostname:
 
-\texttt{nmap -sL www.nw3.sqrawler.com}
+\texttt{nmap -sL www.foo.org.nz}
 
 \texttt{nmap -sL 172.16.11.4}
 
@@ -71,7 +62,7 @@ You can also specify a network using standard CIDR notation.
 
 You can also use this to specify the network or network segment containing a particular host.
 
-\texttt{nmap -sL www.nw3.sqrawler.com/24}
+\texttt{nmap -sL www.foo.org.nz/24}
 
 You can also specify lists or ranges in particular octets of an address.
 
@@ -81,28 +72,28 @@ You can also specify lists or ranges in particular octets of an address.
 
 Note that the \texttt{-sL} option above will cause Nmap to print a list of hosts to be scanned but will not perform and scans. This is a good way to check you scan targets before you start firehosing your network with scans.
 
-Find three different ways to scan your networks using methods shown above.
+Specify two different ways to scan the 192.168.2.0 network using methods shown above.
 
 
 \section{A more intense scan}
 Once you have identified a host with a broad scan like the ping sweep above, you can try a more intense scan on a specific host. For example, 
 
-\texttt{nmap -PS1-1024 172.16.xx.5} 
+\texttt{nmap -PS1-1024 192.168.2.50} 
 
 will perform a TCP SYN scan on ports 1-1024 on the specified host.
 
 Or, you can run 
 
-\texttt{nmap -A 172.16.xx.5} to perform the most comprehensive scan on the 
+\texttt{nmap -A 192.168.2.50} to perform the most comprehensive scan on the 
 target host.
 
 If you just want to attempt OS fingerprinting, try 
 
-\texttt{nmap -O 172.16.xx.5}
+\texttt{nmap -O 192.168.2.50}
 
 Or you can attempt to fingerprint services by running
 
-\texttt{nmap -sV 172.16.xx.5}
+\texttt{nmap -sV 192.168.2.50}
 
 
 Try some of these scans on hosts running on your network.  Note that some of these scans can be very time consuming.
