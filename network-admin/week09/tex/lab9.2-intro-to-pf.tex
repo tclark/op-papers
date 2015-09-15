@@ -11,7 +11,7 @@
 
 \begin{document}
 
-\title{ Lab 9.2 Introduction to PF\\ IN715 Networks Three}
+\title{ Lab 9.2 Introduction to PF\\ IN715 Networks Administration}
 \date{\today}
 \maketitle
 
@@ -27,7 +27,7 @@ online documentation to see what they do.
 In practical terms, these rules will let most traffic through.  We would like to establish a more restrictive rule set.  To begin, edit the file \texttt{/etc/pf.conf} and comment out the line that simply says ``\texttt{pass}''.  We will add our rules immediately under this point
 
 \section{Establish a new rule set}
-Let's allow the following:
+Let's allow the following, and block everything else:
 
 \begin{itemize}
 	\item Allow all ssh traffic.
