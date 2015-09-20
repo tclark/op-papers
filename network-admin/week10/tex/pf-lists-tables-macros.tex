@@ -3,14 +3,14 @@
 % Dec 2012
 
 \documentclass[10pt]{beamer}
-\usetheme{CambridgeUS}
+\usetheme{Dunedin}
 \usepackage{graphicx}
 \usepackage{fancyvrb}
 
 
 \title{Lists, Tables, and  Macros}
 
-\author[IN715]{Networks Three}
+\author[IN715]{Networks Administration}
 \institute[Otago Polytechnic]{
   Otago Polytechnic \\
   Dunedin, New Zealand \\
@@ -37,7 +37,7 @@
              \item transport protocol
              \item network interface
         \end{itemize}
-    \item Example: \texttt{pass in on em0 to 172.20.44.8 to port 80} 
+    \item Example: \texttt{pass in on em0 proto tcp to 172.20.44.8 to port 80} 
  \end{itemize}
 
 \end{frame}
@@ -73,7 +73,7 @@
  rule set.
 
  \begin{verbatim}
- block out from { 192.168.6.211 10.115.8.20 } port www
+ block out proto tcp from { 192.168.6.211 10.115.8.20 } port www
 
  pass in proto { udp tcp } to 172.18.18.6 port 53   
  \end{verbatim}
@@ -106,7 +106,7 @@
  \begin{verbatim}
    allowed_ports = "{ 22 80 443 }"
    web_server = "10.10.1.5"
-   pass in to $web_server port $allowed_ports
+   pass in proto tcpto $web_server port $allowed_ports
  \end{verbatim}
 
 \end{frame}
