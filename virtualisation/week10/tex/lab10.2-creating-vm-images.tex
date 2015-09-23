@@ -1,0 +1,73 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 10.2: Creating VM Images \\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+Once we have an OpenStack installation running, we need virtual machine images to run on it. There are two basic approaches we can take to creating them.  We can create images manually using the methods descrbed at \url{http://docs.openstack.org/image-guide/content/ch_creating_images_manually.html}. This process is somewhat labour-intensive and not cosistently repeatable.
+
+Another way to create images is to use one of the available image creation tools. We will use one of them, \emph{Diskimage-builder} in this lab.
+
+Diskimage-builder can be installed on Ubuntu 15.04 systems with the command
+
+\texttt{on ubuntu 15.04 sudo apt-get install python-diskimage-builder}
+
+\section{Running Diskimage-builder}
+To build a basic Ubuntu image, we just use the command
+
+\texttt{disk-image-create ubuntu vm}
+
+This will produce a disk image file named \texttt{image.qcow2}.  What we are actually doing is passing a list of \emph{elements} to \texttt{disk-image-builder}. In this case we pass it the base \texttt{ubuntu} element that sets up the image operating system and the \texttt{vm} element that specifies how to create the image file.
+
+Elements are defined in subdirectories of \texttt{/usr/share/diskimage-builder/elements}.  Examine the \texttt{ubuntu} and {vm} elements to see how they are organised.
+
+\section{Adding some customisation}
+We can customise our images by adding some addtional elements.
+
+\subsection{Installing packages}
+We may want to add or remove some packages from the base operating system installation.  We can to this by adding a \texttt{package-installs.yaml} file to our base element directory.  For example, suppose we want to install puppet and vim and want to remove nano.  Then our file would look like this
+
+\emph{file: package-installs.yaml}
+\begin{verbatim}
+  puppet:
+  vim:
+  nano:
+    uninstall: True
+\end{verbatim}
+
+This would produce a sensible base system. Create the image with the command
+
+\texttt{disk-image-create ubuntu package-installs vm}
+
+
+subsection{Copying files into our images}
+We can place static files onto our images by placing them inside a subdirectory of the base element directory named \texttt{static}.  The relative path inside the \texttt{static} subdirectory corresponds to the absolute path on the target image. So, to place the file \texttt{/etc/foo.conf} on our images, we place the file \texttt{images/etc/foo.conf} in the base element directory. Then we build the image with the command
+
+\texttt{disk-image-create ubuntu install-static vm}
+
+Note that it is a bad idea to overly customise your vm images, because then you will have to rebuild them whenever you update software or make a configuration change.  A better strategy is to build a base image that fully configures itself after starting up with a tool like Puppet.
+
+\section{Build an image}
+Using the tools and methods described above, build a custom image based on Ubuntu that
+
+\begin{itemize}
+	\item Has \texttt{vim} installed;
+	\item Does not have \texttt{nano};
+	\item Has a sensible \texttt{.vimrc} file in \texttt{root}'s home directory.
+\end{itemize}
+
+\end{document}
