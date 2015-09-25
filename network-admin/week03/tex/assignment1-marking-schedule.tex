@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Assignment 1: DHCP \\ Marking Schedule \\ IN715 Networks Administration}
+\date{\today}
+\maketitle
+
+
+
+\section*{Marking guide}
+
+There are 35 possible marks.
+
+\begin{itemize}
+  \item Successful demonstration of service: 5 marks
+  \item Issues domain name \texttt{foo.org.nz}: 1 mark
+  \item Correct DNS server addresses: 1 mark;
+  \item Your server will be authoritative: 1 mark;
+  \item It will use an address pool of 172.16.5.100 - 172.16.5.150: 5 marks
+    \begin{itemize}
+      \item The gateway for this pool will be 172.16.5.2;
+      \item The default lease time shall be 1 day;
+      \item The maximum lease time shall be 2 days;
+    \end{itemize}
+  \item On the same network as the pool above, reserve an address of
+        172.16.5.30 for your Linux client on that network: 2 marks;
+  \item It will use a second  address pool of 192.168.2.50 - 192.168.2.100: 5 marks
+    \begin{itemize}
+      \item The gateway for this pool will be 192.168.2.2
+      \item The default lease time shall be 8 hours
+      \item The maximum lease time shall be 12 hours.
+    \end{itemize}
+    \item DHCP failover configuration
+      \begin{itemize}
+      	\item Primary server: 5 marks
+      	\item Secondary server: 5 marks
+      \end{itemize}
+    \item DHCP Relay server: 2 marks
+    \item Correct submission via GitHub: 3 marks
+\end{itemize}
+
+
+\end{document}
