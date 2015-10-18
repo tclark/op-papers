@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Assignment 2 \\ Marking Schedule \\ IN715 Networks Administration}
+\date{}
+\maketitle
+
+
+
+\section*{Requirements}
+
+On your primary server, you will provide the following:
+\begin{itemize}
+    \item perform recursive lookups for client on your local networks only (3 marks);
+    \item provide forward lookups for the \texttt{foo.org.nz} zone, 
+          including:
+          \begin{itemize}
+            \item A proper SOA record (3 marks);
+            \item Two NS records (2 marks);
+            \item An MX record (2 marks);
+            \item Correct A records for your hosts with static IP addresses (5 marks);
+            \item A CNAME record that directs www. to your
+                  BSD server (2 marks).
+          \end{itemize}
+    \item provide reverse lookups for your two networks.  For every A record 
+          in your forward zone, there should be a corresponding PTR record 
+          in the appropriate reverse zone (10 marks).
+\end{itemize}
+
+In addition, your systems shall also satisfy the following requirements:
+
+\begin{itemize}
+	
+    \item Your secondary server shall be configured as a slave for each of the three zones on your primary server (5 marks).
+
+    \item Your BIND DNS server and your ISC DHCP servers shall perform dynamic DNS updates of your forward and reverse zones (10 marks).
+    
+    \item Your files will be neatly formatted, well organised, and well named (3 marks).
+
+\end{itemize}
+
+
+\end{document}
