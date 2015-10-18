@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{ Lab 12.1 Snort Alerts\ IN715 Networks Three}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+Last week we installed and ran Snort in a \emph{packet capture} mode.  It simply captured and logged all packets. In a production network setting there would be issues with this.  First, we would simply be capturing and logging huge amounts of routine network traffic that has not security significance.  Second, there would be security and privacy issues created by creating and holding these logs.
+
+Snort gives us better options. Instead of logging everything, we can use rules to identify and log only those packets that are important in a security context.  IN the previous lab we already downloaded and installed a rule set that matches well known patterns of suspicious traffic.  We need to understand how those rules are written so that we can evaluate the rules we have adn write our own.
+
+\section{Running Snort in NIDS mode}
+We can start Snort in \emph{Network Intrusion Detection System} (NIDS) mode with a command like
+
+\texttt{snort -dv -l ./log -h 10.25.0.0/16 -c ./snort.conf}
+
+This tells Snort to verbosely log application layer data (\texttt{-dv}) to the file \texttt{./log}.  It will regard \texttt{10.25.0.0/16} as its ``home'' network and will look for packets matching the rules in \texttt{./snort.conf}. We could use the current configuration in \texttt{/etc/snort.conf}, but since we would like to work on developing our own rules it makes sense to use our own smaller configuration.
+
+\section{Snort rules}
+Here is an example of a simple Snort rule
+
+\begin{verbatim}
+    alert tcp any any -> 10.25.1.50 80 (content:"xml-rpc"; msg: "Possible xml-rpc exploit attempt";)
+\end{verbatim}
+
+This rule will trigger an \emph{alert} message from any source ip address and port (the two occurances of ``\texttt{any}'') addressed to port 80 on the host at \texttt{10.25.1.50} whith the string ``\texttt{xml-rpc} '' in the packet data.  When it identifies a matching packet it wil include the message ``Possible xml-rpc exploit attempt'' in the alert.
+
+You can test rules like this one by putting them in a ocnfiguration file that you specify on the command line as shown above.  Write a rule that catches attempted ssh logins.  Can you modify it so that it only catches attempted root logins?  What about logins only from \texttt{10.25.0.0/16}? (Why might you care about those?)
+
+\section{Output formats}
+Snort supports a variety of output formats.  Smoe are faster to write, which is important, while others provide more information or information in a more readable format.  Two human-readable formats at \texttt{alert\_full} and \texttt{alert\_fast}. In your configuration you can specify them like this:
+
+\begin{verbatim}
+output alert_full: [<filename> [<limit>]]
+\end{verbatim}
+
+Where the optional filename specifies where to write the log, and the optional limit restricts the file to a maximum size, e.g. 512M. Experiment with output formats to see how they work.
+
+
+\section{More information}
+More information about writing and sing rules is available in the Snort Users' Manual at \url{http://manual.snort.org/node1.html}, in particular in sections 1 and 3.
+
+
+
+
+
+\end{document}
