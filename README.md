@@ -1,3 +1,8 @@
+
+N.B.: These are not the current materials for the 2016 calendar year.  They
+are retained here for reference and histroical purposes, but current students
+should refer to the specific repositories referenced in their course directives.
+
 op-papers
 =========
 
