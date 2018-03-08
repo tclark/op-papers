@@ -57,7 +57,7 @@ Open Powershell and run the following command:
 
 This should produce a list of all the user accounts in your domain.  Note especially the value of the \texttt{dc} (domain component) items in the \emph{Distinguished name}. Now run the following:
 
-\texttt{Get-ADUser -Filter * -SearchBase "ou=Application Users,dc=directory,dc=foo,dc=org,dc=nz"}
+\texttt{Get-ADUser -Filter * -SearchBase "ou=OwnCloud Users,dc=directory,dc=foo,dc=org,dc=nz"}
 
 What's the difference in the lists? Do you see why?  Now experiment with other SearchBase strings. Can you write a query that returns only your user account? The purpose of this is to get a sense of the LDAP
 structure of AD DS.
