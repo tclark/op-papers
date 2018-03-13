@@ -55,6 +55,22 @@
 
 %----------- slide --------------------------------------------------%
 \begin{frame}
+  \frametitle{Examples of configuration management systems}
+
+  In this paper we will use \emph{Puppet} for configuration management.
+  
+  \begin{itemize}
+  \item Ansible
+  \item Chef
+  \item Puppet
+  \item Salt
+  \end{itemize}
+
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
   \frametitle{Puppet}
 
   In this paper we will use \emph{Puppet} for configuration management.
@@ -113,11 +129,11 @@ Puppet supports many standard types, and it is possible to define your own.  Som
 
 A node is basically a host you want to configure.
 \begin{verbatim}
-node 'www.sqrawler.com' {
+node 'www.foo.org.nz' {
 
 }
 
-node 'db1.sqrawler.com', 'db2.sqrawler.com' {
+node 'db1.foo.org.nz', 'db2.foo.org.nz' {
 
 }
 \end{verbatim}
@@ -143,14 +159,14 @@ node default {
 \begin{frame}[fragile]
   \frametitle{Node Inheritance}
 
-A node can inherit from another node.  For example 'www.sqrawler.com' gets all of the configuration from the base node, plus it's own specific configuration.
+A node can inherit from another node.  For example 'www.foo.org.nz' gets all of the configuration from the base node, plus it's own specific configuration.
 
 \begin{verbatim}
 node base {
 
 }
 
-node 'www.sqrawler.com'  inherits base {
+node 'www.foo.org.nz' inherits base {
 
 }
 \end{verbatim}
@@ -165,7 +181,7 @@ Note that Puppet best practice is to be careful to avoid overusing inheritance. 
   A collection of related resources can be organised into a \emph{module}.  For example, we may want to install the bacula-fd package, its configuration file, and set up a working directory for restores.  We can create a module that incorporates all of these things, and then use the module in a node:
 
 \begin{verbatim}
-node 'foo.sqrawler.com' {
+node 'foo.foo.org.nz' {
   include bacula-client
 }
 \end{verbatim}

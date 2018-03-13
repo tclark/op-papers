@@ -7,8 +7,8 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 4.2 Creating a Puppet Module \\ IN719 Systems Administration}
-\date{\today}							% Activate to display a given date or no date
+\title{Lab 04.01.2 Creating a Puppet Module \\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
 
 \begin{document}
 \maketitle
@@ -59,7 +59,7 @@ Once the module is ready we can apply it to a node.  To do this you only need to
 
 You can watch the agent apply the configuration by starting it manually:
 
-\texttt{sudo puppet agent --server=mgmt.sqrawler.com --no-daemonize --verbose --onetime}
+\texttt{sudo puppet agent --server=mgmt.foo.org.nz --no-daemonize --verbose --onetime}
 
 \section*{Remaining tasks}
 Using Puppet to configure one server is a bit masturbatory.  Get puppet agents running on your remaining Linux hosts, create node resources for them, and start creating modules for the resources that they have in common.  Don't forget that the management server should also be an agent.

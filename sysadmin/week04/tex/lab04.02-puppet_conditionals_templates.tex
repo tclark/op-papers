@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 4.3: A Puppet Module for Hosts Files \\ IN719 Systems Administration}
+\title{Lab 04.02: A Puppet Module for Hosts Files \\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -73,11 +73,11 @@ Finally, we need to write our template files in the \texttt{templates} subdirect
 \textbf{debhosts.erb}
 \begin{verbatim}
 127.0.0.1       localhost <%= hostname %>
-10.26.1.50      ad ad.sqrawler.com
-10.26.1.51      app app.sqrawler.com
-10.26.1.52      db db.sqrawler.com
-10.26.1.53      mgmt mgmt.sqrawler.com
-10.26.1.54      backup backup.sqrawler.com
+10.26.1.50      ad ad.foo.org.nz
+10.26.1.51      app app.foo.org.nz
+10.26.1.52      db db.foo.org.nz
+10.26.1.53      mgmt mgmt.foo.org.nz
+10.26.1.54      backup backup.foo.org.nz
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     localhost ip6-localhost ip6-loopback
@@ -89,11 +89,11 @@ ff02::2 ip6-allrouters
 \textbf{winhosts.erb}
 \begin{verbatim}
 127.0.0.1       localhost <%= hostname %>
-10.26.1.50      ad ad.sqrawler.com
-10.26.1.51      app app.sqrawler.com
-10.26.1.52      db db.sqrawler.com
-10.26.1.53      mgmt mgmt.sqrawler.com
-10.26.1.54      backup backup.sqrawler.com
+10.26.1.50      ad ad.foo.org.nz
+10.26.1.51      app app.foo.org.nz
+10.26.1.52      db db.foo.org.nz
+10.26.1.53      mgmt mgmt.foo.org.nz
+10.26.1.54      backup backup.foo.org.nz
 
 \end{verbatim}
 
