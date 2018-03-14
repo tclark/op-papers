@@ -44,21 +44,21 @@ puppet agent --server=mgmt.foo.org.nz --no-daemonize --verbose
 You should see output like the following:
 
 \begin{verbatim}
-info: Creating a new SSL key for db.foo.org.nz
+info: Creating a new SSL key for db
 info: Caching certificate for ca
-info: Creating a new SSL certificate request for db.foo.org.nz
+info: Creating a new SSL certificate request for db
 info: Certificate Request fingerprint (md5): A1:2C:E1:C1:2F:C5:AE:34:A9:A5:4F:C9:CA:7A:16:C6
 
 \end{verbatim}
 
-Now, on the puppetmaster, run the command \texttt{puppet cert --list}.  You should see the signing request for your agent.  Sign the key with the command \texttt{ puppet cert --sign db.foo.org.nz}.
+Now, on the puppetmaster, run the command \texttt{puppet cert --list}.  You should see the signing request for your agent.  Sign the key with the command \texttt{ puppet cert --sign db}.
 
 \section{Sample agent configuration}
 Now we want to get Puppet to do something on our systems.  To begin, make sure that \texttt{vim} is not installed on your db server by running \texttt{sudo apt-get remove vim}.
 
 Next create the file \texttt{/etc/puppet/mamifests/nodes.pp} on your management server and put the following text in it:
 \begin{verbatim}
-  node 'db.foo.org.nz' {
+  node 'db' {
     package { 'vim': ensure => present }
   }
 \end{verbatim}
