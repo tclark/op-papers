@@ -17,12 +17,12 @@
 \maketitle
 
 \section*{Introduction}
-Puppet is a tool that allows us to centralise and automate the configuration of computers.  Set up properly, it will save you time and help you keep your server configurations consistent and accurate.  Puppet is an extremely powerful tool."
+Puppet is a tool that allows us to centralise and automate the configuration of computers.  Set up properly, it will save you time and help you keep your server configurations consistent and accurate.  Puppet is an extremely powerful tool.
 
 Puppet uses a central server, called the \emph{puppetmaster}, to manage clients, called \emph{agents}.
 
 \section{Set up the puppetmaster}
-On your management server, use \texttt{apt-get} to install the \texttt{puppetmaster} package and its dependencies.  Edit the file \texttt{/etc/puppet.conf} and add the following lines:
+On your management server, use \texttt{apt-get} to install the \texttt{puppetmaster} package and its dependencies.  Edit the file \texttt{/etc/puppet/puppet.conf} and add the following lines:
 
 \
 \begin{verbatim}
@@ -32,13 +32,13 @@ On your management server, use \texttt{apt-get} to install the \texttt{puppetmas
 
 Next, create the file \texttt{/etc/puppet/manifests/site.pp}.  It should be empty for now.
 
-Restart puppetmaster with the command \texttt{sudo /etc/init.d/puppetmaster restart}.
+Restart puppetmaster with the command \texttt{sudo service puppetmaster restart}.
 
 \section{Installing and connecting an agent}
 On your db server, use \texttt{apt-get} to install the \texttt{puppet} package and its dependencies.  Connect your agent to the puppet server manually with the following command:
 
 \begin{verbatim}
-puppet agent --server=mgmt.foo.org.nz --no-daemonize --verbose
+sudo puppet agent --server=mgmt.foo.org.nz --no-daemonize --verbose
 \end{verbatim}
 
 You should see output like the following:
@@ -51,7 +51,7 @@ info: Certificate Request fingerprint (md5): A1:2C:E1:C1:2F:C5:AE:34:A9:A5:4F:C9
 
 \end{verbatim}
 
-Now, on the puppetmaster, run the command \texttt{puppet cert --list}.  You should see the signing request for your agent.  Sign the key with the command \texttt{ puppet cert --sign db}.
+Now, on the puppetmaster, run the command \texttt{sudo puppet cert --list}.  You should see the signing request for your agent.  Sign the key with the command \texttt{ sudo puppet cert --sign db}.
 
 \section{Sample agent configuration}
 Now we want to get Puppet to do something on our systems.  To begin, make sure that \texttt{vim} is not installed on your db server by running \texttt{sudo apt-get remove vim}.
