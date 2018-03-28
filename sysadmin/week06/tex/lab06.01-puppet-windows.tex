@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 \usepackage{hyperref}
 
-\title{Lab 6.1:  Puppet on Windows\\ IN719 Systems Administration}
+\title{Puppet on Windows\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -17,13 +17,13 @@
 It is possible to run Puppet agents on most Windows systems.  Differences between Windows and Unix/Linux operating systems have to be taken into account, but for the most part Puppet can manage a mixed system infrastructure sensibly.
 
 \section{Preparation}
-On your Windows server, be sure that the hosts file has a correct entry for the \texttt{mgmt} server.  Copy the MSI for version 2.7.23 to your server. You can download this from \url{https://downloads.puppetlabs.com/windows/}.
+On your Windows server, be sure that the hosts file has a correct entry for the \texttt{mgmt} server.  Copy the MSI for version 3.8.5 (64 bit) to your server. You can download this from \url{https://downloads.puppetlabs.com/windows/}.
 
-We need to make a couple of changes to our \texttt{hosts\_file} module to make it function well on our Windows systems.
+We need to make a couple of changes to our \texttt{hosts\_file} module from lab 04.02 to make it function well on our Windows systems.
 
-First, create an empty \texttt{lib} subdirectory of your \texttt{hosts\_file} module.  This will supress an otherwise annoying error message on our Windows servers.
+First, create an empty \texttt{lib} subdirectory of your \texttt{hosts\_file} module.  This will suppress an otherwise annoying error message on our Windows servers.
 
-Second, we would like to deal with the line endings in our Windows hosts file.  An easy way to do this is to install the \texttt{dos2unix} package.  Then run
+Second, we would like to deal with the line endings in our Windows hosts file.  An easy way to do this is to install the \texttt{dos2unix} package on your \texttt{mgmt} server.  Then run
 
 \texttt{unix2dos /etc/puppet/modules/hosts\_file/templates/winhosts.erb}
 
@@ -32,12 +32,12 @@ to convert the line endings.
 \section{Install and run the agent on Windows}
 Run the agent installer on your Windows server by executing the MSI file you copied earlier.  The only thing you'll need to do is to specify the Puppetmaster server during the install.
 
-Run the Puppet agent manually be selecting it from the start screen. You will need to sign the key for the agent on the master server.
+Run the Puppet agent manually be selecting it from the start menu. You will need to sign the key for the agent on the master server.
 
 The agent is already configured to run as a service from this point on.
 
 \section{Follow up}
 We won't be doing much with our Windows server for a while, but take some time to see what configuration you can manage with Puppet on your Windows server.  Recall that your objective is to be able to start with a base installation and get your server properly set up entirely with Puppet.
 
-Note that some good documentation is at \url{https://docs.puppetlabs.com/windows/} and there are some useful Puppet modules for Windows server on the Puppet Forge at http://forge.puppetlabs.com.
+Note that some good documentation is at \url{https://docs.puppet.com/puppet/3.8/} and there are some useful Puppet modules for Windows server on the Puppet Forge at http://forge.puppetlabs.com.
 \end{document}
