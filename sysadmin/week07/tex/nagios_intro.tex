@@ -29,8 +29,10 @@
   \frametitle{Our Problem}
   
 \begin{itemize}
-\item We need to know when things break. 
-\item We want to know about problems \emph{before} things break.
+\item As sysadmins, our job is to know the state of our systems.
+\item We also want to be \textbf{the first} to know.
+\item And whenever possible, we want to catch problems before they
+         start to effect our users.
 \end{itemize}
 \end{frame}
 
@@ -40,12 +42,13 @@
   \frametitle{Proposed Solutions}
   
 \begin{itemize}
-\item \sout{We perform various service checks on our systems regularly.} 
-\item \sout{We write some scripts to automate these steps.}
-\item \sout{???}
-\item \sout{Profit!}
-\item We use a centralised monitoring tool.
+\item We could perform various service checks on our systems regularly.
+\item We write some scripts to automate these checks and alert us if something 
+         is wrong.
 \end{itemize}
+
+These are better than nothing, but we quickly realise that monitoring is a very general
+problem faced by all sysadmins. It calls for purpose built tools.
 \end{frame}
 
 
@@ -58,9 +61,10 @@
 \item Icinga
 \item Zabbix
 \item Spiceworks
+\item Prometheus
 \end{itemize}
 
-Nagios is the best known and most widely used of these and is the one we will use in this paper.
+Nagios is very well known and widely used. Also, it plays well with Puppet, so it is the one we will use in this paper.
 \end{frame}
 
 
@@ -69,10 +73,10 @@ Nagios is the best known and most widely used of these and is the one we will us
   \frametitle{Example Scenario}
   
 \begin{itemize}
-\item We have a server, db.sqrawler.com,  running the MySQL DBMS.
+\item We have a server, db.foo.org.nz,  running the MySQL DBMS.
 \item We want to monitor server uptime and the MySQL service.
-\item One systems admin should be notified of any issues.
-\item We will use puppet to manage the Nagios config.
+\item A systems admin should be notified of any issues.
+\item We will use Puppet to manage the Nagios config.
 \end{itemize}
 
 \end{frame}
@@ -83,7 +87,7 @@ Nagios is the best known and most widely used of these and is the one we will us
   
   We will define the following nagios resources in our Nagios Puppet module
 \begin{itemize}
-\item host:  db.sqrawler.com
+\item host:  db.foo.org.nz
 \item hostgroup with our host as a member
 \item contact and contactgroup for the admin
 \item service:  MySQL

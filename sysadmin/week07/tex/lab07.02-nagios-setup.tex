@@ -7,7 +7,7 @@
 \usepackage{enumerate}                                                          % TeX will automatically convert eps --> pdf in pdflatex                
 \usepackage{hyperref}
 
-\title{Lab 7.1:  Nagios Setup\\ IN719 Systems Administration}
+\title{Nagios Setup\\ IN719 Systems Administration}
 \date{}                                                 % Activate to display a given date or no date
 
 \begin{document}
@@ -19,7 +19,7 @@ database server.  You should have already created a Puppet module
 for your Nagios server and used it to install Nagios on your 
 \texttt{mgmt} server.
 
-All tasks in this lab will be performed on your \texttt{mgmt} server.
+\textbf{All tasks in this lab will be performed on your \texttt{mgmt} server.}
 
 \section{Enable logins to your Nagios web console}
 When you installed the \texttt{nagios3} package it included a web based 
@@ -35,7 +35,7 @@ for Nagios with the command
 You will be asked to supply a password.  You will use that with the 
 user name \texttt{nagiosadmin} to log onto the web console.
 
-Now log in.  Loook in particular at Hosts and Hostgroups.  Nagios is configured
+Now log in.  Look in particular at Hosts and Hostgroups.  Nagios is configured
 to monitor the local machine (\texttt{mgmt}) and nothing else.
 
 \section{Configure Nagios using Puppet}
@@ -43,7 +43,8 @@ to monitor the local machine (\texttt{mgmt}) and nothing else.
 We want to be able to monitor the db server.  We will modify and add resources to
 our nagios server puppet module's \texttt{config} class. 
 
-1.  Create a contact for yourself (and others in your team).
+1.  Create a contact for yourself (and others in your team). N.B.: Don't 
+create a contact for me. I've just used my name below as an example.
 
 \begin{verbatim}
 
@@ -84,7 +85,7 @@ is up.
 
 \begin{verbatim}
 
-nagios_host { 'db.sqrawler.com':
+nagios_host { 'db.foo.org.nz':
                  target => '/etc/nagios3/conf.d/ppt_hosts.cfg',
                  alias => 'db',
                  address => '10.25.1.18',
@@ -130,7 +131,7 @@ identify your MySQL servers to Nagios.
 nagios_hostgroup{'db-servers':
               target => '/etc/nagios3/conf.d/ppt_hostgroups.cfg',
               alias => 'Database Servers',
-              members => 'db.sqrawler.com',
+              members => 'db.foo.org.nz',
 }
 
 \end{verbatim}
