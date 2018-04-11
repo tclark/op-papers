@@ -51,7 +51,39 @@
 
 %----------- slide --------------------------------------------------%
 \begin{frame}[fragile]
-  \frametitle{in /etc/nagios3/conf.d/localhost\_nagios2.cfg}
+  \frametitle{\texttt{check\_disk}}
+
+  This is just a simple program written in C.  We can call it manually.
+\begin{Verbatim}[commandchars=\\\[\]]
+root@mgmt:~# \codeHighlight[/usr/lib/nagios/plugins/check_disk -w 20% -c 10%]
+DISK OK - free space: / 5887 MB (80% inode=90%);
+/lib/init/rw 122 MB (100% inode=99%);
+/dev 117 MB (99% inode=98%);
+/dev/shm 122 MB (100% inode=99%);|
+/=1405MB;6146;6914;0;7683
+/lib/init/rw=0MB;97;109;0;122
+/dev=0MB;93;105;0;117 /dev/shm=0MB;97;109;0;122
+\end{Verbatim}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{in \texttt{/etc/nagios-plugins/config/disk.cfg}}
+
+\begin{Verbatim}[commandchars=\\\[\]]
+define command{
+        command_name    check_all_disks
+        command_line    \codeHighlight[/usr/lib/nagios/plugins/check_disk] ...
+                        \codeHighlight[-w '$ARG1$' -c '$ARG2$' -e]
+        }
+
+\end{Verbatim}
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{in \texttt{/etc/nagios3/conf.d/localhost\_nagios2.cfg}}
 
 
 \begin{Verbatim}[commandchars=\\\[\]]
@@ -65,38 +97,6 @@ define service{
 
 
 \end{frame}
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{in /etc/nagios-plugins/config/disk.cfg}
-
-\begin{Verbatim}[commandchars=\\\[\]]
-define command{
-        command_name    check_all_disks
-        command_line    \codeHighlight[/usr/lib/nagios/plugins/check_disk] ...
-                        \codeHighlight[-w '$ARG1$' -c '$ARG2$' -e]
-        }
-
-\end{Verbatim}
-\end{frame}
-
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
-  \frametitle{check\_disk}
-
-  This is just a simple program written in C.  We can call it manually.
-\begin{Verbatim}[commandchars=\\\[\]]
-root@app:~# /usr/lib/nagios/plugins/check_disk -w 20% -c 10%
-DISK OK - free space: / 5887 MB (80% inode=90%);
-/lib/init/rw 122 MB (100% inode=99%);
-/dev 117 MB (99% inode=98%);
-/dev/shm 122 MB (100% inode=99%);|
-/=1405MB;6146;6914;0;7683
-/lib/init/rw=0MB;97;109;0;122
-/dev=0MB;93;105;0;117 /dev/shm=0MB;97;109;0;122
-\end{Verbatim}
-\end{frame}
-
 
 %----------- slide --------------------------------------------------%
 \begin{frame}
@@ -132,9 +132,9 @@ it's not working yet.
 
 %----------- slide --------------------------------------------------%
 \begin{frame}[fragile]
-  \frametitle{in /etc/nagios3/conf.d/ppt\_mysq\_service.cfg}
+  \frametitle{in \texttt{/etc/nagios3/conf.d/ppt\_mysql\_service.cfg}}
 
-The MySQL service is not defined, so add:
+The MySQL service looks something like this:
 \begin{Verbatim}[commandchars=\\\[\]]
 #check that mysql services are running
 define service {
@@ -161,8 +161,95 @@ define command{
 
 
 \end{Verbatim}
+
+Now that we know how Nagios checks work, we can try
+running that check by hand and see what happens?
 \end{frame}
 
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Problem 1: MySQL doesn't listen on the network}
+
+  A little research will show us that MySQL, by default, does
+  not accept network connections. To change this, we have to 
+  edit \texttt{/etc/mysql/mysql.conf.d/mysqld.cnf}. FInd the line that
+  says 
+  
+  \vskip 5mm
+  \texttt{bind-address = 127.0.0.1}
+  
+  \vskip 5mm
+  and change that address to \texttt{0.0.0.0}.
+  
+  \vskip 5mm
+  Restart the mysql service and try running your Nagios check
+  again.
+\end{frame}
+
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Problem 2: We need a MySQL user and password}
+  
+  Our MySQL service is listening on the network, but we need a username
+  and password to connect to it.
+  
+  \vskip 5mm
+  You will need to add a user by logging in the with MySQL 
+  client and using a command like
+  \vskip 5mm
+  \texttt{GRANT SELECT ON nagiosdb.* to nagioscheck@'\%' IDENTIFIED BY 'foo';}
+  \vskip 5mm
+  But how will we use the credentials?
+  
+  \end{frame}
+  
+  %----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{in \texttt{/etc/nagios-plugins/config/mysql.cfg}}
+
+\begin{Verbatim}[commandchars=\\\[\]]
+# 'check_mysql_cmdlinecred' command definition
+define command{
+  command_name  check_mysql_cmdlinecred
+  command_line  /usr/lib/nagios/plugins/check_mysql
+                -H '$HOSTADDRESS$' -u '$ARG1$' -p '$ARG2$'
+}
+
+\end{Verbatim}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Use this new check}
+
+
+\begin{Verbatim}[commandchars=\\\[\]]
+#check that mysql services are running
+define service {
+	...
+    check_command    \codeHighlight[check_mysql_cmdlinecred!$USER3$!$USER4$]
+}
+
+\end{Verbatim}
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{in \texttt{/etc/nagios3/resources.cfg}}
+
+This file contains items we need, but that need to be handled carefully, like
+usernames and passwords.  Add:
+
+\begin{Verbatim}[commandchars=\\\[\]]
+  # Store some usernames and passwords (hidden from the CGIs)
+  # MySQL username and password
+  \codeHighlight[$USER3$]=nagioscheck
+  \codeHighlight[$USER4$]=foo
+
+}
+\end{Verbatim}
+\end{frame}
 
 %----------- slide --------------------------------------------------%
 \begin{frame}
