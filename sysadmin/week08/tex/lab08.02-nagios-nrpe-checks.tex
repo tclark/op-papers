@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 8.2:  Remote Nagios Checks With NRPE\\ IN719 Systems Administration}
+\title{Remote Nagios Checks With NRPE\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -30,7 +30,7 @@ First we need to edit the file \texttt{/etc/nagios/nrpe.cfg} on our \texttt{db} 
 
 \textbf{Step 1:} Before you start edititing your configuration file, use the \texttt{df} command to find the device id for your hard disk.  It will look something like \texttt{/div/disk/by-uuid/f8c150e9-8751-4f87-8e56-364ad5b3b8f5}.  You will need that for your configuration.
 
-\textbf{Step 2:} Find the line that specifies \texttt{allowed\_hosts} and change it to allow requests from \texttt{mgmt.sqrawler.com}.
+\textbf{Step 2:} Find the line that specifies \texttt{allowed\_hosts} and change it to allow requests from \texttt{mgmt.foo.org.nz} and/or \texttt{mgmt}.
 
 \textbf{Step 3:} Find the command definition section.  It lists and configures the Nagios checks that your server will perform via NRPE.  You will see a command called \texttt{check\_hda1}.  This is nearly what we want, but we don't have an ``\texttt{hda1}".  Change the command name in square brackets to something else, like ``\texttt{check\_hd}".  Then change the command argument that specifies \texttt{/dev/hda1} to the id of your disk that you noted in step 1.
 
@@ -39,7 +39,7 @@ Be sure that you restart the \texttt{nagios-nrpe-server} service after altering 
 \section{Nagios Server Configuration}
 Now that our remote server is ready, we can configure the check in Nagios on \texttt{mgmt}.
 
-\textbf{Step 1:} Create a new hostgroup with a name like ``Remote Disks".  Place your \texttt{db.sqrawler.com} host in this new hostgroup.
+\textbf{Step 1:} Create a new hostgroup with a name like ``Remote Disks".  Place your \texttt{db.foo.org.nz} host in this new hostgroup.
 
 \textbf{Step 2:}  Create a new service that performs the disk check via NRPE.  The command to do this is \texttt{check\_nrpe\_1arg!check\_hd}.  This command is defined in the file \texttt{/etc/nagios-plugins/config/check\_nrpe.cfg}.  The single argument, \texttt{check\_hd}, is the name of the command we set up in the \texttt{nrpe.cfg} file on the remote system.
 
