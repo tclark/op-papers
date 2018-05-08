@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 10.1:  Installing and Trying Bacula\\ IN719 Systems Administration}
+\title{Lab 10.01:  Installing and Trying Bacula\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -17,7 +17,7 @@
 Bacula is a powerful backup management system that will let you define and run backup and restore jobs across your network.  Because it's a powerful system, it's also complex.  Today we'll install Bacula and run through a basic backup and restore operation.  Later we will configure Bacula to run proper backups on our networks.
 
 \section*{Step-by-step}
-Carry out the following procudure on your \texttt{backup} server.
+Carry out the following procudure on your \texttt{storage} server.
 
 \begin{enumerate}
   \item Use \texttt{apt-get} to install the \texttt{bacula-server} package\footnote{We will bypass Puppet for today's lab, but you should create puppet modules for Bacula later.}.  At one point you will be asked if you want to use SQLite; say yes to this.  
@@ -45,7 +45,7 @@ Carry out the following procudure on your \texttt{backup} server.
 
   \item Create some files in \texttt{/home/bacula/data-to-backup}.
 
-  \item Now you are ready to run some backup and restore jobs.  Open a second ssh session to your \texttt{backup} server. In it, run the 
+  \item Now you are ready to run some backup and restore jobs.  Open a second ssh session to your \texttt{storage} server. In it, run the 
         \texttt{bconsole} command.  The next several commands take place inside the \texttt{bconsole}.
 
   \item Enter \texttt{show filesets} to see what files Bacula is configured to back up.
@@ -68,7 +68,7 @@ Carry out the following procudure on your \texttt{backup} server.
   \item Now we will restore the missing files.  In bconsole, enter the command \texttt{restore all}.  From the 
         resulting menu, pick option 5.
 
-  \item Bacula will ask what files you want to resotre.  Enter \texttt{done} to restore everything.
+  \item Bacula will ask what files you want to restore.  Enter \texttt{done} to restore everything.
 
   \item Bacula will placed the restored files under \texttt{/home/bacula/restores}.  Verify that the files are correct
         before manually copying them to the desired location.
