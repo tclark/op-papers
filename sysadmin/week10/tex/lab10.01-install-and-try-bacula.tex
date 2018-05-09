@@ -26,8 +26,8 @@ Carry out the following procudure on your \texttt{storage} server.
 
   \item Bacula's configuration files are in \texttt{/etc/bacula}. We will edit two of them today.
         \begin{enumerate}
-            \item In \texttt{/etc/bacula/bacula-sd.conf}, look for the \emph{Device} section named "FileStorage".  Change the \emph{Archive Device} to 
-	          \texttt{/home/bacula/storage}.
+            \item In \texttt{/etc/bacula/bacula-sd.conf}, look for the \emph{Device} sections named "\texttt{FileChgr1-Dev1}" and "\texttt{FileChgr1-Dev2}" .  Change the \emph{Archive Device} to 
+	          \texttt{/home/bacula/storage/dev1} and  \texttt{/home/bacula/storage/dev2}.
 
 	    \item In \texttt{/etc/bacula/bacula-dir.conf}, look for the \emph{Job} section named \emph{RestoreFiles}.  Change the \emph{Where} property
 	          to \texttt{/home/bacula/restores}.
@@ -40,7 +40,7 @@ Carry out the following procudure on your \texttt{storage} server.
   \item Since we have modified the configuration files, we will need to use the \texttt{service} command to reload the services 
         \texttt{bacula-director} and \texttt{bacula-sd} (e.g., \texttt{service bacula-director reload}).
 
-  \item Create the directories \texttt{/home/bacula/storage}, \texttt{/home/bacula/restores}, and \texttt{/home/bacula/data-to-backup}.
+  \item Create the directories \texttt{/home/bacula/storage/dev1}, \texttt{/home/bacula/storage/dev2}, \texttt{/home/bacula/restores}, and \texttt{/home/bacula/data-to-backup}.
         Change the owner of the first two to \texttt{bacula}.
 
   \item Create some files in \texttt{/home/bacula/data-to-backup}.
