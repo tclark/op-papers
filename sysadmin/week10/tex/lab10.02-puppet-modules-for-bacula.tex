@@ -7,20 +7,20 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 10.2:  Puppet Modules for Bacula\\ IN719 Systems Administration}
+\title{Lab 10.02:  Puppet Modules for Bacula\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
 \maketitle
 
 \section*{Preface}
-You must complete lab 10.1 before starting on this task. 
+You must complete lab 10.01 before starting on this task. 
 
 \section*{Introduction}
-In the previous lab we performed a minimal installation of Bacula on our \texttt{mgmt} servers so that we could try out a backup/restore process. In this lab we're going to start preparing our Puppet modules to manage a complete Bacula installation across our systems. We will create three modules in this lab:
+In the previous lab we performed a minimal installation of Bacula on our \texttt{storage} servers so that we could try out a backup/restore process. In this lab we're going to start preparing our Puppet modules to manage a complete Bacula installation across our systems. We will create three modules in this lab:
 
 \begin{itemize}
-	\item \texttt{bacula-director} will install and manage the Bacula Director service.  We will apply this module to our \texttt{mgmt} servers.
+	\item \texttt{bacula-director} will install and manage the Bacula Director service.  We will apply this module to our \texttt{storage} server.
 	\item \texttt{bacula-file} will install and manage the Bacula File Daemon (client) service. We will apply this module to every Linux server.
 	\item \texttt{bacula-storage} will install and manage the Bacula Storage Daemon.  We will apply this module to our \texttt{storage} server.
 \end{itemize}
@@ -77,9 +77,9 @@ include bacula-file::install, bacula-file::config,
 Test your module additions by applying them to to your servers before continuing.
 
 \section{Services}
-One you have the installation and configuration incorporated into your Puppet modules, you need to add service resources.
+Once you have the installation and configuration incorporated into your Puppet modules, you need to add service resources.
 \begin{itemize}
-	\item The \texttt{bacula-director} module will ensure that the \texttt{bacula-director} service is running on \texttt{mgmt}
+	\item The \texttt{bacula-director} module will ensure that the \texttt{bacula-director} service is running on \texttt{storage}
 	\item The \texttt{bacula-storage} module will ensure that the \texttt{bacula-sd} module is running on \texttt{storage}
 	\item The \texttt{bacula-file} module will ensure that the \texttt{bacula-fd} service is running on every Linux server.
 \end{itemize}
