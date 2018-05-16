@@ -1,0 +1,138 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{Lab 11.2:  Configuring Backup Jobs\\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+So far we have set up Bacula and are prepared to configure it, but we have not configured it to do any real backups/restores. In this lab we will walk through doing this.
+
+All of the backup and restore jobs are configured in the file \texttt{/etc/bacula/bacula-dir.conf} on \texttt{storage}. We also have to do some configuration in  \texttt{/etc/bacula/bacula-fd.conf} on each backup client machine, and a small bit of configuration in  \texttt{/etc/bacula/bacula-sd.conf} on \texttt{storage}.
+
+\section{Configuring a Backup Job}
+The details of a backup job are configured in a \texttt{Job} section in the configuration file.  You will have a \texttt{Job} section for each client that you back up.  If your backup jobs include a lot of shared configuration, you can create a \texttt{JobDefs} section that provides default values that can be applied to \texttt{Jobs}.  These defaults can be overridden if necessary.  The use of a \texttt{JobDefs} is optional.
+
+A backup \texttt{Job} contains a few core components - that themselves have to be defined - and a handful of other values.  Important components of a backup \texttt{Job} are
+
+\begin{itemize}
+	\item \texttt{Client}: the client \texttt{bacula-fd} whose data is to be backed up;
+	\item \texttt{FileSet}: a set of files and directories on the client machine to back up;
+	\item \texttt{Schedule}: when to perform the backups;
+	\item \texttt{Storage}: the storage daemon/device that will hold or backed up data.
+\end{itemize}
+
+All of these elements need their own configurations.
+
+First, let's look at a \texttt{Client} configuration in \texttt{bacula-dir.conf}.
+
+\begin{verbatim}
+Client {
+  Name = example-fd
+  Address = 10.25.123.123
+  FDPort = 9102
+  Catalog = MyCatalog
+  Password = "lolcats"          # password for FileDaemon
+  File Retention = 60 days            # 60 days
+  Job Retention = 6 months            # six months
+  AutoPrune = yes                     # Prune expired Jobs/Files
+}
+\end{verbatim}
+
+Note a few things here:
+\begin{enumerate}
+  \item The Name property need to match the Name that is set in the \texttt{bacula-fd.conf} file on the client machine.
+  \item The Address can be an ip address or a hostname that resolves in DNS.
+  \item The Password needs to match the Password set in the corresponding \texttt{bacula-fd.conf}. There are a lot of passwords
+  in our configuration and it's hard to keep them straight. My advice is to use one easy password everywhere while you get things working,
+  then go back and use a more secure password scheme later.
+\end{enumerate}
+ 
+\newpage
+
+Now we need to look at an example \texttt{FileSet}.
+  
+  \begin{verbatim}
+  FileSet {
+    Name = "ExampleSet"
+    Include {
+      Options {
+        signature = MD5
+        Exclude = yes
+       }
+       File = /etc
+       File = /home
+   }
+   Exclude {
+       File = *.swp
+   }
+  }
+  \end{verbatim}
+  
+This \texttt{FileSet} will back up everything under \texttt{/home} and \texttt{/etc} but will ignore vi swap files. Note that there is nothing 
+here that is specific to any client machine, so we could use it on any one where we want to back up \texttt{/home} and \texttt{/etc}.
+ 
+There is already a good example of a working \texttt{Schedule} definition in \texttt{bacula-dir.conf} that looks like this
+
+\begin{verbatim}
+Schedule {
+  Name = "WeeklyCycle"
+  Run = Full 1st sun at 23:05
+  Run = Differential 2nd-5th sun at 23:05
+  Run = Incremental mon-sat at 23:05
+}
+\end{verbatim}
+
+Now we need a \texttt{Storage} device, but it turns out that we set one up in the first Bacula lab, called \texttt{File1}.
+You will see that we refer to it in the \texttt{Job} definition below.
+
+
+For the \texttt{Job}, there are a few values that are important:
+
+\begin{itemize}
+	\item \texttt{Name}: each backup job needs a distinct name;
+	\item \texttt{Type}: jobs are either \texttt{Backup} or \texttt{Restore} jobs;
+	\item \texttt{Level}: backup jobs can be \texttt{Full} or \texttt{incremental}.	
+\end{itemize}
+
+Here is an example of a backup \texttt{Job}:
+
+\begin{verbatim}
+Job {
+  Name = "ExampleBackp"
+  Type = Backup
+  Level = Incremental
+  Client = example-fd
+  FileSet = "ExampleSet"
+  Schedule = "WeeklyCycle"
+  Storage = File1
+  Messages = Standard
+  Pool = File
+  SpoolAttributes = yes
+  Priority = 10
+  Write Bootstrap = "/var/lib/bacula/%c.bsr"
+}
+
+\end{verbatim}
+
+Finally, for any of this to work, we need the client side configured in \texttt{/etc/bacula/bacula-fd.conf} Rather that copy the full configuration here, we will just note the 
+key fields.
+
+\begin{itemize}
+  \item In the \texttt{Director} section, make sure the \texttt{Name} and \texttt{Password} values match those in \texttt{bacula-dir.conf}.
+  \item In the \texttt{FileDaemon} section, make sure the name matches the corresponding \texttt{Name} in the \texttt{Client} section
+  in \texttt{bacula-dir.conf}.
+  \item In the \texttt{FileDaemon} section, make sure the \texttt{Address} matches the IP address on which the file daemon should be listening.
+\end{itemize}
+
+
+\end{document}
+
