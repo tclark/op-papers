@@ -23,7 +23,7 @@ Capabilities of modern Linux kernels allow us to create \emph{containers} that g
 In this lab we will use LXC on Ubuntu servers to create and experiment with some containers.
 
 \section{Setup}
-A virtual Ubuntu 14.04 server has been created for you on vCloud.  Use PuTTY or another ssh client to log into your server. The username is \texttt{user} and the password is \texttt{P@ssw0rd}. A list of IP addresses will be posted on the class Slack channel. We need to apply updates to our server and then install LXC.
+Virtual Ubuntu 16.04 servers have been created for you on vCloud.  Use PuTTY or another ssh client to log into your server. The username is \texttt{user} and the password is \texttt{P@ssw0rd}. A list of IP addresses will be shared in class. We need to apply updates to our server and then install LXC.
 
 \begin{enumerate}
 	\item Apply updates with the commands \\
@@ -50,7 +50,7 @@ sudo lxc-list
 \end{verbatim}
 
 \section{Running Your Containers}
-to use a container you will need to start it.  Then you cna attach a console to it to work within the container.  Start your \texttt{container-01} container with the command
+to use a container you will need to start it.  Then you can attach a console to it to work within the container.  Start your \texttt{container-01} container with the command
 
 \begin{verbatim}
 sudo lxc-start -d -n container-01
