@@ -47,7 +47,9 @@ WARNING: No swap limit support
 
 Create a new container with the command
 
-\texttt{sudo docker run -i -t --name fred ubuntu /bin/bash}
+\begin{verbatim}
+sudo docker run -i -t --name fred ubuntu /bin/bash
+\end{verbatim}
 
 This will create a new container named \texttt{fred} based on the ubuntu base image. We have told docker to run \texttt{bash} on the container, and the \texttt{-i} and \texttt{-t} options connect us to an interactive console on it.  
 
