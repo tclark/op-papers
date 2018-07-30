@@ -47,8 +47,9 @@ So far we have just used base images.  The real power of Docker comes from using
 which returns several matches.  Notice that the first one is simply called \texttt{wordpress}.  A repository whose name is a bare word like that is curated by the Docker team.  Other repositories are named according to the \texttt{username/repo-name} scheme and have been uploaded by Docker Hub users. Anybody can create and share images on Docker Hub, so we should exercise appropriate care when using them.
 
 Note that you can do the same search on the web by going to \url{https://hub.docker.com} and searching there.  Search for ``wordpress'' on the web site now.  We are interested in the \texttt{tlongren/docker-wordpress-nginx-ssh} images, so select that repository from the search results.  We want to pull and run a container from this image, which we will do with the command
-
-\texttt{sudo docker run -p 80:80 -p 22:2222 --name wordpress -d tlongren/docker-wordpress-nginx-ssh:stable}
+\begin{verbatim}
+sudo docker run -p 80:80 -p 2222:22 --name wordpress -d tlongren/docker-wordpress-nginx-ssh:stable
+\end{verbatim}
 
 The \texttt{-p} option map ports between the container and the host system. Once your container is running, you should be able to browse to your virtual machine with a web browser and see the initial Wordpress setup screen.  You can also ssh into your container by ssh'ing to your host machine's ip address at port 2222.  For ssh, the user name and password are both \texttt{wordpress}.
 
