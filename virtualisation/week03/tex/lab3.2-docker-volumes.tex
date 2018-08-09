@@ -46,4 +46,21 @@ Shut down \texttt{vol\_lab\_1}.  Start a new container with the command
 \texttt{sudo docker run -it  --volumes-from vol\_lab\_1 ubuntu /bin/bash}
 
 When your new container starts, inspect the \texttt{/data} volume inside it.  Make some changes inside the volume and then shut down this container.  Then, check the volume directory on the host system and see if your changes are visible there.
+
+\section{Creating a volume from an exisiting directory on the host}
+Often, especially when developing applications, we have a directory on the host system that contains code or other resources we want to use inside a container while still keeping access to them directly on the host. Modify the container image you created earlier by doing the following:
+
+\begin{enumerate}
+	\item Create a directory, \texttt{/home/user/mydata} on your host system. Place some files in it.
+	\item In your Dockerfile, remove the earlier commands that created the \texttt{/data} directory and its contents.
+	\item Make \texttt{/data} a volume that mount \texttt{/home/user/mydata}.
+	\item Rebuild your image and start a new container from it. 
+	\item On your host system, modify the contents of \texttt{/home/user/mydata} and then observe how those changes are visible inside your running container.
+\end{enumerate}
+
+\section{One final note}
+The important property of volumes is that they exist independently of the containers that use them. You can see what volumes are present on your system with the command
+
+\texttt{docker volume ls}
+
 \end{document}

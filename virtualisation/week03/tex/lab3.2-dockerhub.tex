@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{DockerHub\\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Now that we can create images, we need to be able to distribute them using a Docker \emph{repository}.  DockerHub is the standard repository for Docker images and we will use it in this lab.
+
+You will need an account on DockerHub to do this lab, and you must complete lab 3.1 before doing this lab.
+
+\section{Pushing an image}
+Since our Docker servers are configured to use DockerHub by default, so there's almost nothing to do in order to push it upstream.  Simply issue the command
+
+\texttt{docker push yourusername/lab3.1}
+
+Since this is the first time you have pushed to DockerHub on this system, a dialogue will verify your credentials before performing the push.
+
+Check the DockerHub web site to verify that your image shows up on your profile.  Then, find the name of one of your classmates' images, pull it, and run a container from it.
+
+\section{Automated builds}
+Although we can now distribute our images on DockerHub, the situation is less than ideal.  Anytime we make a change to the image we must perform a set of manual steps to rebuild and push the image.  Also, even though we are storing the build context on GitHub, there's nothing explicitly linking the image to those sources. Effectively, we can't be completely sure what is in those images. We can address all of those by setting up an \emph{automated build}.
+
+To start, delete the DockerHub repository we created above, so that we can create a new one with the same name.
+
+Next, from your Dashboard page, select Create $\rightarrow$ Create Automated Build. You will have to link your DockerHub account to your GitHub account if you have not already done so. Once you have done this, you will select the GitHub repository that holds your image's build context. Fill out the resulting form, click create, and you're done.
+
+From now on, any time you push a new commit to your GitHub repository it will trigger a new build of your image on DockerHub. Try is now by making a small change to your build context and committing it.
+
+Explore the settings for this new repository. You'll see that the Dockerfile is shown here so that we can quickly see what your image contains, although we have to go to the associated GitHub repository to see the other resources. In particular, note the build settings.  Here you can set this repository to build and tag images whenever you push an associated branch or tag to GitHub.
+
+\section{Conclusions}
+A repository like DockerHub is basically necessary to distribute and use your Docker images.  The ability to set up automated builds also makes it easy to maintain and update images in an organised manner.
+
+\end{document}
