@@ -48,7 +48,7 @@ This dockerfile creates an image with some dependencies needed to run our app, c
 Build your container image with the tag \texttt{user/flaskapp}. Test it by running a container with the following command
 
 \begin{verbatim}
-docker run -d -rm --name flaskapp -p 5000:5000 user/flaskapp
+docker run -d --rm --name flaskapp -p 5000:5000 user/flaskapp
 \end{verbatim}
 
 and verify that it works by checking it with a browser.  Our application works, but for a production deployment we need to place it behind a reverse proxy server. For this, we will need a second container. Shut down your \texttt{flaskapp} container.
@@ -87,7 +87,7 @@ Now, run two containers based on our images with the following commands.
 
 \begin{verbatim}
 docker run -d --rm --name flaskapp user/flaskapp
-docker run -d --rm --name -p 8080:80 nginx user/nginx
+docker run -d --rm --name nginx -p 8080:80 user/nginx
 \end{verbatim}
 
 and see if you can see your application output. 
@@ -114,7 +114,7 @@ Now we just need to start our containers again, this time directing them to use 
 
 \begin{verbatim}
 docker run -d --rm --name flaskapp --net=app user/flaskapp
-docker run -d --rm --name nginx --net=app -p 8080:8- user/nginx
+docker run -d --rm --name nginx --net=app -p 8080:80 user/nginx
 \end{verbatim}
 
 Note that it doesn't matter in which order you start the containers. Now verify one last time that your application works by checking it with a browser.
