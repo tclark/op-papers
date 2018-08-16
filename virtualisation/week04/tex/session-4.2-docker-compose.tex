@@ -1,0 +1,106 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Docker Compose}
+
+\author[I720]{Virtualisation}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Think about what we did last time}
+  
+  \begin{enumerate}
+    \item Build \texttt{flaskapp} image
+    \item Build \texttt{nginx} image
+    \item Create \texttt{app} network
+    \item Run a \texttt{flaskapp} container, attaching it to the \texttt{app} network
+    \item Run an \texttt{nginx} container, attaching it to the \texttt{app} network and mapping its port 80 to host port 8080
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{This seems like something we might do more than once}
+  
+   How do we deal with a situation like this?
+   
+   \begin{enumerate}
+     \item Write a shell script.
+     \item Use (or create) a more general tool.
+   \end{enumerate}
+   
+   A more general tool exists: \emph{Docker Compose}.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{How would we redo the last lab with Docker Compose?}
+   
+   \begin{enumerate}
+     \item Create a project directory, called \texttt{lab4}.
+     \item Place the build contexts for our images inside this directory.
+     \item Create a file, \texttt{docker-compose.yml} in the directory with appropriate directives.
+   \end{enumerate}
+   
+   We can then build and run everything by executing the command \texttt{docker-compose up}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Our compose file}
+    
+    \begin{verbatim}
+version: '3'
+services:
+    flaskapp:
+        build: ./flaskapp
+        image: flaskapp
+        networks:
+            - app
+    nginx:
+        build: ./nginx
+        image: nginx
+        ports:
+            - 8080:80
+        networks:
+            - app
+        depends_on:
+            - flaskapp
+networks:
+    app:
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{When is Docker Compose a good tool}
+   
+   \begin{itemize}
+     \item Development environments    
+     \item Automated builds, tests
+     \item Small deployments
+   \end{itemize}
+   
+ However, if you're going deploy services on a larger scale, you need more horsepower than is provided by Docker Compose.
+
+\end{frame}
+
+
+
+\end{document}
