@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Docker Compose\\IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In this lab we will create a service using a three different containers managed with Docker Compose. To begin, create a project directory named \texttt{lab\_4.2}
+
+\section{Create a Flask application container}
+Make a directory \texttt{flaskapp} to serve as a build context for the Python/Flask application image. You can just reuse the context you used in lab 4.1, with a two changes:
+
+  \begin{enumerate}
+    \item Replace the Flask application code from last time with the files \texttt{app.py} and \texttt{requirements.txt} you will find in the \texttt{week04/lab-4.2-resources} directory.
+    \item Change the \texttt{ENTRYPOINT} value to \texttt{python app.py}.
+    \end{enumerate}
+
+\section{Create an nginx proxy container}
+In this case you can simply reuse the nginx container from lab 4.1 with no changes. It would, however, be a good idea to rename the image to something else, like ``\texttt{proxy}''.
+
+\section{Create a compose file}
+Finally., create the \texttt{docker-compose.yml} file. In it, you will need directives to
+
+\begin{enumerate}
+  \item Build and run the \texttt{flaskapp} container, using the \texttt{app} network.
+  \item Build and run the \texttt{proxy} container, using the app network and mapping its port 80 to a port on the host.
+  \item Run a \texttt{redis} container, also attached to the app network. It's not necessary to set up a special image for this. You can just use the standard \texttt{redis} image from Dockerhub.
+  \item Create the app network.
+  \end{enumerate}
+
+Once this is done, you can build any images you need with the \texttt{docker-compose build} command. You will also need to run this any time you make changes in your build contexts to update your images. Start the whole thing running with the \texttt{docker-compose up} command, and shut it down when you're done with \texttt{docker-compose down}.
+
+
+
+\end{document}
