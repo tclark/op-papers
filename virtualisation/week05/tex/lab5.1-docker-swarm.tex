@@ -47,7 +47,9 @@ Be sure that all tree systems have been added to your swarm and that one of them
 \section{Create and manage a service}
 A swarm \emph{service} is a set of containers built from the same image that you have directed to be run on your swarm. Start your first service with the command 
 
-\texttt{docker service create --name hi --replicas 2 tclark/hello}
+\begin{verbatim}
+docker service create --name hi --replicas 2 tclark/hello
+\end{verbatim}
 
 entered on your manager host. This command creates a service named ``hi'' that runs two containers built from the \texttt{tclark/hello} image. The two containers will run somewhere on your swarm, probably but not necessarily on two different nodes. Check the status of your service with the command
 
