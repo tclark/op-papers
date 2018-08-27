@@ -1,0 +1,127 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Compose and Swarm}
+
+\author[I720]{Virtualisation}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{To some extent, it just works}
+  
+  Make a \texttt{docker-compose.yml} file, then run
+  
+  \begin{verbatim}
+  $ eval "$(docker-machine env --swarm <manager>)"
+  $ docker-compose up
+   \end{verbatim}
+   
+   There are some issues, however.
+\end{frame}
+
+\begin{frame}
+  \frametitle{First issue, building}
+   
+   \begin{itemize}
+     \item We saw that you can specify that Docker build an image in a Compose file.
+     \item But we also saw that Swarm needs images to be accessible in a registry.
+     \item So, building in a compose file used for Swarm deployment is right out.
+     \item Really, when you're deploying to a production setting, you shouldn't be building on the fly anyway.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Next issue, volumes}
+   
+   \begin{itemize}
+     \item We use volumes to let containers work directly with the host file system.
+     \item But we don't always know what host our containers will run upon.
+     \item If our container creates volumes, use named ones.
+     \item If our containers read from volumes, have other containers that populate them, then use a \texttt{volumes\_from} directive.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Issue three: dependencies}
+   
+   \begin{itemize}
+     \item We can create dependencies between containers
+              \begin{itemize}
+                \item Explicitly: \texttt{depends\_on}
+                \item Implicitly: \texttt{volumes\_from}
+              \end{itemize}
+         
+     \item In either case, Docker interprets this to mean that a container must be deployed on the same node as its dependencies.
+     \item In simple cases this works fine.
+     \item We need to be aware of this when scaling services. When scaling a service, we may need to scale its dependencies.
+   \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{The tricky case: multiple dependencies}
+    
+    \begin{verbatim}
+version: '2'
+services:
+    svc_a:  
+        image: image_a
+        depends_on:
+            - svc_b
+            - svc_c
+    svc_b:  
+        image: image_b
+    svc_c:  
+        image: image_c
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Final issue: networks}
+   
+   \begin{itemize}
+     \item We've seen that Docker can set up internal networks that allow containers to communicate and find each other by name.   
+     \item What happens when the containers are on seperate hosts?
+     \item We can get the same result by creating \emph{overlay networks}.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{In compose}
+     \begin{verbatim}
+networks:
+     foo:
+         driver: overlay
+     \end{verbatim}
+ \end{frame}
+ 
+ \begin{frame}
+  \frametitle{Final caveats}
+   
+   \begin{itemize}
+     \item This stuff is highly version-dependent.
+     \item Documentation is sometimes lacking and what's there can be confusing.
+     \item Stack Overflow does not care about you.
+   \end{itemize}
+\end{frame}    
+ 
+
+\end{document}
