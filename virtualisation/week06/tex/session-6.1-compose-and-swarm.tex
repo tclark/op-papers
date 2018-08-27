@@ -33,7 +33,7 @@
   $ docker-compose up
    \end{verbatim}
    
-   There are some issues, however.
+   There are some issues, however\footnote{The above won't work on our machines.  Don't sweat it.}.
 \end{frame}
 
 \begin{frame}
@@ -79,7 +79,7 @@
     \frametitle{The tricky case: multiple dependencies}
     
     \begin{verbatim}
-version: '2'
+version: '3'
 services:
     svc_a:  
         image: image_a
