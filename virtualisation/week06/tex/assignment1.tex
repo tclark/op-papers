@@ -18,45 +18,28 @@
 \maketitle
 
 \section*{Introduction}
-In this assignment you will create a set of Docker containers to operate a highly-available web site.  You will then deploy those containers to a CoreOS cluster running on AWS.
+In this assignment you will create a set of Docker containers to operate a highly available web site.  You will then deploy those containers to a Docker Swarm cluster using a Compose file
 
 This assignment is worth 25\% of your mark in this paper.
 
-\section{Create a data container}
-Your first container's role is to hold your web site code.  Create a container that mounts a \emph{volume} at \texttt{/var/www/html}. This directory just needs to hold a simple web page in a file named \texttt{index.html}. This container image will use a Docker Hub automated build so that we can easily get a new image any time we commit a change to its GitHub repository.
+\section{Create an nginx container}
+Create an nginx image using the same configuration that you used in lab 4.1 and check it into your Dockerhub account. You will launch one container made from this image into your swarm.
+ 
+\section{Create application containers}
+Clone the GitHub repository \texttt{tclark/virt-assn1-app} into your own GitHub repository. Use it to create an application container image that is produced using an automated build on DockerHub. Make at least one small change to the application code and commit it to verify that your Docker image rebuilds automatically.
 
-\section{Create a web server container}
-Your second container will run your web server. Create a container from Ubuntu 14.04 with Apache installed on it. This container should mount the volume provided by your first one and will expose port 80.
+You will launch three container instances built from this image into your swarm. Call this service \texttt{flaskapp} so that it matches the configuration from the nginx container. 
 
-\section{Deployment}
-You will deploy your containers to a cluster of CoreOS machines running on AWS. Write Fleet service files that allow you to deploy data and web server containers on two machines in the cluster.  Note that you will need to ensure that the data and web server containers are deployed together on the same containers.
+\section{Create a Redis container}
+Deploy one instance of a standard Redis container into your swarm. Name this service \texttt{redis} to match the application servers' configuration.
 
-You will deploy another container that runs a load balancing server on the third system in your cluster. This container image will be supplied by the lecturer, but you will need to write the Fleet service file to deploy it.
+\section{Prepare a Docker Compose file}
+Write a Docker Compose file that will launch the application stack described above into a Docker swarm. Use Compose version 3 syntax. \textbf{Include a comment in the file with your full name.}
 
-Since your load balancer will need to find your web servers, you will need to set up \emph{sidekick services} that announce the presence of the webservers to etcd.
+\section{Submission}
+Email a copy of your Compose file to the lecturer by Friday, 14 September at 17:00.  Since your Compose file will identify the appropriate Dockerhub repositories (which will identify the relevant GitHub repository), it is not necessary to submit anything else directly. Just be sure that the relevant resources are available in their respective online locations.
 
-Also, note that you will need to control the order in which Fleet deploys your containers.  The data containers need to deploy first and the web servers should deploy next. It doesn't actually matter when the load balancer deploys.  It will watch etcd and pick up the web servers as they appear.
-
-\section{Assignment submission and marking}
-Some of the assignment deliverables will be uploaded to your GitHub account.  Place all of these into a repository named \texttt{virtualisation\_assn1}.
-
-Specifically, your submission will include the3 following parts:
-
-\begin{description}
-	\item[Data container (25 marks)] You will commit your build context files to the GitHub repository mentioned above (You need to do this for the autobuild anyway.)  You will also have a corresponding container image on your Docker Hub.
-	\item[Web server container (15 marks)] This container image will also be placed on your Docker Hub.
-	\item[Fleet service files (25 marks)] Your Fleet service files will be commited into a directory in your GitHub repository named \texttt{fleet}.
-	\item[Deployment (35 marks)] When you are ready to deploy, contact the lecturer to receive details for your CoreOS cluster. You will then deploy your containers onto the cluster and demonstrate that they run. 
-\end{description}
-
-NB:
-\begin{itemize}
-	\item Be sure that your images have a proper maintainer.
-	\item Be sure that your images' \texttt{From} attributes specify a specific version.
-	\item Be sure that your images apply updates when they are built.  Note also that you need to use something like a ``last modified'' attribute to be sure this happens\footnote{Do you know why? Don't you think you should?} (See Turnbull)
-\end{itemize}
-
-This assignment is due at 9:00 AM on Monday, 8 September.  Tag both your GitHub repository and your Docker Hub images with the tag ``assignment1''.
+You will be assessed on the functionality of the stack that the lecturer will launch from your Compose file, along with the correctness of the associated container images and related resources.
 
 
 
