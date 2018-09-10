@@ -1,0 +1,69 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 8.1: The OpenStack Dashboard \\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+We will start exploring OpenStack's features by working with its web based dashboard. Using it, we will upload an ssh key pair, launch a VM instance from an image, and associate a public IP address with it so that we can log into it remotely. Then we will create an attach a volume to our VM, format it, and mount it on the VM.
+
+
+
+\section{Create and upload a key}
+In order to ssh into our VM later, we need to create an encryption key pair and upload our public key. You can carry out the steps below on \texttt{kate}, or on your own machine if you use Linux or OS X.
+
+Create the key pair with the command
+
+\begin{verbatim}
+ssh-keygen -t rsa -f openstack.key
+\end{verbatim}
+
+This will create two files \texttt{openstack.key} and \texttt{openstack.key.pub}. Use \texttt{cat} to output the contents of \texttt{openstack.key.pub} and copy it to your clipboard.
+
+On the web dashboard, select ``Key Pairs'' from the left side menu and then click ``Import Key Pair''. In the resulting dialogue, name your key pair \texttt{<your-username>-key} and copy the key text into the text area box.
+
+\section{Launch a VM instance}
+Now we are ready to launch a VM. Select ``Instances'' from the left side menu and then click ``Launch Instance'' at the top right. You will be walked through a set of dialogues.
+
+\begin{enumerate}
+  \item Details: Name your instance \texttt{<your-username>-vm}.
+  \item Source: Do \textbf{not} create a new volume. Scroll down the list of source images and choose the Ubuntu 18.04 image.
+  \item Flavor: Choose the \texttt{c1.c1r1} flavor.
+  \item Networks: The \texttt{private-net} network should be selected.
+  \item Network Ports: Do nothing here.
+  \item Security Groups: Choose \texttt{lab8.1-secgrp}.
+  \item Key Pair: Select the key pair you created earlier.
+ \end{enumerate}
+ 
+ The remaining options don't need to be changed, click ``Launch Instance''. You should see your running instance in the list shortly.
+ 
+ \section{Associate a floating IP address}
+ Before you can ssh into your VM, you need to give in a public IP address. Find your VM instance on the list. From the ``Actions'' dropdown at the right of the row, select ``Associate Floating IP'' and follow the prompts.
+ 
+ Once this is done, you should be able to ssh into your VM with the command
+ 
+ \texttt{ssh -i openstack.key ubuntu@<your-floating-ip>}
+
+\section{Create and attach a volume}
+From the left side menu, select ``Volumes'' and then click ``Create Volume''. The only option you need to set is the name; name it \texttt{<your-username>-vol}. Then go back to the instances list and find your instance. From the actions dropdown, choose ``Attach Volume'' and select your volume.
+
+The volume will be connected to your VM at \texttt{/dev/vdb}. But before you can mount and use the volume, you must initialise it and create a file system on it. This process is documented at \url{http://docs.catalystcloud.io/block-storage/using-volumes.html}.
+
+\section{Cleaning up}
+Once you have finished this lab, delete your VM instance, delete your volume, and release your floating IP address.
+
+
+\end{document}
