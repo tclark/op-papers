@@ -1,0 +1,129 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Hosted Cloud Services}
+
+\author[I720]{Virtualisation}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+\begin{frame}
+  
+   \begin{center}
+     \includegraphics[scale=0.28]{what_is_the_cloud}
+     \end{center}
+\end{frame}
+
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Hosted cloud services}
+  
+  We can think of hosted cloud services as falling into three categories:
+   
+   \begin{itemize}
+     \item Infrastructure as a Service
+     \item Platform as a Service
+     \item Software as a Service
+     \end{itemize}
+\end{frame}
+ 
+\begin{frame}
+  \frametitle{Why?}
+  
+   
+   \begin{itemize}
+     \item They are cheap
+     \item They are flexible
+     \end{itemize}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Why not?}
+  
+   
+   \begin{itemize}
+     \item You're operating at such a large scale that it's not cheap.
+     \item You don't need the flexibility.
+     \item You have a special use case.
+     \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Some providers}
+  
+   
+   \begin{itemize}
+     \item AWS (Amazon)
+     \item Azure (Microsoft)
+     \item Rackspace
+     \item Digital Ocean
+     \item Linode
+     \item Rimu Hosting
+     \item Catalyst
+     \end{itemize}
+     
+     This is absolutely not an exhaustive list.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Our cloud}
+  
+   Our cloud is operated by Catalyst. They host OpenStack services.
+   
+   Some OpenStack background
+   \begin{itemize}
+     \item It started in about 2010 from projects at Rackspace and Anso Labs.
+     \item Free/Open Source
+     \item It's a big collection of projects that run together operate a cloud.
+     \item You can run your own, or there are a number of service providers who will run it for you.
+     \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What it does}
+  
+      
+   OpenStack   
+   \begin{itemize}
+     \item Hosts and manages \textbf{images}
+     \item Hosts \textbf{volumes} (a.k.a block storage)
+     \item Runs \textbf{instances}
+     \item Provide \textbf{networking}
+     \item Also, some other stuff.
+     \end{itemize}
+     
+     And every other IaaS cloud service does basically the same things.
+\end{frame}
+
+\begin{frame}
+  \frametitle{How we use it}
+  
+   
+   
+   We work with OpenStack using
+   \begin{itemize}
+     \item A web console
+     \item A CLI
+     \item A remote API
+     \end{itemize}
+\end{frame}
+\end{document}
