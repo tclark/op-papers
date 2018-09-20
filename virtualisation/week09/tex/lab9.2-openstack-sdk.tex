@@ -1,0 +1,100 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 9.2: Using the OpenStack SDK \\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+In this lab we will use the OpenStack SDK to access services in our and launch a VM instances. Our process will be to
+
+\begin{enumerate}
+  \item Get a connection 
+  \item Identify our image
+  \item Identify our flavour
+  \item Find a suitable network
+  \item Identify a keypair
+  \item Launch an instance
+  \item Associate a floating IP address with the instance.
+\end{enumerate}
+
+\section{Preliminary steps}
+Before you start coding, create a subdirectory of your home directory to hold your work, unless you have already done so. In that directory, create a \texttt{clouds.yml} file similar to the one we looked at in the last lab. Activate your Python virtualenv and make sure you can create a working connection object like we saw last time. In the code below, we will assume that you have created an OpenStack connection object and associated it with the variable \texttt{conn}.
+
+\section{Identify resources}
+Before we can launch our instances, we need to find the needed OpenStack resources. Start by creating variables in your code with the resource names.
+
+\begin{verbatim}
+  IMAGE = 'ubuntu-16.04-x86_64'
+  FLAVOUR = 'c1.c1r1'
+  NETWORK = 'private-net'
+  KEYPAIR = '<your keypair name>'
+\end{verbatim}
+
+
+\newpage
+
+Next, we will use our connection object to get the resources with these names from our cloud.
+
+\begin{verbatim}
+    image = conn.compute.find_image(IMAGE)
+    flavour = conn.compute.find_flavor(FLAVOUR)
+    network = conn.network.find_network(NETWORK)
+    keypair  = conn.compute.find_keypair(KEYPAIR)
+\end{verbatim}
+
+Now we have objects that represent the specific resources we need to launch an instance. Note that if you don't have a keypair ready to use on the cloud, then you can use the SDK to create one. These calls generally raise \texttt{ResourceNotFound} exception if the requested resource is not found.
+
+\section{Launch an instance}
+With our resources in hand, launching an instance is straightforward:
+
+\begin{verbatim}
+    SERVER = '<your username>-server'
+    server = conn.compute.create_server(
+        name=SERVER, image_id=image.id, flavour_id=flavor.id,
+        networks=[{"uuid": network.id}], key_name=keypair.name) 
+\end{verbatim}
+
+Notice that the \texttt{networks} argument is specified slightly differently than the others. This is because we can connect a server to multiple networks, so we pass in a list of them.
+
+The call is completed \emph{asynchronously}, meaning it may take some time before the instance is actually launched. We cannot proceed to the next step until this is done, so we will wait:
+
+\begin{verbatim}
+    server = conn.compute.wait_for_server(server)
+\end{verbatim}
+
+
+\section{Associate a floating IP address}
+Floating IP addresses are available on our public network, so we will access the network and get an ip address from it:
+
+\begin{verbatim}
+    public_net = conn.network.find_network('public-net')
+    floating_ip = conn.network.create_ip(floating_network_id=public_net.id) 
+\end{verbatim}
+
+Now we can associate the address with the server
+
+\begin{verbatim}
+ conn.compute.add_floating_ip_to_server(server, floating_ip)
+\end{verbatim}
+
+\section{Cleaning up}
+Don't forget to remove your instance from the cloud. Seeing how to do this with Python is left as an exercise. See
+
+\url{https://docs.openstack.org/openstacksdk/latest/user/index.html}
+
+for more information.
+
+\end{document}
