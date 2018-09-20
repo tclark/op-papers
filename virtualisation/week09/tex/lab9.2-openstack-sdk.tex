@@ -63,7 +63,7 @@ With our resources in hand, launching an instance is straightforward:
 \begin{verbatim}
     SERVER = '<your username>-server'
     server = conn.compute.create_server(
-        name=SERVER, image_id=image.id, flavour_id=flavor.id,
+        name=SERVER, image_id=image.id, flavor_id=flavour.id,
         networks=[{"uuid": network.id}], key_name=keypair.name) 
 \end{verbatim}
 
@@ -87,7 +87,7 @@ Floating IP addresses are available on our public network, so we will access the
 Now we can associate the address with the server
 
 \begin{verbatim}
- conn.compute.add_floating_ip_to_server(server, floating_ip)
+ conn.compute.add_floating_ip_to_server(server, floating_ip.floating_ip_address)
 \end{verbatim}
 
 \section{Cleaning up}

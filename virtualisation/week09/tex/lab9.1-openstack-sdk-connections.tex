@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 9.1: ``Basic'' OpenStack Setup \\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+OpenStack is an industrial strength system.  This means that it can be difficult to scale it \emph{down} to a manageable size to try out and become familiar with its setup and operation.   Fortunately, Tim Potter from HP prepared an excellent set of documents that walk through the installation and setup of OpenStack on a singel computer.In this lab we will work trough his guide.  The guide is available at \url{https://github.com/tpot/os4nd/wiki} and there is an accomapnying video in which he describes it at \url{https://www.youtube.com/watch?v=VJgrbApKnqc}.
+
+Although this lab is designed to be accessible, keep in mind that the task you are performing is complex and time-consuming.  You will need to work both inside and outsideof class to have your installation running by Tuesday, 22 September.
+
+\section{System details}
+Two virtual machines have been prepared for you on vCloud, an Ubuntu 12.04 server on which you will install OpenStack, and an Ubuntu 15.04 desktop for use as a client.  These machines share a private network, 192.168.2.0/24 where your OpenStack VMs sould be connected when they are started. Both machines also have network interfaces attached to the Polytech campus network for external access.
+
+Note that the referenced documents use some IP addresses in the examples.  \textbf{Do not} simply copy those addresses in your setup unless you verify that they make sense in the context of your systems.  It is likely that you will need to adjust some of the addresses to suit your networks.
+
+Note that you are encouraged to discuss this lab and collaborate, but be sure that you do your own work to get your installation working.  All material in this lab is examinable. 
+\end{document}
