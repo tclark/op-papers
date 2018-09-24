@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Assignment 2:  \\Managing Cloud Resources with Code}
+\date{}
+
+\maketitle
+
+\section*{Introduction}
+
+In this assignment you will write a program in Python\footnote{This assignment is most easily done in Python, but it you want to take on the challenge of doing this assignment in a different language, that is negotiable.} that will create and use various OpenStack resources, report on the state of resources, and release resources when we are done with them.
+
+Documentation for the OpenStack SDK is available at \url{https://docs.openstack.org/openstacksdk/latest/user/index.html}.
+
+\section{Basic setup}
+Use the file \texttt{assn2.py} as a starting point for this assignment. It has been written to take a command line argument that determines which of three operations your program will perform. The possible arguments and operations are:
+
+\begin{description}
+\item[\texttt{report}] Collect information from the OpenStack cloud and print it to standard output.
+\item[\texttt{up}] Launch a VM together with associated resources for it.
+\item[\texttt{down}] Remove the VM and associated resources launched by the \texttt{up} operation above.
+\end{description}
+
+Each of these three operations are described in more detail below.
+
+Your program should get its connection parameters from a clouds.yml file that can be downloaded from the OpenStack dashboard.
+
+\section{\texttt{report} actions}
+If the command line argument is \texttt{report}, your program should print a list of the instances in the queried availability zone.  For each server, provide the following information:
+
+\begin{itemize}
+  \item instance name
+  \item ip address(es)
+  \item instance status
+  \item image name
+\end{itemize}
+
+Make an effort to present this information in an organised and readable way.
+
+\section{\texttt{up} actions}
+If the command line argument is \texttt{up}, your program should launch a VM instance. More specifically, it should:
+
+1. Check for the existence of a network called \texttt{assn2-net} and exit with an error message if it is not present.
+
+2. Generate a keypair.
+
+3. Launch an instance using the keypair you generated and attached to the \texttt{assn2-net} network. Use the Ubuntu 16.04 image and the \texttt{c1.c1r1} flavour.
+
+4. Obtain a floating IP address and associate it with the VM instance just launched.
+
+5. Print a report with information about the instance including the instance name, floating IP address, and private key. If any errors occur in the process of completing the above tasks, print information about the errors that occurred.
+
+When you create the resources for this, use the naming scheme \texttt{username-resource-type}.
+
+\section{\texttt{down} actions}
+If the command line argument is \texttt{down}, your program should shut down the vm and delete all associated resources from the OpenStack cloud.
+
+
+\section{Submission}
+Submit your completed Python program (it should be just one file) by email to the lecturer by the beginning of class on Tuesday, 16 October.
+
+You will be marked on 
+
+\begin{itemize}
+  \item The correct functioning of the program;
+  \item The correctness and formatting of the output;
+  \item Correct and effective use of the OpenStack SDK;
+  \item The organisation and structure of your program, including appropriate comments.
+  \end{itemize}
+  
+  \end{document}
+  
+  
