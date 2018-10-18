@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 11.2: Installing Xen \\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+In this lab we will install the Xen hypervisor and associated tools. This means that we will actually
+
+\begin{enumerate}
+  \item Install Ubuntu 14.04 
+  \item Install the Xen hypervisor, converting our system installed above into the Dom0 guest.
+  \item Configure bridge networking 
+  \item Try some Xen utilities to test our installation
+\end{enumerate}
+
+\section{Preliminary steps}
+Start by collecting your physical machine from the storeroom on the first floor, along with any cables or peripherals that you need. Get an installation disk from the front desk. (There aren't quite enough disks to go around, so share your disk when you're done with it.) Set up your computer in the lab and place the installation disk in the drive.
+
+Reboot the machine, and as it POSTs you will need to press F12 to get a menu that lets you override the boot device order.
+
+\section{Install Ubuntu and Xen}
+To begin, simply install Ubuntu 14.04 with an installation disc. The installer is largely self explanatory so we will only describe the salient points here.
+
+\begin{itemize}
+  \item Do not encrypt the \texttt{home} directory.
+  \item When you get to the disk partitioning steps:
+           \begin{enumerate}
+             \item Select guided partitioning using the entire disk and LVM.
+             \item Install on the \texttt{SCSI1} disk.
+             \item Use only 10GB for the installation volume group.
+           \end{enumerate}
+   \item Do not enable auto updates.
+   \item Install the SSH server, but no other extra packages.
+ \end{itemize}
+ 
+ When you finish and reboot, you may need to tweak the BIOS a bit to be sure it boots of the correct disk.
+ 
+ Once the basic installation is done, use apt-get to install the \texttt{xen-hypervisor-4.4-amd64} package and reboot. Your system should boot into Xen with the operating system you installed as Dom0.
+ 
+ \section{Configure bridged networking}
+ Your Dom0 operating system should have the \texttt{bridge-utils} package installed already. You just need to configure the network interfaces. 
+ To do this, edit the file \texttt{/etc/network/interfaces} to look like this:
+ 
+ \begin{verbatim}
+     auto lo eth0 xenbr0
+     iface lo inet loopback
+
+     iface xenbr0 inet dhcp
+       bridge_ports eth0
+
+     iface eth0 inet manual
+\end{verbatim}
+
+Then start your newly configured interfaces with the command
+
+ \begin{verbatim}
+ sudo ifdown eth0 && sudo ifup xenbr0 && sudo ifup eth0
+ \end{verbatim}
+ 
+ \section{Test that Xen is functioning}
+ Finally, we will use a few basic xl commands to be sure that Xen is working properly. List your guest VMs with the command
+ \texttt{sudo xl list}. You should see one entry for your Dom0 guest. Finally, run \texttt{sudo xl info} to get a summary of information 
+ about your Xen host. 
+ 
+ 
+
+\end{document}
