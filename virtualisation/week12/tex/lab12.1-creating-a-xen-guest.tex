@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 12.1: Creating a Xen Guest\\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+In this lab we will create a Xen guest domain and run a virtual machine.  A Xen guest has three components:
+
+\begin{enumerate}
+  \item A ``disk'' for the guest system;
+  \item An operating system kernel for the hypervisor to run;
+  \item A configuration file.
+\end{enumerate}
+
+We put the word ``disk'' in quotes above because while it can be a physical disk, it probably isn't. It may be a disk partition or it may be a file that acts as a sort of virtual disk. In today's lab we will use a partition. The operating system kernel may be placed on the disk, but it does not have to be.
+
+Our process for creating a guest will be the following:
+
+\begin{enumerate}
+  \item Create a disk partition for the guest;
+  \item Download installation media (i.e., our first kernel);
+  \item Write a configuration file;
+  \item Run the VM and install the operating system on the guest's disk;
+  \item Modify the configuration file (because our kernel has changed);
+  \item Run the final version of the VM.
+ \end{enumerate}
+ 
+ \textbf{N. B.:} The commands shown in this lab need root privileges, so either preface them with \texttt{sudo} or start a privileged session with the command 
+ \texttt{sudo -i}.
+ 
+ \section{Create a disk partition}
+ We set us our Xen servers with the Logical Volume Manager (LVM) which lets us add, remove, and resize partitions easily. We will use that capability to create a partition to serve as the ``disk'' for our guest. LVM organises \emph{logical volumes} (partitions, basically) into \emph{volume groups}.
+ 
+ Find the name of our volume group with the command
+ 
+ \texttt{vgs}
+ 
+ then create a new volume for our guest with the command 
+ 
+ \texttt{lvcreate -L 10G -n lab12\_vol /dev/<volume group name>}
+ 
+ This will give us a volume named \texttt{lab12\_vol}.
+
+ \section{Download installation media}
+ We will download the netboot installer for Ubuntu 14.04 from a nearby mirror with the commands
+ 
+ \begin{verbatim}
+ mkdir -p /var/lib/xen/images/ubuntu-netboot/trusty
+ cd /var/lib/xen/images/ubuntu-netboot/trust
+ wget http://http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/vmlinuz
+ wget http://http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/initrd.gz
+ \end{verbatim}
+ 
+ \section{Write a configuration file}
+ Xen needs a configuration file to inform it about how our VM should be set up. There are some example files in our installation
+ and we can use one of those as a starting point.
+ 
+ \begin{verbatim}
+ cd /etc/xen
+ cp xlexample.pvlinux lab12.cfg
+ \end{verbatim}
+ 
+ Now we just need to edit that file to add or modify some entries. In particular
+ 
+ \begin{itemize}
+  \item Set the \texttt{name} to \texttt{lab12vm}
+  \item Set the \texttt{kernel} to texttt{/var/lib/xen/images/ubuntu-netboot/trusty/vmlinuz}
+  \item Set the \texttt{ramdisk} to texttt{/var/lib/xen/images/ubuntu-netboot/trusty/initrd.gz}
+  \item Set the \texttt{memory} to texttt{1024}
+   \item Set the \texttt{vcpus} to texttt{1}
+ \end{itemize}
+ 
+ \section{Install Ubuntu on your VM}
+ Now we are ready to actually run the VM. Enter the command
+ 
+ \texttt{xl create -c /etc/xen/lab12.cfg}
+ 
+ to start the guest and also to attach to its console.
+ 
+ Now we just have to run through the typical installation process. Set the hostname of your VM to \texttt{lab12}. When setting up the partions,
+ choose use the entire disk (guided) without LVM. When the installation gets to the reboot phase you will be disconnected from the console and dropped back at your 
+ Dom0 system's shell.
+ 
+ \section{Modify the configuration}
+ Before we can use the VM we need to change the configuration since it's kernel parameter still directs it to use the installer's kernel. Comment out the \texttt{kernel} and \texttt{ramdisk} lines and add a line to use Xen's \texttt{pygrub} bootloader by adding the line
+ 
+ \texttt{bootloader = "/usr/lib/xen-4.4/bin/pygrub"}
+ 
+ Then restart our VM with the commands
+ 
+ \begin{verbatim}
+ sudo xl shutdown lab12vm
+ sudo xl create -c /etc/xen/lab12.cfg
+ \end{verbatim}
+ 
+ You may need to hit the enter key a couple of times to get a login prompt at the console. From here we will want to explore a bit about how to use \texttt{xl} commands to manage guests. See \url{http://xenbits.xen.org/docs/4.4-testing/man/xl.1.html} for documentation. As a quick reference, you can disconnect from a guest console with \texttt{ctrl-]} and attach to one with the command \texttt{xl console <vm name>}.
+ 
+ 
+ 
+\end{document}
