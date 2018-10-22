@@ -60,10 +60,14 @@ Our process for creating a guest will be the following:
  
  \begin{verbatim}
  mkdir -p /var/lib/xen/images/ubuntu-netboot/trusty
- cd /var/lib/xen/images/ubuntu-netboot/trust
- wget http://http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/vmlinuz
- wget http://http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/xen/initrd.gz
+ cd /var/lib/xen/images/ubuntu-netboot/trusty
+ wget http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/
+   current/images/netboot/xen/vmlinuz
+ wget http://ucmirror.canterbury.ac.nz/ubuntu/dists/trusty/main/installer-amd64/
+   current/images/netboot/xen/initrd.gz
  \end{verbatim}
+ 
+ Note that I broke up those urls into two lines for readability, but you should enter them on one line each.
  
  \section{Write a configuration file}
  Xen needs a configuration file to inform it about how our VM should be set up. There are some example files in our installation
