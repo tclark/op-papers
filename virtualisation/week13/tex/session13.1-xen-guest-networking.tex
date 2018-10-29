@@ -160,4 +160,20 @@ See \texttt{http://xenbits.xen.org/docs/4.2-testing/ \\ misc/xl-network-configur
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Today's lab}
+
+  On your Xen host:
+\begin{itemize}
+    \item Start/stop various combinations of your guests and use \texttt{ifconfig} on Dom0 to see
+    how the list of interfaces changes. Note in particular the MAC addesses of the \texttt{vif} interfaces.
+    \item Start one of your clone VMs and inspect its network settings. Modify the \texttt{vif} spec
+    in its Xen configuration file to manually produce the same config. Stop and recreate the guest 
+    to check the results.
+    \item Now experiment with some of the \texttt{vif} options in the configuration and test their effects on 
+    the guest. Note that you will have to stop and recreate the guest when you change the configuration.
+    \item Add a second bridged interface to your Dom0. Configure a guest to use it. Does it work? Does 
+    another guest using the original bridge still work? See if you can determine why or why not.
+  \end{itemize}
+\end{frame}
 \end{document}
