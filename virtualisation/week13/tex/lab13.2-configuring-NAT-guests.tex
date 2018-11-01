@@ -1,0 +1,128 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 13.2: Configuring NAT\\ IN720 Virtualisation}
+\date{\today}
+\maketitle
+
+\section*{Introduction}
+Right now our Xen systems use bridged networking for guest domains, which is the default behaviour. There are 
+other other networking models available: routing and NAT. In this lab we will reconfigure our Xen hosts and guests 
+to use NAT. This will give us a little more direct experience with how networking is set up in Xen and provide a chance 
+to compare networking types. We've chosen NAT for this because it is an option that is functional in our larger 
+networking environment.
+
+Note that when we finish this lab we will want to restore bridged networking on our Xen hosts. To facilitate this, it 
+would be a good idea to comment out items of configuration that we need to deactivate rather than deleting them.
+
+\section{The plan}
+We will modify our Xen networking configuration in several steps:
+
+\begin{enumerate}
+  \item Remove the bridged interface from Dom0;
+  \item Enable routing on Dom0;
+  \item Configure \texttt{xend} to use NAT;
+  \item Modify our DomU \texttt{xl} configuration to use NAT;
+  \item Modify our DomU guest configuration to use static network configuration (since DHCP will no longer be available).
+\end{enumerate}
+
+Since some of our network changes will interrupt our network connections, it may be necessary to do some of this work in the console rather then over ssh.
+
+\section{Remove bridged networking}
+Recall that we set up bridged networking on our Dom0 systems by installing the \texttt{bridge-utils} package and configuring a bridge interface in the file \texttt{/etc/network/interfaces}. To stop using bridging, we just need to remove 
+the bridge interface and reconfigure the \texttt{eth0} interface.
+
+In the file \texttt{/etc/network/interfaces}, remove or comment out the references to the xenbr0 interface. Find the line that says
+
+\texttt{inface eth0 inet manual} 
+
+and change it to
+
+\texttt{iface eth0 inet dhcp}
+
+Don't worry about restarting the interfaces now, we will make additional changes first.
+
+\section{Enable routing on Dom0} 
+Enabling routing on Linux is extremely easy, Simply edit the file \texttt{/etc/sysctl.conf} and add (or just 
+uncomment) the line
+
+\texttt{net.ipv4.ip\_forward = 1}
+
+We can make this change take immediately by entering the command
+
+\texttt{sysctl -p /etc/sysctl.conf}
+
+but we will be rebooting soon so it's not actually necessary.
+
+\section{Configure \texttt{xend} to use NAT}
+\texttt{xend} is configured to use bridging by default by referencing a script in \texttt{/etc/xen/scripts}. We just need to 
+use a different script. Edit the file \texttt{/etc/xen/xend-config.sxp}. Look for a line that says 
+
+\texttt{(network-script network-bridge)}
+
+Comment it out and replace it with 
+
+\texttt{(network-script network-nat)}
+
+At this point we've made a number of changes, and a good way to make sure they all take effect is to use \texttt{xl} 
+to shut down any guest VMs and reboot the host. When it comes back up, verify that Dom0 has network connectivity 
+before proceeding.
+
+\section{Enable NAT}
+To enable NAT we just set a firewall rule on Dom0 with the command
+
+\texttt{iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE}
+
+This setting will not persist if the host is rebooted. To do that we would need to add it to a script that is run at boot time, 
+but for our purposes today that is not necessary.
+
+\section{Modify DomU configuration}
+We saw last time how the default \texttt{vif} settings work and cause our Dom0 guests to use bridged networking. 
+Now we will modify the \texttt{vif} setting for one of our DomU guests to use NAT. In the guest config file (just choose one of yours), change 
+
+\texttt{vif = ['']}
+
+to 
+
+\texttt{vif = ['ip=192.168.5.10,script=vif-nat']}
+
+Note that we will use static ip addressing since we do not have a DHCP server. Start the guest VM after making this change.
+
+\section{Modify the guest's networking configuration}
+Although our Xen system is configured to use NAT, our guest operating system still is not. We need to configure 
+the guest's \texttt{eth0} interface to use the new networking setup.
+
+First, use \texttt{ifconfig} on Dom0 to inspect the settings of the backend interface for the guest. Note its ip address.
+
+Next login to a console on the guest and edit its \texttt{/etc/network/interfaces} file, setting up eth0 as follows:
+
+\begin{verbatim}
+
+  iface eth0 inet static
+    address 192.168.5.10
+        broadcast 192.168.5.255
+        netmask 255.255.255.0
+        gateway <ip address of backend interface>
+ \end{verbatim}
+ 
+ No we just need to restart networking on the guest for the changes to take effect. If we get errors when doing this, it suffices to restart the guest. 
+ 
+ Finally, verify that you have network connectivity on the guest by pinging an external host. Note that we do not have a 
+ DNS resolver configured, so the guest won't find hosts by name.
+ 
+ When you have done all this, you will want to restore bridged networking on you Xen system to prepare for upcoming 
+ work.
+
+\end{document}
