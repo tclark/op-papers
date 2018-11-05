@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 14.1: Xen-Tools\\ IN720 Virtualisation}
+\date{6 November 2018}
+\maketitle
+
+\section*{Introduction}
+A repeated\footnote{Some might even say tedious.} theme running through this part of the paper has been that Xen
+by itself is too low-level for use in typical production settings. We need to either build or get additional management 
+tools to carry out common tasks on our Xen hosts. There are several options available that span the range from some 
+lightweight scripts to Enterprise\texttrademark management consoles.
+
+In this lab we will consider something one the simple and lightweight end of the spectrum: Xen-Tools. These are basically just a set of Perl scripts and associated resources for creating and working with guest images. Xen-Tools is worth considering for two reasons: First, as a useful tool in it's own right; second as a model for how similar lightweight tools can be built.
+
+\section{Install and use Xen-Tools}
+The primary point of Xen-Tools is to easily create guest images running a variety of Linux operating
+systems (Assorted versions of Debian, Ubuntu, and CentOS). Recall that we created our guest image 
+by setting up a guest and manually installing the operating system on it. Xen-Tools provides a script,
+\texttt{xen-create-image}, that automates this process. I also includes scripts to update, list, and delete 
+guest images.
+
+Since our Dom0 operating system is Ubuntu, installing Xen-Tools is utterly free of drama. Simply use 
+\texttt{apt-get} to install the \texttt{xen-tools} package on our Dom0 system.
+
+The main tool in the package is \texttt{xen-create-image}. Run the following command as an example:
+
+\texttt{xen-create-image  --hostname=lab14img --lvm=<hostname>-vg --dist=trusty --memory=512M --dhcp}
+
+Where we should substitute the name of your Dom0 host for \texttt{<hostname>}.
+
+This will take a little time to run and produce some output. Some of the behaviour of the tool is governed by
+a set of defaults, but we have to specify some items. In this example
+
+\begin{description}
+\item[\texttt{hostname}] (required) is the name the new guest image will have.
+\item[\texttt{lvm}] is the name of the LVM volume group where the guest volumes will go.
+\item[\texttt{trusty}] is the Linux distribution to install in the guest.
+\item[\texttt{memory}] is exactly what you think it is.
+\item[\texttt{dhcp}] specifies that the guest should be configured to use DHCP.
+\end{description}
+
+\section{Review the results}
+The result of the command above should be placing a runnable guest on our Xen host. This means that 
+three things have been put in place:
+
+\begin{enumerate}
+ \item Disk: LVM volumes have been created for the guest. Verify this with \texttt{lvs}.
+ \item Configuration: A configuration file for our guest is at \texttt{/etc/xen/lab14img.cfg}. Review it.
+ \item An operating system has been installed on our volume. we will see this in the configuration
+          and can verify it further by running the guest. Start it now.
+\end{enumerate}       
+   
+A log of the guest image creating process is written to the \texttt{/var/log/xen-tools} directory. Review it now.
+
+\section{Xen-Tools settings}
+We know that image creation is a fairly complex policy with a large number of options. \texttt{xen-create-image} 
+gets some of those options from the command line with which it is invoked. Things that aren't specified there 
+come from the configuration file at \texttt{/etc/xen-tools/xen-tools.conf}. Check that file to see what the defaults
+are. For example, how much disk space is dedicated to a guest by default?
+
+Earlier we noted that Xen-tools could install a number of possible Linux distributions. To see which ones we can install on our system, check the directory \texttt{/usr/share/xen-tools}. There we will find installation resources for various 
+distributions.
+
+Run \texttt{xen-create-image} a second time, this time with one of the Debian distribution options. See 
+\url{http://manpages.ubuntu.com/manpages/trusty/man8/xen-create-image.8.html} for information on 
+options and usage.
+
+\section{Other tools}
+Besides \texttt{xen-create-image}, Xen tools includes some other scripts:
+
+\begin{itemize}
+  \item \texttt{xen-update-image}
+  \item \texttt{xen-list-images}
+  \item \texttt{xen-delete-image}
+ \end{itemize}
+ 
+ All of these are also documented at the same web site where \texttt{xen-create-image} is. For example, 
+ \texttt{xen-update-image} will install OS updates on Debian-ish images that are not active. Try it now by 
+ making sure that the guest we created earlier is not running, then run
+ 
+ \texttt{xen-update-image --lvm=<hostname>-vg lab14img}
+ 
+ again, substituting the correct value for \texttt{<hostname>}. To verify that it worked, start the guest and see 
+ that there are no updates that need to be installed.
+ 
+ \section{Conclusion}
+ Xen-tools only addresses on small part of the Xen management problem, and only in a fairly limited way. It does, however, show an approach that can be applied more thoroughly to provide reasonably capable Xen management tools.
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
