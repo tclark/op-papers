@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 14.2: Xen Server\\ IN720 Virtualisation}
+\date{9 November 2018}
+\maketitle
+
+\section*{Introduction}
+In this lab we will get some experience using Xen with additional management tools on top of it. One thing to keep in mind is that behind the management interface we still have a Xen server. Everything we have done up to this point still works.
+
+Xen Server is a special distribution of Xen with some extra tooling added, including XAPI. It can be used with a Windows 
+based management tool. 
+
+You need to be on the internal Polytech network to do this lab, and since you have to install a piece of software it is recommended that you use a lab machine.
+ 
+ \section{Install Citrix Xen Center}
+ Xen Center is the management tool we will use for this lab. An installer is at \\
+ \texttt{M:{\textbackslash}ICT Students{\textbackslash}XenServer-7.6.0-XenCenter.msi}. Use it to install
+ Xen Center and start it. It will appear in your start menu under ``Citrix''. When it starts, select ``Add a Server'' and connect to our lab server with the parameters
+ 
+ \begin{enumerate}
+  \item Server: \texttt{10.118.0.180}
+  \item Username \texttt{root}
+  \item Password: our usual default
+  \end{enumerate}
+  
+  
+  
+  \section{Examine the server console}
+ 
+ Once you connect, select ``Objects'' from the lower left menu and find our server, \texttt{xenserver-in720}, in the tree 
+ view. When you select it, examine the various tabs in the main part of the window to see what options are available. 
+ Select the Console tab and log into the management console with our usual password. Use \texttt{xl list} to see the guest on the host.
+ 
+ 
+\section{Create a VM Guest} 
+ To create a new VM, we need a \emph{template} and some installation media. Expand the Templates section of the 
+ tree menu and  and select the Ubuntu 12.04 64 bit template. Why this one? Because our server can only run 
+ paravirtualised guests and this is one of the few templates for PV\footnote{Understanding why our server only runs
+ PV guests might come in handy on the final.}.
+ 
+ Right-click the template and run the New VM Wizard. When you get to the Installation Media selection, choose DVD drive 0. Our Xen server needs a library of installation media. In our case the ``library'' is a disc in the DVD drive, but in 
+ a full installation.
+ 
+ Generally just take the default options in the wizard. When you get to the Network section, choose Network 0.
+ Our new VM will appear in the VMs section of the tree menu, Choose yours and pick the console tab. In it, work through 
+ the Ubuntu installer. You may run into problems with DHCP on your guest, if so don't worry about it; it's not necessary
+ for this lab.
+
+\section{Install XenServer Tools}
+XenServerTools is a software package we install on the guest to support extra control and monitoring functions. Once 
+our server is installed and running, click the XenServer tools link on the General tab and work though the installation 
+process. The documentation to do this is linked in the first dialogue.
+
+After installing the package and rebooting the guest, you should see some additional information, particularly on the General tab for your guest.
+
+\section{Attach a disk}
+From the storage tab, click the ``Add'' button and work through the Add Virtual Disk wizard. Once this has been done,
+note that our VM has a new ``disk'' attached at \texttt{/dev/xvdb}. To use this disk we would need to format it with a file 
+system and mount it on the VM.
+
+Just to see the difference, delete the new disk on the Storage tab and verify that \texttt{/dev/xvdb} is removed from the 
+VM.
+
+
+\section{Take a Snapshot}
+One feature of VMs is that we can take \emph{snapshots} that let us easily back up our VM's. Make a snapshot of our VM from the Snapshots tab. Once this is done do something dumb like removing the user's home directory on the VM, then use the ``Revert To'' option to roll back to the snapshot version and check that the directory is restored.
+
+\section{Shut Down and Remove VM}
+Once you finish the lab, please shut down and delete your VM to conserve system resources. We are doing this on old
+hand-me-down hardware.
+
+
+
+
+\end{document}
