@@ -1,8 +1,4 @@
 
-N.B.: These are not the current materials for the 2016 calendar year.  They
-are retained here for reference and histroical purposes, but current students
-should refer to the specific repositories referenced in their course directives.
-
 op-papers
 =========
 
@@ -19,6 +15,11 @@ These materials are also offered here to facilitate open collaboration with
 others, although for at least the time being I'm making no effort to 
 generalise them for use outside my own programme. I may do so in the future if
 demand warrants it.
+
+I recommend that you take note of the dates in the commit logs. Some of these
+materials are for course I'm actively teaching and will be reasonably accurate
+and up to date. Some of the materials are for courses I have not taught in years,
+and even I don't really know what state they're in.
 
 Teaching documents in this repository are offered under a Creative Commons
 Attribution 4.0 International (http://creativecommons.org/licenses/by/4.0/) 
