@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 01.02\\Ticketing with Request Tracker (RT)\\IN719 Systems Administration}
+\date{}
+\maketitle
+
+\section{Introduction}
+The first topic on the Operations Report Card was the use of a ticketing system. We will address that topic now. A ticketing system allows users, sysadmins, and managers to submit work items, and it allows sysadmins to track and document progress on work items. It helps in four important ways:
+
+\begin{enumerate}
+\item It helps us organise our work;
+\item It helps us document our work;
+\item It facilitates collecting metrics about our work;
+\item It helps us communicate with affected parties.
+\end{enumerate}
+
+There are several ticketing systems available. In this paper we will use Request Tracker (RT). It?s a widely used and well regarded system. It?s also Free/Open Source, so it is an easy system to introduce into an organisation that does not already have such a system.
+
+There are two main ways in which people interact with RT. Most users just use email. Sysadmins and other people who respond to tickets use email and a web interface. Our RT instance is at https://rt.foo.org.nz You should already have an account on the system that uses your OP user name and that is initially set up with a password that will be shared on Slack. Check that you are able to log in on the web site.
+
+\section{Queues}
+Tickets in RT are sorted into queues. Queues may be set up based on who is responsible for handling tickets, or by the ticket topic. For example, there is a queue in our system called ``lecturers'' that is used for issues related to the running of the paper and those tickets are handled by the lecturers.
+
+Each queue has an email address associated with it, and most users will submit a ticket by sending an email to that address. You can submit a ticket to the lecturer queue by sending email to \texttt{lecturers@foo.org.nz}. Submit a sample ticket now, using your OP student email\footnote{Only authorised users may submit tickets, and your authorisation is tied to your email address. Sending from another address will not work.}. During the rest of the semester you can raise issues related to the course by submitting tickets to that queue.
+
+You will be placed in a student team that will be identified by a number, e.g., group 42. Your RT queue will then be called ``group42'' and the queue email address will be \texttt{group42@foo.org.nz}. When a new ticket is submitted, everyone in the group will receive a notification via email. If you respond to that email, the response will be logged and also directed to the ticket submitter.
+
+There is a second email address used for commenting on tickets. For group 42 that address is \\ \texttt{group42-comment@foo.org.nz}. Comments are used by sysadmins to add information to the ticket record but are not relayed to the ticket submitter. You can also add correspondence and comments through the web interface.
+
+\section{Workflow}
+Here is a basic workflow for using RT.
+
+\begin{enumerate}
+  \item A user with an issue submits a ticket via email and then receives an automated response notifying that the ticket was submitted.
+  \item Sysadmins responsible for the queue receive notifications of the new ticket by email.
+  
+  \item A sysadmin decides to take responsibility for the ticket, logs into the web site, and takes ``ownership'' of the ticket.
+  \item When sysadmins start work on the ticket, they change its status to ``open''. They can correspond with the submitter and comment on the ticket as necessary.
+  \item If necessary, ownership of the ticket can be transferred to another sysadmin. The current owner can flip it to someone else, another sysadmin can take it, or a third person, like a manager, can reassign it.
+  \item When the issue is resolved, the owner changes the ticket status to ``resolved''. The submitter will receive a notification.
+\end{enumerate}
+
+
+Note that there are other ways to close a ticket. For example, a sysadmin my ``reject'' a ticket that is related to an unsupported system. Also, note that you should not open a ticket until you actively start work on it, so that the time between opening and resolving the ticket will accurately reflect the time spent working on it.
+
+It is possible to delete a ticket in RT, but doing so removes all history of the ticket and is almost never something you want to do. You should only delete tickets that were entered by mistake or when you're trying to conceal criminal activity on your part.
+
+\section{Exercise}
+First, an admission: Part of the point of today's lab is to ensure that RT is set up correctly and that you can properly access your account. If this does not appear to be true, bring any issues to the lecturers right away so that they can be resolved.
+
+By now you should have already logged into RT and submitted a ticket via email. When you log into RT you will initially see your default dashboard. At the top you will see a dropdown labeled ``Logged in as [username]''. Expand that dropdown to expose ``Settings>About Me'' and click that option. In the resulting form, enter your real name and change your password. Click the homepage link at the top left to go back to the dashboard.
+
+On the right side of the dashboard page you should see a pane for your queue with one or two new tickets in it. Click your queue to see the list of new tickets. At least one of those tickets should be unowned. Click it to go to a detailed view. At the bottom of that view you will see the correspondence for that ticket and the first item will be a question to answer.
+
+Now you will start working on the ticket. First, from the actions menu at the top, select ``Take'', making you the owner of the ticket. It's important to do this so your other team member will know that you are working on the issue. Next, ``open'' the ticket in the actions menu to indicate that you are actively working on the ticket.
+
+Once you have the answer to the question in the ticket, select ``reply'' from the actions menu. You will go to a form where you will enter your reply message. Note that the text entry box for your reply body is shaded red to remind you that the requestor, who is quite possibly a normal human, will receive this message. Choose your language accordingly and send the response.
+
+You want to document \emph{how} you answered your question, so now select the ``comment'' action to enter a comment explaining how you found the answer to your question. Enter your comment. Comments can only be seen by people with access to your ticket queue, i.e., you and your team.
+
+Finally, since you are done with the ticket, you need to close it. Do this by selecting ``Resolve'' from the actions menu. 
+
+It's important to execute a proper work flow with RT so that it accurately reflects what you are doing and what you have done. When you are responding to issues, comment liberally to preserve information that you can use to solve similar problems in the future. Also, you should enter tickets for yourself so that you maintain a record of the tasks you perform. Your ticket history will be a critical source of evidence of your work that you will need for the first assessment.
+
+Once you have done the above, go back to the dashboard. Using the web form there, create a ticket for your other group member. Look for a similar ticket from that person. Open the ticket created for you, comment on it, and then transfer ownership to your other team member. That person will also have transferred a ticket to you. Open that one and resolve it.
+
+More documentation for RT can be found at \url{https://docs.bestpractical.com/rt/4.2.16/index.html}.
+
+
+
+
+
+
+\end{document}
