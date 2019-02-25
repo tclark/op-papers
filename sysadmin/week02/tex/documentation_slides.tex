@@ -1,0 +1,89 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Documentation}
+
+\author[IN719]{Systems Administration}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{}
+   
+   
+   In the first session we observed that a key responsibility of sysadmins 
+   is to know the states of their systems. Since most of us do not have perfect
+   memories, nor can we read minds, it's important to document this.
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Document repositories}
+   
+   We need some tools to access our documentation. We will use a wkik.
+   
+   \begin{itemize}
+     \item It is accessible over the Internet from anywhere from which we will work.
+     \item It is accessible on a wide range of devices.
+     \item It doesn't have a lot of dependencies.
+     \item It automatically tracks metadata.
+   \end{itemize}
+  
+  
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{What goes on our wiki}
+   
+   \begin{itemize}
+     \item Step-by-step procedures for tasks that are, or may be done repeatedly.
+     \item A list of all the machines with information about each one.
+     \item A page with team members, contact information, and an on-call schedule.
+     \item For each service we deploy, a section in the Ops Doc format:
+       \begin{enumerate}
+         \item Overview
+         \item Build (We can omit this one.)
+         \item Deploy
+         \item Common Tasks
+         \item Pager Playbook
+         \item Disaster Recovery Plan
+         \item Service Level Agreement (SLA)
+         \end{enumerate}
+   \end{itemize}
+  
+  We won't have a lot of information to put in these to begin, but get the framework in place
+  and add the specific information over time.
+  
+  
+\end{frame}
+
+%----------- slide --------------------------------------------------%
+\begin{frame}
+  \frametitle{Security considerations}
+   
+   Our wiki is password protected, so we can put information that is not public, 
+   but do not put any security sensitive information on it.
+  
+  
+\end{frame}
+
+\end{document}
