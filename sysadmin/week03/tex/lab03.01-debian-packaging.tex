@@ -13,23 +13,31 @@
 
 \begin{document}
 
-\title{Lab 02.01\\Debian Packages\\IN719 Systems Administration}
+\title{Lab 03.01\\Debian Packages\\IN719 Systems Administration}
 \date{}
 \maketitle
 
 \section{Introduction}
-One of the nice features of Debian is its excellent package management system
-that makes it easy to install, update, and remove software packages. Most of 
-the time we can get the software we want from official repositories. But 
-sometimes we need to go beyond the standard sources and install something 
-special. In these cases, we might go outside the package system, but then we 
-lose the benefits of the package manager.  It turns out that it's not hard to 
-create our own packages, and we'll see that in this lab.  
+Often in the process of operating a set of computer systems we find that we need to
+install some custom software. The process of doing this may require copying executable 
+and configuration files, perhaps along with other resources. It may also be 
+necessary to verify that dependencies are met on the target systems, 
+and we might need to carry out some other procedures to complete the installation.
+Since we want to make the installation process reliable and repeatable, we might be 
+tempted to write a shell script to manage the installation process. But before we 
+do that we should remember that there is already a tool that does this. That tool
+is a \emph{package manager}, and to use it we just need to make a package.
+
+Package managers do not just help install software packages. They keep track of what
+packages are installed, they manage package upgrades, and they remove packages that
+are no longer required. Debian and its derivatives have an excellent package manager that 
+we will use to create and install a package in this lab. While other distributions use
+different package managers, the basic principle remains the same.  
 
 \section{The problem}
-In the \texttt{week02} folder on GitHub there's a simple shell script called \texttt{interactive\_cowsay}. We want to
+In the \texttt{week03} folder on GitHub there's a simple shell script called \texttt{interactive\_cowsay}. We want to
 install it in \texttt{/usr/bin}. But our script has a \emph{dependency}, the Debian package \texttt{cowsay} that is available from
-the standard repositories. We'll create a \texttt{.deb} fille for our packages that addresses these requirements. To
+standard repositories. We'll create a \texttt{.deb} fille for our program that addresses these requirements. To
 begin, copy the \texttt{interactive\_cowsay} script onto the lab server. Create a subdirectory of your home
 directory called \texttt{interactive\_cowsay\_package}. We'll use it to set up our package.
 
@@ -37,19 +45,19 @@ directory called \texttt{interactive\_cowsay\_package}. We'll use it to set up o
 \begin{enumerate}
 	\item We want to install the executable file under \texttt{/usr/bin}, so create a \texttt{usr/bin} subdirectory tree under
 		\texttt{interactive\_cowsay\_package}. Move the \texttt{interactive\_cowsay} file into \texttt{interactive\_cowsay\_package/usr/bin}.
-	\item It's best to get the ownership and permissions right at this stage. Make sure that \texttt{root} owns the \texttt{usr} sub-
-		directory and everything under it. Make sure that everybody can read and execute \texttt{interactive\_cowsay}.
+	\item We want to get the ownership and permissions right at this stage. Make sure that \texttt{root} owns the \texttt{usr}
+		subdirectory and everything under it. Make sure that everybody can read and execute \texttt{interactive\_cowsay}.
 	\item Create another subdirectory of \texttt{interactive\_cowsay\_package} called \texttt{DEBIAN}.
 	\item Inside \texttt{DEBIAN}, create three text files: \texttt{control}, \texttt{postinst}, and \texttt{prerm}.
 		\texttt{postinst} is a shell script that does whatever tasks must be done after the package files are installed.
 		\texttt{prerm} is a shell script that does whatever must be done before removing package files when uninstalling.
-		We don't need to do anything in those cases, so both files just need to contain the following:
+		We don't need to do anything special at those time with our package, so both files just need to contain the following:
 
 		\begin{verbatim}
 		#!/bin/sh
 		exit 0
 		\end{verbatim}
-\newpage
+
 
 	\item The \texttt{control} file contains information about your package. Use the following information, it is explained below.
 		\begin{verbatim}
@@ -59,7 +67,7 @@ directory called \texttt{interactive\_cowsay\_package}. We'll use it to set up o
 		Essential: no
 		Depends: cowsay
 		Installed-Size: 512
-		Maintainer: Tom Clark <tom.clark@op.ac.nz> (use your own information here)
+		Maintainer: Tom Clark <tclark@op.ac.nz> (use your own information here)
 		Description: Provides an interactive front end for cowsay
 		\end{verbatim}
 
@@ -85,6 +93,9 @@ directory called \texttt{interactive\_cowsay\_package}. We'll use it to set up o
 	Now you can install the package with the command \texttt{sudo dpkg -i interactive-cowsay-1.0.deb}. Try it.
 		What happens?
 		The problem is that your package depends on the \texttt{cowsay} package. But dpkg isn't smart enough to find and install it for you. For that, you need \texttt{apt-get}, and to use it for your new package, you need to set up a Debian \emph{repository}. Setting up and running a repository is not hard, but it's beyond the scope of today's exercise.  However, you can complete the install by installing \texttt{cowsay} yourself and then installing your new package.
+		
+		Once you have installed the package, you can check its status with the command \texttt{dpkg -s interactive-cowsay}. Finally, try out your package by running the command \texttt{interactive\_cowsay}. If after trying it you are unconvinced that it will be useful, you may remove it with the command \texttt{sudo dpkg -r interactive-cowsay}.
+		
 
 
 
