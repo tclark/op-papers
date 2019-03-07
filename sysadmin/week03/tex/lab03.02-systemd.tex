@@ -84,7 +84,7 @@ To turn this into a systemd service, we need to write a unit file for it. Write 
     Description=Hello world service
     After=systemd-user-sessions.service
     [Service]
-    SyslogIndentifier=HelloWorldService
+    SyslogIdentifier=HelloWorldService
     Type=simple
     ExecStart=/home/<your home dir>/hello.sh
 \end{verbatim}
