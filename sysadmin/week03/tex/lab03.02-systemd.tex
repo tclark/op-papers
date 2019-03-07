@@ -1,0 +1,159 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 03.02\\systemd\\IN719 Systems Administration}
+\date{}
+\maketitle
+
+\section{Introduction}
+Unix and similar systems have long relied upon init systems to bootstrap and manage resources as the server starts up and shuts down, and more generally as the host transitions between various states. Since about 2015, the primary init system used on Linux has been \emph{systemd}. The adoption of systemd has been a contentious process and the ensuing controversy is well worth discussing at a pub after about two beers. In the meantime, however, we need to familiarise ourselves with it so that we can effectively do our work.
+
+On one of your servers, run the command \texttt{pstree -p} to see a tree diagram to see how your host's processes are started either by systemd, or indirectly started by a process that was started by systemd.
+
+\section{Key Concepts}
+\subsection*{Units}
+The primary abstraction in systemd is the \emph{unit}. A unit is a system resource that systemd is able to manage. systemd can manage 12 different types of units:
+
+\begin{itemize}
+  \item device
+  \item mount
+  \item path
+  \item scope
+  \item service
+  \item slice
+  \item snapshot
+  \item socket
+  \item swap
+  \item target
+  \item timer
+\end{itemize}
+  
+We will focus primarily on service units, which represent services running on a host, like a web server or a database server.
+
+\newpage
+
+More concretely, a unit is something defined in a \emph{unit file}. Unit files conform to a specific format and syntax that we will see shortly. These files may be placed in four directories:
+
+\begin{enumerate}
+ \item \texttt{/etc/systemd/system}
+ \item \texttt{/run/systemd/system}
+ \item \texttt{/lib/systemd/system}
+ \item \texttt{/usr/lib/systemd/system}
+\end{enumerate}
+
+If you look in some of these directories you will find unit files of various types. Their filenames indicate what sorts of units they are. Service unit files end in \texttt{.service}, device unit files end in \texttt{.device}, and so on.
+
+systemd will check these directories in this order, taking the first matching unit file found. Locally defined units should be placed in \texttt{/etc/systemd/system}, so any unit files we write will be placed there.
+
+\subsection*{Targets}
+Targets are special systemd units that are themselves collections of other units that specify a desired overall system state. For example, a host will have a default target that identifies a set of units that should be active when the host boots up. See all the targets defined on your server with the command 
+
+\begin{verbatim}
+    systemctl list-unit-files --type=target
+\end{verbatim}
+
+\section{An Example}
+Let's see how some of these ideas work by creating a small example. First, write a shell script in your home directory like the following:
+
+\begin{verbatim}
+    #!/bin/bash
+    while $(sleep 30);
+    do
+        echo "Hello, systemd world"
+    done
+\end{verbatim}
+
+Name your script \texttt{hello.sh} and make it executable.
+
+To turn this into a systemd service, we need to write a unit file for it. Write a unit file named \texttt{hello.service} with the following contents:
+
+\begin{verbatim}
+    [Unit]
+    Description=Hello world service
+    After=systemd-user-sessions.service
+    [Service]
+    SyslogIndentifier=HelloWorldService
+    Type=simple
+    ExecStart=/home/<your home dir>/hello.sh
+\end{verbatim}
+
+Copy this file to \texttt{/etc/systemd/system}. Verify that systemd recognises your unit with the command
+\begin{verbatim}
+    systemctl list-unit-files | grep hello.service
+\end{verbatim}
+
+Our unit file has two sections: \texttt{[Unit]} and \texttt{[Service]}. Some of the entries are self explanatory. The \texttt{After} directive identifies what units should be started before this one is. The \texttt{Type} of our service is \texttt{simple}, but more commonly we will see \texttt{forking} services for daemons.
+
+Start the new service with the command 
+
+\begin{verbatim}
+    systemctl start hello.service
+\end{verbatim}
+
+and check that it is running with the command
+
+\begin{verbatim}
+    systemctl status hello.service
+\end{verbatim}
+
+Interestingly, our very simple service writes logs. We can see the logged output with the command
+
+\begin{verbatim}
+    journalctl -u hello -e
+\end{verbatim}
+
+The \texttt{-u} option tells \texttt{journalctl} that we only want to see the log entries for the \texttt{hello} service and the \texttt{-e} says to show the entires from the most recent entry and work backwards. Note that many services write their own log files in addition to what they write to systemd's journal.
+
+\section{\texttt{systemd} Quick Reference}
+
+To wrap up we will review some systemd commands that we will find useful this semester and beyond. We will use the \texttt{cron} service as an example. Some of these commands require \texttt{sudo} privileges.
+
+\texttt{systemctl start cron.service}
+
+Starts the service\footnote{Duh.}.
+
+\texttt{systemctl status cron.service}
+
+Prints a report on the service's status, including recent journal entries
+
+\texttt{systemctl stop cron.service}
+
+Stops the service
+
+\texttt{systemctl cat cron.service}
+
+Prints the services unit file.
+
+\texttt{systemctl edit cron.service --full}
+
+Opens the services unit file in the default editor. Note that this and the cat command above finds the effective unit file in the directories we listed above. We don't need to look around to find the file ourselves.
+
+Note also that cron's unit file has an \texttt{[Install]} section, which means that this service can be \emph{enabled} to start at boot.
+
+\texttt{systemctl enable cron.service}
+
+Identifies the service to be started automatically on boot. 
+
+\texttt{systemctl disable cron.service}
+
+Removes the service from the list of those started at boot.
+
+\texttt{journalctl -u nginx.service}
+
+Show journal entries for the service. Note that we often want to add the \texttt{-e} option to see the newest entries.
+
+
+
+\end{document}
