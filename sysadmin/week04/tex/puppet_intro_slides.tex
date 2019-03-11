@@ -93,6 +93,13 @@
   
 \end{frame}
 %----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Puppet overview}
+
+  \includegraphics[width=90mm]{puppet.png} 
+   
+\end{frame}
+%----------- slide --------------------------------------------------%
 \begin{frame}
   \frametitle{Some Key Terms}
 
@@ -174,15 +181,33 @@ node 'www.foo.org.nz' inherits base {
 Note that Puppet best practice is to be careful to avoid overusing inheritance.  If you find yourself going back and modifying base classes or adding and removing inheritance relationships often, that is a sign that you shouldn't be using inheritance.
 
 \end{frame}
+%----------- slide --------------------------------------------------%
+\begin{frame}[fragile]
+  \frametitle{Applying Configuration to a Node}
+
+
+
+\begin{verbatim}
+node 'db.foo.org.nz' {
+  packaage { 'vim':
+             ensure => installed,
+           }  
+              
+}
+\end{verbatim}
+
+
+\end{frame}
+
 
 %----------- slide --------------------------------------------------%
 \begin{frame}[fragile]
   \frametitle{Modules}
-  A collection of related resources can be organised into a \emph{module}.  For example, we may want to install the bacula-fd package, its configuration file, and set up a working directory for restores.  We can create a module that incorporates all of these things, and then use the module in a node:
+  A collection of related resources can be organised into a \emph{module}.  For example, we may want to install the nginx package, its configuration file, and set up a document root directory.  We can create a module that incorporates all of these things, and then use the module in a node:
 
 \begin{verbatim}
-node 'foo.foo.org.nz' {
-  include bacula-client
+node 'app.foo.org.nz' {
+  include nginx-webserver
 }
 \end{verbatim}
 
