@@ -4,102 +4,118 @@
 
 \usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
-\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{enumerate}
+\usepackage{hyperref}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 04.02: A Puppet Module for Hosts Files \\ IN719 Systems Administration}
+\title{Lab 04.02: A Puppet Module for NTP \\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
 \maketitle
 
 \section*{Introduction}
-Last time we made a Puppet module for \texttt{sudo}.  That module wasn't very flexible, however.  It only worked because we configure \texttt{sudo} in the exact same way on every system. Today we'll make a more flexible module to manage our hosts files.  To accomplish this, we'll make use of Puppet's \emph{variables}, \emph{conditionals}, and \emph{templates}.
+Virtual machines may be the best thing since sliced bread. Just like sliced bread, however, they are very bad at keeping time accurately. This leads to some difficult problems when two or more machines need to coordinate the delivery of a service and they disagree on what time it is. Fortunately, this problem is easily solved by running \emph{Network Time Protocol} (NTP) services. NTP uses a hierarchical clinet-server achitecture. Top tier servers get their time from GPS or other satellites. Lower tier servers get their time from higher tier servers. Clients get their time from various NTP servers.
+
+In this lab we will set up an ntp server on our respective \texttt{mgmt} servers and clients on the other servers. We only want to write one Puppet module, so we will use \emph{conditionals} and \emph{templates} in our module to accomplish this.
 
 \section{Module setup}
 Create a standard module structure in the \texttt{/etc/puppet/modules} directory of your puppetmaster.
 
-\texttt{hosts\_file} \\
-\texttt{hosts\_file/manifests} \\
-\texttt{hosts\_file/files} \\
-\texttt{hosts\_file/templates} \\
+\texttt{ntp} \\
+\texttt{ntp/manifests} \\
+\texttt{ntp/files} \\
+\texttt{ntp/templates} \\
 
 Create an \texttt{init.pp} file in your \texttt{manifests} subdirectory.
 
 \section{Module manifest}
-Put the following code in your \texttt{init.pp} file.  Adjust the IP addresses to match your systems.
+Put the following code in your \texttt{init.pp} file.  Adjust the \texttt{group00mgmt} hostname to match your own.
 
 \begin{verbatim}
-  class hosts_file {
-    if $osfamily == 'Debian' {
-      include deb_hosts
-    }
-    elsif $osfamily == 'windows' {
-      include win_hosts
-    }
+
+  class ntp_service {
+      include install, config, service
+
   }
 
-  class hosts_file::deb_hosts {
-    file { "/etc/hosts" :
-      ensure => present,
-      owner => 'root',
-      group => 'root',
-      mode => 0444,
-      content => template('hosts_file/debhosts.erb'),
-    }
+  class ntp_service::install {
+      package { "ntp":
+          ensure => present,
+      }
   }
 
-  class hosts_file::win_hosts {
-    file {"C:/windows/System32/drivers/etc/hosts" :
-      ensure => present,
-      content => template('hosts_file/winhosts.erb'),
-    }
+  class ntp_service::config {
+      if $hostname == "group00mgmt" {
+          $restrict = "restrict 10.25.0.0 mask 255.255.0.0 nomodify notrap"
+          $server = "server 127.127.1.0"
+          $fudge = "127.127.1.0 stratum 10"
+      } else {
+          $restrict = ""
+          $server = "server group00mgmt.foo.org.nz prefer"
+          $fudge = ""
+      }
+      file { "/etc/ntp.conf":
+          ensure => present,
+          owner => "root",
+          group => "root",
+          mode => 0444,
+          content => template("ntp/ntp.conf.erb"),
+      }    
   }
+
+  class ntp_service::service {
+      service { "ntp":
+          ensure => running,
+          enable => true,
+      }    
+  }
+
+
   
 \end{verbatim}
 
-\newpage
+
 
 There are a few new things happening in this manifest.
 \begin{itemize}
-  \item We're using a \emph{variable}, \texttt{\$osfamily}.  We can define and use our own variables, but many variables are populated for us by a utility called \emph{Facter}.  You can see a list of the core facts produced by Facter at \\ http://docs.puppetlabs.com/facter/1.6/core\_facts.html.
-  \item We are using an \texttt{if/elsif} structure to conditionally select which Puppet class to use based in the operating system of the agent.
-  \item Instead of copying over static files, we are using \emph{templates}.  The template files are to be placed in the \texttt{templates} subdirectory of the module.  Puppet's templates use the erb (Embedded Ruby) templating system.
+  \item We're using\emph{variables}, such as \texttt{\$hostname}.  We can define and use our own variables, but many variables are populated for us by a utility called \emph{Facter}.  You can see a list of the core facts produced by Facter at \url{https://puppet.com/docs/puppet/5.3/lang_facts_and_builtin_vars.html}.
+  \item We are using an \texttt{if/else} structure to conditionally populate variables based in the hostname of the agent.
+  \item Instead of copying over static files, we are using \emph{templates}.  The template files are to be placed in the \texttt{templates} subdirectory of the module.
 \end{itemize}
 
 \section{Template files}
-Finally, we need to write our template files in the \texttt{templates} subdirectory of our module.  The text of those files is below.
+Retrieve the \texttt{ntp.conf.erb} file from the week 4 subdirectory of the class GitHub repository and copy it into the \texttt{templates} subdirectory of the ntp module. Examine the contents of the file and look for these lines:
 
-\textbf{debhosts.erb}
 \begin{verbatim}
-127.0.0.1       localhost <%= hostname %>
-10.26.1.50      ad ad.foo.org.nz
-10.26.1.51      app app.foo.org.nz
-10.26.1.52      db db.foo.org.nz
-10.26.1.53      mgmt mgmt.foo.org.nz
-10.26.1.54      backup backup.foo.org.nz
 
-# The following lines are desirable for IPv6 capable hosts
-::1     localhost ip6-localhost ip6-loopback
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-\end{verbatim}
+  <%= restrict %>
 
+  <%= server %>
 
-\textbf{winhosts.erb}
-\begin{verbatim}
-127.0.0.1       localhost <%= hostname %>
-10.26.1.50      ad ad.foo.org.nz
-10.26.1.51      app app.foo.org.nz
-10.26.1.52      db db.foo.org.nz
-10.26.1.53      mgmt mgmt.foo.org.nz
-10.26.1.54      backup backup.foo.org.nz
+  <%= fudge %>
 
 \end{verbatim}
 
-In these templates we are inserting the correct value for the local host name with the \texttt{hostname} variable that is defined by Facter.
+Each of these lines will be replaced by the values of the variables we set up in our manifest above. This template is actually just an \texttt{erb} template, the same kind that is typically used with Ruby on Rails. More documentation on using templates with Puppet is available at \url{https://puppet.com/docs/puppet/5.3/lang_template_erb.html}\footnote{This version is newer than the one we are using, but it's close enough.}.
 
-\section{Follow up}
-You can, and should, read more about Puppet templates at http://docs.puppetlabs.com/learning/templates.html.
+
+\section{Applying the module}
+This module is set up so that we may apply it to any of our server nodes and it will do the right thing. In the node definitions you have placed in \texttt{/etc/puppet/manifests/nodes.pp} we just need to add a line that says
+
+\begin{verbatim}
+    include ntp
+\end{verbatim}
+
+and the run the Puppet agent on each machine as we did earlier this week:
+
+\begin{verbatim}
+ sudo puppet agent --server=group00mgmt.foo.org.nz --no-daemonize --verbose --onetime
+\end{verbatim}
+
+Wow, that's a long command. It seems like it would be easier to alias it\footnote{Wink, wink, nudge, nudge.}.
+
+\section{Epilogue}
+With NTP services running on our VMs, their clocks will be more accurate \emph{eventually}. Abruptly changing the time on a server can cause Bad Things to happen, so NTP adjusts clocks gradually until they are sufficiently accurate. In our case it may take a couple of days.
 
 \end{document}
