@@ -1,0 +1,113 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{A Puppet Module to Manage MariaDB \\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+In this lab we will build a more complex module to manage our database server software.  This module will use a collection of related \emph{classes}.  We've used classes already, but you may not have paid much attention to them.  Note that this lab is based on an example from \emph{Pro Puppet} by James Turnbull.  In this module we will handle not just installation and configuration of a service, but also preinstallation tasks, operation, and ongoing maintenance of the service.
+\section{Module setup}
+Create a standard module structure in the \texttt{/etc/puppet/modules} directory of your puppetmaster.
+
+\texttt{mariadb} \\
+\texttt{mariadb/files/50-server.cnf} \\
+\texttt{mariadb/manifests/init.pp} \\
+\texttt{mariadb/manifests/install.pp} \\
+\texttt{mariadb/manifests/config.pp} \\
+\texttt{mariadb/manifests/service.pp} \\
+\texttt{mariadb/templates} \\
+
+Notice that we're using some more manifest files than we've used in the past. We will be writing a bit more code and we need to organise it more deliberately. Also, note that you can get a copy of the \texttt{50-server.cnf} file from the \texttt{week05} subdirectory of the class GitHub repository.
+
+\section{mariadb::install}
+The \textbf{mariadb::install} class includes the resources needed to install MariaDB.  Put the following in your \texttt{install.pp} file
+
+\begin{verbatim}
+  class mariadb::install {
+    package { "mariadb-server" :
+              ensure => present,
+              require => User["mysql"],
+    }
+    user { "mysql":
+           ensure => present,
+           comment => "MariaDB user",
+           gid => "mysql",
+           shell => "/bin/false",
+           require => Group["mysql"],
+    }
+    group { "mysql" :
+            ensure => present,
+    }
+   }
+
+\end{verbatim}
+
+It's not a typo that the user and group are "\texttt{mysql}".
+
+Note how we use \texttt{require} directives to make sure that things are set up in the correct order, and we don't bother attempting steps that will fail because prerequisites are not met.
+
+
+
+\newpage
+
+\section{mariadb::config}
+Place the following resources in your \texttt{config.pp} file.
+
+\begin{verbatim}
+  class mariadb::config {
+    file { "/etc/mysql/mariadb.conf.d/50-server.cnf":
+      ensure => present,
+      source => "puppet:///modules/mariadb/50-server.cnf",
+      mode => 0444,
+      owner => "root",
+      group => "root",
+      require => Class["mariadb::install"],
+      notify => Class["mariadb::service"],
+    }
+  }
+\end{verbatim}
+
+Notice how these resources require mariadb::install, and they also \emph{notify} mariadb::service.  This means that the server daemon will be restarted whenever its configuration changes.
+
+\section{mariadb::service}
+The maria::service class is brief.  Place it in your \texttt{service.pp} file.
+
+\begin{verbatim}
+  class mariadb::service {
+    service { "mysql" :
+      ensure => running,
+      hasstatus => true,
+      hasrestart => true,
+      enable => true,
+      require => Class["mariadb::config"],
+    }
+  }
+\end{verbatim}
+
+This class will make sure that the server daemon is running and will restart it if necessary when its configuration is changed by Puppet.
+
+\section{mariadb class}
+
+Finally we just combine our classes in the \texttt{init.pp} file.
+
+\begin{verbatim}
+  class mariadb {
+    include mariadb::install, mariadb::config, mariadb::service
+  }
+\end{verbatim}
+
+Now you can apply the module to your db server by placing \texttt{include mariadb} in the node definition for your db server.
+
+\section{Follow up}
+With the ability to create modules like this, you are now prepared to start fully managing your servers with Puppet.  You should set nodes for your other servers and get those servers connected to Puppet.
+ 
+\end{document}
