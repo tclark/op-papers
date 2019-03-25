@@ -1,0 +1,73 @@
+\documentclass{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                   		% ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
+
+
+\title{Lab 06.01:  Set Up Nagios With Puppet\\ IN719 Systems Administration}
+\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+Next week we will start working with Nagios to monitor our systems. We will introduce Nagios itself then, but we can already start using Puppet to install Nagios and to perform some basic configuration.
+
+There are two things about this that can be confusing. Nagios has its own configuration files with their own syntax, but for now we are only going to use Puppet and it manifest format to configure Nagios. We can do this because we won't us Puppet to manage Nagios' configuration \emph{files}. Instead we will prepare native Puppet resources that represent elements of Nagios configuration.
+
+
+\section{Set up a Nagios Module}
+Following the example of our MariaDB module, create a new module for Nagios with an \texttt{install}, \texttt{config}, and \texttt{service} class. Most of the work will be in the config class, but the other two are what we need to get set up first.
+
+We will apply this module to \textbf{only} our \texttt{mgmt} servers.
+
+\subsection{\texttt{install} class}
+The \texttt{install} class should create a \texttt{nagios} group and a \texttt{nagios} user. It should install the \texttt{nagios3} package.
+
+\subsection{\texttt{service} class}
+The \texttt{service} class should enable the \texttt{nagios3} service and ensure that it is running. When the service is running you should be able to reach its web interface by visit \texttt{http://<your server ip>/nagios3} with a web browser. Note that this is only accessible while on the OP campus network.
+
+\subsection{\texttt{config} class}
+Nagios requires a lot of configuration and we will be working on in over the next few weeks. We will get started today by creating a \texttt{config} class that includes the following: 
+
+Create a \texttt{file} resource that manages \texttt{/etc/nagios3/nagios.cfg}. You can use the default configuration file installed by the package for this. 
+
+Create a second \texttt{file} resource to manage \texttt{/etc/nagios3/htpasswd.users}. This file contains usernames and passwords used to log into the Nagios web interface. You will create this file with the \texttt{htpasswd} command, invoked in this manner:
+
+\texttt{htpasswd -c <path to you module's file directory>/htpasswd.users nagiosadmin}
+
+You will be prompted for a password which will be used with the user name \texttt{nagiosadmin}. You must use this user name, at least for now.
+
+Nagios uses a directory, \texttt{/etc/nagios3/conf.d}. Create a file resource that ensures the directory is present, sets its group ownership to \texttt{puppet}, and its mode to \texttt{0775}.
+
+Finally, we will set up one nagios-specific resource, a \texttt{nagios\_host}. This will direct Nagios to monitor the status of our database server. Your \texttt{nagios\_host} resource should look like this:
+
+\begin{verbatim}
+nagios_host { "group00db.foo.org.nz":
+                 target => "/etc/nagios3/conf.d/ppt_hosts.cfg",
+                 alias => "db",
+                 check_period => "24x7",
+                 max_check_attempts => 3,
+                 check_command => "check-host-alive",
+                 notification_interval => 30,
+                 notification_period => "24x7",
+                 notification_options => "d,u,r",
+                 mode => 0444,
+}
+
+\end{verbatim}
+
+We will discuss Nagios resources in class, but note especially that this resource writes a file, \texttt{/etc/nagios3/conf.d/ppt\_hosts.cfg}. It places configuration directives in that file that we specify in the resource definition.
+
+\section{Apply the Module}
+
+Use Puppet to apply this module to our management server \textbf{only}. If sanity is a thing you're into, don't do this by trying to write the complete module and applying it in one go. Write the module piece by piece, applying and debugging it successively until the module is complete and working. When it is done, you should be able to log into your Nagios web dashboard and find the status of your management and database servers. 
+
+
+
+
+
+\end{document}
