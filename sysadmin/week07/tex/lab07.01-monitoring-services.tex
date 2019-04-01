@@ -1,0 +1,70 @@
+\documentclass{article}         % use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                             % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                              % ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}                   % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}                           % Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}                                                          % TeX will automatically convert eps --> pdf in pdflatex                
+\usepackage{hyperref}
+
+\title{Nagios Sevices, Hosts, and Host Groups\\ IN719 Systems Administration}
+\date{}                                                 % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+
+\section*{Introduction}
+Today we're going to get our Nagios server to monitor network services on our hosts. To do this, we will define \emph{Hosts}, \emph{Host Groups}, and \emph{Services}. Note that all of the work today will be done by modifying the \texttt{config} class
+in your Nagios module.
+
+\section{Create hosts}
+Last week we set up a \texttt{nagios\_host} for our \texttt{db} server. Start by creating similar host entries for your other three servers in the same way. Note that your Nagios instance monitors its \texttt{localhost} as part of its default configuration. You may want to remove that eventually, but for the time being it's a useful example, so leave it in place.
+
+\section{Host Groups}
+Ultimately we want to monitor services, but those services may run on multiple hosts. Ssh is an example of this. We'd like to handle all the hosts running ssh services in one go. We do this by creating a \emph{host group}, then set up our ssh service monitoring to look at all the hosts in the appropriate group. Create a host group for our ssh servers by adding the following to the config class:
+
+\begin{verbatim}
+nagios_hostgroup {'ssh-servers':
+              target => '/etc/nagios3/conf.d/ppt_hostgroups.cfg',
+              alias => 'ssh Servers',
+              members => 'group00db.foo.org.nz, group00app.foo.org.nz, <et al.>',
+}
+\end{verbatim}
+
+Note that you have an existing host group from the default configuration. You will want to remove it at some point.
+
+Once this is done, set up a similar host group for your database server. This host group should only have your db server as a member.
+
+\newpage
+
+\section{Services}
+Finally we will define \emph{services} that we want to monitor. Nagios checks those services by trying to connect to them over the network to see if they respond properly. First, define a service to check ssh. (Again, this replaces an existing one, but it's a good example.)
+
+
+\begin{verbatim}
+nagios_service {'ssh':
+              service_description => 'ssh servers',
+              hostgroup_name => 'ssh-servers',
+              target => '/etc/nagios3/conf.d/ppt_services.cfg',
+              check_command => 'check_ssh',
+              max_check_attempts => 3,
+              retry_check_interval => 1,
+              normal_check_interval => 5,
+              check_period => '24x7',
+              notification_interval => 30,
+              notification_period => '24x7',
+              notification_options => 'w,u,c',
+              contact_groups => 'admins',
+}
+
+\end{verbatim}
+
+Once this is done, define a similar service for MariaDB. The relevant \texttt{check\_command} is \texttt{check\_mysql}, and of course the host group should be the db host group you created.
+
+
+If you have done everything right, your db server will appear to be up in Nagios,
+but the MariaDB service will appear to be down. We'll sort that out later.
+
+\end{document}
+

@@ -128,7 +128,7 @@ And finally, define a host group that you will use to
 identify your MySQL servers to Nagios.
 
 \begin{verbatim}
-nagios_hostgroup{'db-servers':
+nagios_hostgroup {'db-servers':
               target => '/etc/nagios3/conf.d/ppt_hostgroups.cfg',
               alias => 'Database Servers',
               members => 'db.foo.org.nz',
