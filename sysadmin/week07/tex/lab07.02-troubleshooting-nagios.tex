@@ -63,8 +63,8 @@ We just need to modify our service configuration that we set up in the Nagios Pu
 Here's a little trick, for security, we can create a database user that can only perform \texttt{SELECT} queries on a nonexistent database. That's enough for our Nagios check to succeed. To do this, log onto your database server and open a MariaDB shell, then run the following SQL statement:
 
 \begin{verbatim}
-    GRANT ALL PRIVILEGES ON nagiosdb.* to 'nagios'@'group00mgmt.foo.org.nz' IDENTIFIED BY 'mypasswd';
-\end{verbatim}/var/lib/
+    GRANT SELECT ON nagiosdb.* to 'nagios'@'<mgmt server's ip address' IDENTIFIED BY 'mypasswd';
+\end{verbatim}
 
 Before you modify the nagios service configuration in your Puppet module, verify that the check will pass by running \texttt{/var/lib/nagios/plugins/check\_mysql}, passing in the right values for the \texttt{-H}, \texttt{-u}, and \texttt{-p} options.
 
