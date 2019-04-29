@@ -1,0 +1,67 @@
+\documentclass{article}         % use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                             % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                              % ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}                   % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}                           % Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}                                                          % TeX will automatically convert eps --> pdf in pdflatex                
+\usepackage{hyperref}
+
+\title{Nagios Contacts\\ IN719 Systems Administration}
+\date{}                                                 % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+In this lab we will create Nagios contacts and contact groups so that we can be notified
+when Nagios triggers an alert.
+
+
+
+
+\section{Configure Nagios Contacts}
+
+
+1.  Create a contact for yourself (and others in your team). N.B.: Don't 
+create a contact for me. I've just used my name below as an example.
+
+\begin{verbatim}
+
+nagios_contact { 'tclark':
+              target => '/etc/nagios3/conf.d/ppt_contacts.cfg',
+              alias => 'Tom Clark',
+              service_notification_period => '24x7',
+              host_notification_period => '24x7',
+              service_notification_options => 'w,u,c,r',
+              host_notification_options => 'd,r',
+              service_notification_commands => 'notify-service-by-slack',
+              host_notification_commands => 'notify-host-by-slack',
+              email => 'root@localhost',
+}
+
+  \end{verbatim}
+
+We would like to use a better email address, but for now we want to use
+\texttt{root@localhost}.
+
+Note that the \texttt{notify-*-by-slack} commands are set up in the accompanying lab document.
+
+2. Contacts aren't used until they appear in a relevant contact group.
+
+\begin{verbatim}
+
+nagios_contactgroup { 'sysadmins':
+               target => '/etc/nagios3/conf.d/ppt_contactgroups.cfg',
+               alias => 'Systems Administrators',
+               members => 'tclark', 
+}
+
+  \end{verbatim}
+
+
+
+
+
+\end{document}
+
