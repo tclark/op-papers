@@ -13,7 +13,7 @@
 \includegraphics[width=30mm]{../../../resources/images/oplogo.png}
 \end{figure}
 
-\title{Course Directive\\IN720 Virtualisation\\Semester Two, 2018}
+\title{Course Directive\\IN720 Virtualisation\\Semester Two, 2019}
 \date{}
 \maketitle
 
@@ -26,6 +26,7 @@ In this paper we will learn about how to provide and consume virtual systems.
 \begin{itemize}
   \item 15 Credits
   \item Prerequisite: IN719
+  \item Class meetings: Tuesday, Friday, 8:00 - 10:00, D313
 \end{itemize}
 
 \section*{Lecturer}
@@ -37,21 +38,26 @@ In this paper we will learn about how to provide and consume virtual systems.
 \end{tabular}
 
 \section*{Course Dates}
-\begin{tabular}{lr}
-Term 1 (10 weeks) & 23 July - 28 September \\
-Mid semester break & 29 September - 15 October \\
-Term 2 (6 weeks) & 16 October - 23 November \\
+\begin{tabular}{ll}
+Term 1 (10 weeks) & 22 July - 27 September \\
+Mid semester break & 30 October - 11 October \\
+Term 2 (6 weeks) & 14 October - 22 November \\
 \end{tabular}
 
 
 \section*{Resources}
-We will use a couple of books for reference during the semester and it is strongly recommended that you get your own copies.  The first one we will use is \emph{The Docker Book} by James Turnbull, available at \url{http://www.thedockerbook.com}.
+We are going to cover three main areas in this paper: running virtual machines (using Xen), hosted cloud services (using OpenStack), and containers (using Docker).
 
-An Xen reference will be selected later in the semester.
+I have yet to find a book or other reference that I like for Xen. We'll mainly rely on my course notes and I may reference online articles if I find nes that are of use.
 
-You will need to set up accounts on a few online services like GitHub, Docker Hub, and AWS.  We will deal with these as they come up in class.
+For OpenStack we will mainly rely on documentation at https://docs.catalystcloud.nz/ and API documentation at https://docs.openstack.org/openstacksdk/stein/
 
-Lab documents, slides, and other material is available on Github at https://github.com/tclark/op-papers.
+For Docker, you will want to get a copy of James Turnbull's \emph{The Docker Book}, available at https://dockerbook.com/. We will also use the core documentation at https://docs.docker.com/.
+
+
+You will need to set up accounts on a few online services like GitHub, Docker Hub, and OpenStack.  We will deal with these as they come up in class.
+
+Lab documents, slides, and other material is available on Github at https://github.com/tclark/op-papers/virtualisation.
 
 \newpage 
 
@@ -62,24 +68,24 @@ This schedule is subject to change based on needs of the class.
 \begin{tabular}{|l|c|l|}
 \hline
  Week & Week Start & \multicolumn{1}{c|}{Topics}             \\ \hline
- 1    & 23 Jul     & Introduction, Containers                 \\ \hline
- 2    & 30 Jul     & Docker                                   \\ \hline
- 3    &  6 Aug     & Docker Images                            \\ \hline
- 4    & 13 Aug     & Docker Registries, Docker Hub            \\ \hline
- 5    & 20 Aug     & Container Orchestration                  \\ \hline
- 6    & 27 Aug     & Container Orchestration                 \\ \hline
- 7    & 3 Sep     & Work Time                               \\ \hline
- 8    &  10 Sep     & Hosted Cloud Services                           \\ \hline
- 9    & 17 Sep     & Hosted Cloud Services                                   \\ \hline
- 10   & 24 Sep     & Hosted Cloud Services                              \\ \hline
- H1   & 1 Oct     & Holiday                                  \\ \hline
- H2   &  8 Oct     & Holiday                                  \\ \hline
- 11   & 15 Oct     &  Hardware Virtualisation                              \\ \hline
- 12   & 22 Oct     & Xen                                \\ \hline
- 13   & 29 Oct     & Xen                               \\ \hline
- 14   &  5 Nov     & Private Clouds                               \\ \hline
- 15   &  12 Nov     & Work Time                               \\ \hline
- 16   & 19 Nov     & Revision and Exam                       \\ \hline
+ 1    & 22 Jul     & Introduction                            \\ \hline
+ 2    & 29 Jul     & Traditional Virtualisation, Xen         \\ \hline
+ 3    &  5 Aug     & Xen                                     \\ \hline
+ 4    & 12 Aug     & Xen                                     \\ \hline
+ 5    & 19 Aug     & Xen                                     \\ \hline
+ 6    & 26 Aug     & Hosted Cloud Services                   \\ \hline
+ 7    & 2  Sep     & Hosted Cloud Service                    \\ \hline
+ 8    & 9  Sep     & Hosted Cloud Services                   \\ \hline
+ 9    & 16 Sep     & Work Time                               \\ \hline
+ 10   & 23 Sep     & Containers                              \\ \hline
+ H1   & 1  Oct     & Holiday                                 \\ \hline
+ H2   & 7  Oct     & Holiday                                 \\ \hline
+ 11   & 14 Oct     & Containers                              \\ \hline
+ 12   & 21 Oct     & Containers                              \\ \hline
+ 13   & 28 Oct     & Containers                              \\ \hline
+ 14   & 4  Nov     & Containers                              \\ \hline
+ 15   & 11 Nov     & Work Time                               \\ \hline
+ 16   & 18 Nov     & Revision and Exam                       \\ \hline
 \end{tabular}
 
 \section*{Assessment}
@@ -88,9 +94,9 @@ Assessments are weighted as follows: \\
 \begin{tabular}{|l|c|}
 \hline
 Assessment                  &  Weighting \\ \hline
+Xen Project                 &  25\% \\ \hline
+Hosted Service Project      &  20\% \\ \hline
 Container Project           &  25\% \\ \hline
-Hosted Service Project                 &  20\% \\ \hline
-Xen Project           &  25\% \\ \hline
 Theory Exam                 &  30\% \\ \hline
 \end{tabular}
 
@@ -107,14 +113,13 @@ However, you are responsible for keeping up with events that take place in class
 \subsection*{Communication}
 Important announcements and discussions about the course, assessments, and scheduling may take place during class sessions.  It is your responsibility to be informed about them.  If you cannot attend a class session, be sure to check with another student.
 
-A private channel, \texttt{virtualisation}, is set up on the op-bit Slack at \url{https://op-bit.slack.com/}.  The channel is intended for general class discussion.  Important announcements may also be posted there, so you should join and monitor the channel.
-
 Your student email is an official communication channel. It is your responsibility to regularly check your student email for important course related material, including changes to class scheduling or assessment details. Not checking will not be accepted as an excuse.
 
 You can manage your email at the Student Hub and download the instructions for forwarding your email at http://www.op.ac.nz/students/student-hub/
 
 \subsection*{Proprietary software}
 Most of this class can be completed using free/open source software, but some labs may require the use of proprietary software.  In addition, lab machines use proprietary operating systems and applications.
+
 \subsection*{Polytechnic Closure}
 In the event that the Polytechnic is closed or has a delayed opening because of snow or bad weather, you should not attempt to attend class if it is unsafe to do so. It is possible that your instructor will not be able to attend either, so classes will not physically be meeting. However, this does not become a holiday. Rather, material will be available on the Cisco Academy web site covering the material for classes affected by the closure. You are responsible for any material presented in this manner. Information about closure will be posted on the Otago Polytechnic facebook page https://www.facebook.com/OtagoPoly.
 
