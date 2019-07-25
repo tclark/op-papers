@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 5.1: Docker Swarm \\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Docker Swarm is a system that lets us manage containers across a collection of Docker hosts. It's already included in more recent versions of Docker, so there is nothing extra to install. In one sense, it's just an additional set of \texttt{docker} commands to run.
+
+For this lab you will get a new set of three virtual machines to use. Go ahead and open ssh settings on each of them. For some not particularly amusing reason, they probably all have the same host names. Rename one of the machines \texttt{manager} and the other two \texttt{worker0} and \texttt{worker1}. Make sure that the \texttt{docker.io} package is installed, and put the \texttt{user} account into the \texttt{docker} group with the command \texttt{sudo adduser user docker}. This will let you run \texttt{docker} commands without using sudo.
+
+\section{Set up our swarm}
+
+We begin by initialising our swarm on what will become our swarm management host. The decision on which of your three system is to be used as the manager is left as an exercise. Perform the initialisation with the command
+
+\texttt{docker swarm init}
+
+This will create our new swarm and add the current system to it as a manager. In the output for this command you will see the command you need to run on other systems to add them to the swarm as workers. In particular, you will see the value of the \emph{join token} needed to join the swarm. Don't worry if you lose this, however, because you can always retrieve it with the command 
+
+\texttt{docker swarm join-token worker} 
+
+or 
+
+\texttt{docker swarm join-token manager}
+
+if you want to add managers to your swarm.
+
+Now add your two remaining machines to your swarm as workers. You can see the systems in your swarm with the command
+
+\texttt{docker node ls}
+
+Be sure that all tree systems have been added to your swarm and that one of them is the manager.
+
+\section{Create and manage a service}
+A swarm \emph{service} is a set of containers built from the same image that you have directed to be run on your swarm. Start your first service with the command 
+
+\begin{verbatim}
+docker service create --name hi --replicas 2 tclark/hello
+\end{verbatim}
+
+entered on your manager host. This command creates a service named ``hi'' that runs two containers built from the \texttt{tclark/hello} image. The two containers will run somewhere on your swarm, probably but not necessarily on two different nodes. Check the status of your service with the command
+
+\texttt{docker service ls}
+
+and then see where your containers are running with the command
+
+\texttt{docker service ps hi} (since our service is named \texttt{hi}).
+
+On one of the systems where a container is running, use \texttt{docker ps} to find the id of the container and then stop it with the command
+
+\texttt{docker stop <container-id>}
+
+Now go back to the manager node and run \texttt{docker service ps hi}. You should observe two things:
+
+\begin{enumerate}
+  \item The listing will show that one of your containers was stopped.
+  \item A new container has been started since you specified that you want two instances running.
+\end{enumerate}
+
+We can actually change the number of containers running in our service with a command like this:
+
+\texttt{docker service scale hi=4}
+
+that specifies that we now want four containers running on our swarm. Enter the command and then use \texttt{docker service ps hi} to see that they are running on your swarm.
+
+Finally, you can stop your service with the command
+
+\texttt{docker service rm hi}
+
+You can see all the various docker commands at \url{https://docs.docker.com/engine/reference/commandline/docker/}. In particular, the sections on \texttt{docker swarm} and \texttt{docker service} are most relevant today.
+
+\end{document}
