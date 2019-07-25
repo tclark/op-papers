@@ -10,7 +10,7 @@
 
 \newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
 
-\title{Actual Virtualisation, Finally}
+\title{Actual Virtualisation, For a Start}
 
 \author[I720]{Virtualisation}
 \institute[Otago Polytechnic]{
@@ -30,7 +30,7 @@
 
 \begin{frame}
   \frametitle{Weird idea} 
-  For a change, we will talk about running proper virtual machines on top of some hardware.
+  We will start our exploration of virtualisation by talking about running ``proper'' virtual machines on top of some hardware.
   \end{frame}
   
 \begin{frame}
@@ -75,7 +75,7 @@
     \item A hosted hypervisor runs on top of a full operating system.
     \end{itemize}
     
-    These are also referred to as type1 and type 2 virtualisation, respectively, which is stupid.
+    These are also referred to as type 1 and type 2 virtualisation, respectively, which is stupid.
    
 \end{frame}
    
@@ -123,28 +123,18 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{xend}
+  \frametitle{XL}
   
-  Dom0 runs a special service \texttt{xend}, the Xen management daemon.  \texttt{xend} works with the hypervisor to start, stop, and manage guest domains. 
-  We typically interact with \texttt{xend} using \texttt{xm}, the Xen management interface.         
+  Dom0 runs a special tool stack \texttt{XL}.  \texttt{XL} works with the hypervisor to start, stop, and manage guest domains. 
+  We typically interact with \texttt{XL} using \texttt{xl}, the Xen management interface.         
   
-  \vspace{5mm}
-  
-  On occasion, Xen hosts communicate with \texttt{xend} daemons running on other hosts to manage thing like live migrations of guest domains.   
-\end{frame}
+  \end{frame}
 
-\begin{frame}
-  \frametitle{XenStore}
-  
-  Dom0 also runs \emph{XenStore}, a shared database of configuration information to which guest domains read and write.  As sysadmins we can also 
-  query XenStore to get information about the status of domains. The XenStore database is organised in a way the models a file system tree that we can traverse to 
-  find information about domains.
-\end{frame}
 
 \begin{frame}
   \frametitle{The plan from here}
   
-  Starting next time you will pair up with a classmate and be assigned a physical machine. Over the next few weeks you will install and configure Xen and see 
+  Now you will pair up with a classmate and be assigned a physical machine. Over the next few weeks you will install and configure Xen and see 
   how to use it to run virtual machines.
   
 \end{frame}
