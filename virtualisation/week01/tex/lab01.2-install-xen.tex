@@ -41,7 +41,7 @@ To begin, simply install Ubuntu 14.04 with an installation disc. The installer i
            \begin{enumerate}
              \item Select guided partitioning using the entire disk and LVM.
              \item Install on the \texttt{SCSI1} disk.
-             \item Use only 10GB for the installation volume group.
+             \item Use only 15\% for the installation volume group.
            \end{enumerate}
    \item Do not enable auto updates.
    \item Install the SSH server, but no other extra packages.
@@ -56,19 +56,19 @@ To begin, simply install Ubuntu 14.04 with an installation disc. The installer i
  To do this, edit the file \texttt{/etc/network/interfaces} to look like this:
  
  \begin{verbatim}
-     auto lo eth0 xenbr0
+     auto lo em1 xenbr0
      iface lo inet loopback
 
      iface xenbr0 inet dhcp
-       bridge_ports eth0
+       bridge_ports em1
 
-     iface eth0 inet manual
+     iface em1 inet manual
 \end{verbatim}
 
 Then start your newly configured interfaces with the command
 
  \begin{verbatim}
- sudo ifdown eth0 && sudo ifup xenbr0 && sudo ifup eth0
+ sudo ifdown em1 && sudo ifup xenbr0 && sudo ifup em1
  \end{verbatim}
  
  \section{Test that Xen is functioning}
