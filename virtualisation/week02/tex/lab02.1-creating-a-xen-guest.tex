@@ -13,8 +13,8 @@
 
 \begin{document}
 
-\title{Lab 12.1: Creating a Xen Guest\\ IN720 Virtualisation}
-\date{\today}
+\title{Lab 02.1: Creating a Xen Guest\\ IN720 Virtualisation}
+\date{}
 \maketitle
 
 \section*{Introduction}
@@ -49,11 +49,12 @@ Our process for creating a guest will be the following:
  
  \texttt{vgs}
  
- then create a new volume for our guest with the command 
+ For example, my xen host is named \texttt{triton}, so my volume group is \texttt{triton-vg}.
+ now create a new volume for our guest with the command 
  
- \texttt{lvcreate -L 10G -n lab12\_vol /dev/<volume group name>}
+ \texttt{lvcreate -L 10G -n lab2\_vol /dev/<volume group name>}
  
- This will give us a volume named \texttt{lab12\_vol}.
+ This will give us a volume named \texttt{lab2\_vol}.
 
  \section{Download installation media}
  We will download the netboot installer for Ubuntu 14.04 from a nearby mirror with the commands
@@ -75,23 +76,24 @@ Our process for creating a guest will be the following:
  
  \begin{verbatim}
  cd /etc/xen
- cp xlexample.pvlinux lab12.cfg
+ cp xlexample.pvlinux lab2.1.cfg
  \end{verbatim}
  
  Now we just need to edit that file to add or modify some entries. In particular
  
  \begin{itemize}
-  \item Set the \texttt{name} to \texttt{lab12vm}
+  \item Set the \texttt{name} to \texttt{lab2.1vm}
   \item Set the \texttt{kernel} to \texttt{/var/lib/xen/images/ubuntu-netboot/trusty/vmlinuz}
   \item Set the \texttt{ramdisk} to \texttt{/var/lib/xen/images/ubuntu-netboot/trusty/initrd.gz}
   \item Set the \texttt{memory} to \texttt{1024}
    \item Set the \texttt{vcpus} to \texttt{1}
+   \item Set the \texttt{disk} to \begin{verbatim}['/dev/<volume-group-name>/lab2_vol,raw,xvda,rw']\end{verbatim}
  \end{itemize}
  
  \section{Install Ubuntu on your VM}
  Now we are ready to actually run the VM. Enter the command
  
- \texttt{xl create -c /etc/xen/lab12.cfg}
+ \texttt{xl create -c /etc/xen/lab2.1.cfg}
  
  to start the guest and also to attach to its console.
  
@@ -107,8 +109,8 @@ Our process for creating a guest will be the following:
  Then restart our VM with the commands
  
  \begin{verbatim}
- sudo xl shutdown lab12vm
- sudo xl create -c /etc/xen/lab12.cfg
+ sudo xl shutdown lab2.1vm
+ sudo xl create -c /etc/xen/lab2.1.cfg
  \end{verbatim}
  
  You may need to hit the enter key a couple of times to get a login prompt at the console. From here we will want to explore a bit about how to use \texttt{xl} commands to manage guests. See \url{http://xenbits.xen.org/docs/4.4-testing/man/xl.1.html} for documentation. As a quick reference, you can disconnect from a guest console with \texttt{ctrl-]} and attach to one with the command \texttt{xl console <vm name>}.
