@@ -13,12 +13,12 @@
 
 \begin{document}
 
-\title{Lab 12.2: Cloning a VM Image\\ IN720 Virtualisation}
-\date{\today}
+\title{Lab 02.2: Cloning a VM Image\\ IN720 Virtualisation}
+\date{}
 \maketitle
 
 \section*{Introduction}
-In the last lab we create a guest domain on our Xen host. Recall that to do this we needed three things:
+In the last lab we created a guest domain on our Xen host. Recall that to do this we needed three things:
 
 \begin{enumerate}
   \item A disk, or something like one (we set up a logical volume for this);
@@ -31,59 +31,50 @@ rather tricky. We rewrote the configuration file to no longer user the kernel fr
 boot loader to use the kernel we installed on the logical volume. So, we actually created and ran \emph{two different} guest domains.
 
 As fun as it was, this process won't scale. We can't manually install an OS every time we want to create a new guest. We've already done it once; there
-must be a way to reuse that result. And of course there is. To run another guest domain, we need the three resources listed above. There are several ways we could do this. The other virtualisation tools we used this semester each had some clear concept of an \emph{image}, a reusable resource we could use to create virtual instances. The bad news is that Xen doesn't have a canonical idea of an image. In fact, it has several ways to provide an image, and they're note really Xen tools. They just rely on the basic capabilities of our Dom0 system. In this lab we will employ one such method, but keep in mind that it is just one way among several.
+must be a way to reuse that result. And of course there is. To run another guest domain, we need the three resources listed above. There are several ways we could do this. All of the virtualisation tools we will use this semester have some concept of an \emph{image}, a reusable resource we use to create virtual instances. The bad news is that Xen doesn't have a canonical idea of an image. In fact, it has several ways to provide an image, and they are not really Xen tools. They just rely on the basic capabilities of our Dom0 system. In this lab we will employ one such method, but keep in mind that it is just one way among several.
 
 \section{Finalise our base image}
 We are going to use the volume from the previous lab as our base image, so begin by updating it one last time.
 
 \begin{enumerate}
-  \item Use \texttt{xl list} to be sure your guest is running; if not, use \texttt{xl create /etc/xen/lab12cfg} to start it.
-  \item Connect to the guest console with \texttt{xl console lab12\_guest}.
+  \item Use \texttt{xl list} to be sure your guest is running; if not, use \texttt{xl create /etc/xen/lab2.1cfg} to start it.
+  \item Connect to the guest console with \texttt{xl console lab2.1vm}.
   \item On the guest, run \texttt{sudo apt-get update \&\& sudo apt-get dist-upgrade}.
-  \item Disconnect from the guest console and use \texttt{xl shutdown lab12\_guest} to stop it.
-  \item Check that the guest no longer appears in the output of \texttt{xl-list}.
+  \item Disconnect from the guest console and use \texttt{xl shutdown lab2.1vm} to stop it.
+  \item Check that the guest no longer appears in the output of \texttt{xl list}.
 \end{enumerate}
 
-Since we are going to use the volume from this guest to store a base image for future guests, we do not want to modify it further. In particular, do not start a new guest 
-attached to this volume.
+Since we are going to use the volume from this guest to store a base image for future guests, we do not want to modify it further. In particular, do not start a new guest attached to this volume.
 
 \section{Create copy-on-write file systems}
-We could simply copy the data from our base volume onto other guest volumes bit-by-bit, but doing so would result in a.lot of duplication since the resulting guest systems would be very similar. Luckily we don't have to do that. Using LVM we can create \emph{copy-on-write} (COW) file systems. Create some now with the following  commands: (In the commands below we use \texttt{dom0} as the name of our Dom0 system. You should substitute the name of your own system in your commands.)
+We could simply copy the data from our base volume onto other guest volumes bit-by-bit, but doing so would result in a.lot of duplication since the resulting guest systems would be very similar. Luckily we don't have to do that. Using LVM we can create \emph{copy-on-write} (COW) file systems. Create some now with the following  commands: (In the commands below you will substitute the name of your own volume group in your commands.)
 
 \begin{verbatim}
   modprobe dm-snapshot
-  lvcreate -s -L 1G -n clone1 /dev/dom0-vg/vol_lab12_vm  
-  lvcreate -s -L 1G -n clone2 /dev/dom0-vg/vol_lab12_vm
+  lvcreate -s -L 1G -n clone1 /dev/<volume-group>/lab2_vol 
+  lvcreate -s -L 1G -n clone2 /dev/<volume-group>/lab2_vol
 \end{verbatim}
 
 The creates two new logical volumes based on our original volume. Even though the original volume was 10GB in size, these new volumes only use 1GB This is because these volumes simply use the data from the base volume and only need to store the difference between themselves and the base volume. This is also why modifying the base volume would be a Bad Idea at this point. Note that the \texttt{modprobe} command loaded a needed kernel module in the Dom0 system.
 
 \section{Create two new guests}
-Now that we have two new disks (which each contain kernels), we just need two new configurations to launch the guests. Simply start by copying our last configuration, \texttt{/etc/xen/lab12.cfg} into two new files, \texttt{clone1.cfg} and \texttt{clone2.cfg}. In both of those, make the following changes:
+Now that we have two new disks (which each contain kernels), we just need two new configurations to launch the guests. Simply start by copying our last configuration, \texttt{/etc/xen/lab2.1.cfg} into two new files, \texttt{clone1.cfg} and \texttt{clone2.cfg}. In both of those, make the following changes:
 
 \begin{enumerate}
   \item Change the name, since each guest needs a unique name;
   \item Change the starting memory to 512, just to same system resources;
-  \item Change the first item in the disk triple to the path of the clone volume, e.g. \texttt{/dev/dom0-vg/clone1}
+  \item Change the first item in the disk triple to the path of the clone volume, e.g. \texttt{/dev/<volume-group>/clone1}
  \end{enumerate}
  
  Now we can simply start each guest with the commands
  
  \begin{verbatim}
-   xl create /etc/xen/clone1
-   xl create /etc/xen/clone2
+   xl create /etc/xen/clone1.cfg
+   xl create /etc/xen/clone2.cfg
  \end{verbatim}
  
  Check that our new guests are running with the command \texttt{xl list}. Log into one of the commands and use \texttt{df -h} to observe the size of the root file system on the guest. 
  
- \section{Resize a guest volume} 
- Since our guests' storage is based on LVM file systems, we can resize them easily. Shut down your \texttt{clone1} guest before executing the commands:
  
- \begin{verbatim}
-   lvextend -L 2G /dev/dom0-vg/clone1
-   resize2fs /dev/dom0-vg/clone1
-  \end{verbatim}
-  
-  Then restart your guest with \texttt{xl create}. It may be possible to do the above without shutting down the guest, but the guest operating system may not pick up the change. Feel free to experiment.
 
 \end{document}
