@@ -75,7 +75,7 @@ To see what these mean, we need a little background.
   Bridged networking is the default.
   
   \vspace{5mm}
-  Note than none of these networking schemes are provided by Xen. They are provided through
+  Note that none of these networking schemes are provided by Xen. They are provided through
   the underlying capabilities of the Dom0 operating system.
   
   \end{frame}
@@ -145,7 +145,7 @@ To see what these mean, we need a little background.
    \texttt{vif = ['']}
   
   \vspace{5mm}
-This is actually Python code. \texttt{vif} is a list of strings. Each one is a comma-separated  set of
+This is actually Python code\footnote{No, it's not.}. \texttt{vif} is a list of strings. Each one is a comma-separated  set of
 key/value pairs. Examples are
 
 \begin{verbatim}
@@ -155,7 +155,7 @@ key/value pairs. Examples are
  'ip=192.168.10.44'
 \end{verbatim}
 
-See \texttt{http://xenbits.xen.org/docs/4.2-testing/ \\ misc/xl-network-configuration.html} for more information
+See \texttt{http://xenbits.xen.org/docs/4.4-testing/ \\ misc/xl-network-configuration.html} for more information
 
 
 \end{frame}
@@ -172,8 +172,6 @@ See \texttt{http://xenbits.xen.org/docs/4.2-testing/ \\ misc/xl-network-configur
     to check the results.
     \item Now experiment with some of the \texttt{vif} options in the configuration and test their effects on 
     the guest. Note that you will have to stop and recreate the guest when you change the configuration.
-    \item Add a second bridged interface to your Dom0. Configure a guest to use it. Does it work? Does 
-    another guest using the original bridge still work? See if you can determine why or why not.
   \end{itemize}
 \end{frame}
 \end{document}

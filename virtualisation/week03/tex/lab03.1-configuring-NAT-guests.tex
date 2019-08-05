@@ -13,8 +13,8 @@
 
 \begin{document}
 
-\title{Lab 13.2: Configuring NAT\\ IN720 Virtualisation}
-\date{\today}
+\title{Lab 03.2: Configuring NAT\\ IN720 Virtualisation}
+\date{}
 \maketitle
 
 \section*{Introduction}
@@ -33,7 +33,7 @@ We will modify our Xen networking configuration in several steps:
 \begin{enumerate}
   \item Remove the bridged interface from Dom0;
   \item Enable routing on Dom0;
-  \item Configure \texttt{xend} to use NAT;
+  \item Configure \texttt{xen} to use NAT;
   \item Modify our DomU \texttt{xl} configuration to use NAT;
   \item Modify our DomU guest configuration to use static network configuration (since DHCP will no longer be available).
 \end{enumerate}
@@ -42,15 +42,15 @@ Since some of our network changes will interrupt our network connections, it may
 
 \section{Remove bridged networking}
 Recall that we set up bridged networking on our Dom0 systems by installing the \texttt{bridge-utils} package and configuring a bridge interface in the file \texttt{/etc/network/interfaces}. To stop using bridging, we just need to remove 
-the bridge interface and reconfigure the \texttt{eth0} interface.
+the bridge interface and reconfigure the \texttt{em1} interface.
 
-In the file \texttt{/etc/network/interfaces}, remove or comment out the references to the xenbr0 interface. Find the line that says
+In the file \texttt{/etc/network/interfaces}, comment out the references to the xenbr0 interface. Find the line that says
 
-\texttt{inface eth0 inet manual} 
+\texttt{inface em1 inet manual} 
 
 and change it to
 
-\texttt{iface eth0 inet dhcp}
+\texttt{iface em1inet dhcp}
 
 Don't worry about restarting the interfaces now, we will make additional changes first.
 
@@ -66,8 +66,8 @@ We can make this change take immediately by entering the command
 
 but we will be rebooting soon so it's not actually necessary.
 
-\section{Configure \texttt{xend} to use NAT}
-\texttt{xend} is configured to use bridging by default by referencing a script in \texttt{/etc/xen/scripts}. We just need to 
+\section{Configure \texttt{xen} to use NAT}
+\texttt{xen} is configured to use bridging by default by referencing a script in \texttt{/etc/xen/scripts}. We just need to 
 use a different script. Edit the file \texttt{/etc/xen/xend-config.sxp}. Look for a line that says 
 
 \texttt{(network-script network-bridge)}
@@ -83,7 +83,7 @@ before proceeding.
 \section{Enable NAT}
 To enable NAT we just set a firewall rule on Dom0 with the command
 
-\texttt{iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE}
+\texttt{iptables -t nat -A POSTROUTING -o em1 -j MASQUERADE}
 
 This setting will not persist if the host is rebooted. To do that we would need to add it to a script that is run at boot time, 
 but for our purposes today that is not necessary.
