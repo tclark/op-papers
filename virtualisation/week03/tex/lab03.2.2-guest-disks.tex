@@ -1,0 +1,115 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 03.2.: Configuring Guest Disks\\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Up to this point we have used LVM to create volumes providing principal hard drives for our guests. However, we might want to provide additional disk storage for guests, in particular to create storage options not linked to a particular guest instance. In this lab we will add a disk to a Xen guest domain.
+
+\section{The plan}
+
+
+\begin{enumerate}
+  \item Create a new logical volume on Dom0;
+  \item Add a specification for the volume do a guest's diskspec;
+  \item Start the guest;
+  \item From the guest, create a partition table on the new volume;
+  \item Set up a file system on the volume;
+  \item Mount the volume on the guest.
+\end{enumerate}
+
+\section{Create a new logical volume}
+We've already used lvm a few times to create logical volumes in our volume group. This case is no different.
+
+\begin{verbatim}
+  lvcreate -L 1GB -n storagevol /dev/<volume group name>
+\end{verbatim}
+
+\section{Add the volume to a guest's diskspec}
+
+In our guests' configuration files, there is a diskspec line that looks like this:
+
+\begin{verbatim}
+  disk = [ '/dev/my-vg/clone1,raw,xvda,rw']}
+\end{verbatim}
+
+We just need to add a second string to this list that provides the details for our new volume. That string will look like this:
+
+\begin{verbatim}
+  '/dev/my-vg/storagevol,raw,xvdb,rw'
+\end{verbatim}
+
+Don't forget to substitute your systems volume group name. Note that we label this new device \texttt{xvdb} on the guest, since \texttt{xvda} is already used for the first disk device.
+
+One you finish modifying the diskspec, start the reconfigured guest domain. All the following steps will be carried out on the guest's console.
+
+\section{Create a partition table on the new volume}
+
+From the point of view of the guest domain, we have added a new unformatted drive to the system. We need to do some additional work before we can mount it ad use it. First, we'll used \texttt{parted} to create the partition table:
+
+(Below we first invoke parted, specifying the new volume as it's seen by the guest. Then we enter parted commands where we see the \texttt{(parted)} prompt.)
+
+\begin{verbatim}
+parted /dev/xvdb
+(parted) mklabel msdos
+(parted) mkpart
+Partition type? primary/extended? primary 
+File system type? [ext2]? ext4 
+Start? 1 
+End? 100%
+<output snipped>
+(parted)quit
+
+
+\end{verbatim}
+
+Note that you may get a warning about the sector alignment. For our purposes today it's safe to ignore it.
+
+The result of this is that we will now have a disk device with a partition table on it. We need to do one more thing to get it ready to use.
+
+\section{Create a file system on the new volume}
+Before we can mount the volume, it needs a file system. Create a new \texttt{ext4} system on the volume with the command
+ 
+\begin{verbatim}
+  mkfs.ext4 /dev/xvdb1
+\end{verbatim}
+
+Note the ``1'' above. We create the file system on the first (and only) partition.
+
+Once this is done we can mount and use the new volume.
+
+\section{Mount the volume}
+Create a mount point on the gust domain with the command
+
+\begin{verbatim}
+  mdir /mnt/storage
+\end{verbatim}
+
+Then mount it with the command
+
+\begin{verbatim}
+  mount /dev/xvdb1 /mnt/storage
+\end{verbatim}
+
+Finally, use \texttt{df} to verify that the new volume is mounted and available.
+
+\section{Epilogue}
+Now that the new volume is fully formatted, we can use in on other guest domains by simply adding the volume to the guest's diskspec configuration. Then 
+we can immediately mount and use the disk on the guest. Any files that we create using one guest will be seen by another that uses the volume.
+
+
+\end{document}
