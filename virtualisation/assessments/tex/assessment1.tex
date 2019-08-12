@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Assignment 1: Xen \\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In labs we created and ran virtual machines using LVM volumes on our Xen servers' hard disks. Xen can use other mechanisms to provide virtual disk images for DomU guests, however. One such option is to use a QEMU image file. For this assignment you will research and test procedures to create a QEMU image file and use it to launch a VM instance. You shall deliver a document describing your procedure in detail. You will work on this assignment in pairs along with the partner with whom you are sharing a machine and submit one document.
+
+Your document should include a complete step-by-step procedure for carrying out the tasks along with some discussion
+of \emph{why} the various steps are necessary and what the effects of them are. You should also call attention to 
+possible problems that can arise and how to avoid or fix them.
+
+This assignment is worth 25\% of your mark in this paper.
+
+\section{Specifications}
+
+For your document, you may assume that the person using it is working with a single server running Xen 4.4 with an 
+Ubuntu Dom0 operating system. Also assume that the Xen host
+is configured with bridged networking and an external DHCP server. (Basically, the same system that you have been using for this paper.)
+
+Your document should explain how to do the following things:
+
+\begin{enumerate}
+	\item Use QEMU utilities to create an image file and install an operating system on the image.
+	\item Configure a Xen guest domain to use the QEMU image file.
+	\item Launch a guest VM and manage its life cycle using Xen utilities (e.g. \texttt{xl})
+\end{enumerate}
+
+Also describe the relative advantages and disadvantages of using a QEMU image file versus using logical volumes as we did in labs. 
+
+Again, be sure your document explains both what to do and why it needs to be done (Or not done - if
+doing nothing and taking the default behaviour, be clear about that and explain what that default is.).
+
+\section{Submission}
+You assignment will be evaluated on its clarity, correctness, and completeness. Take advantage of formatting to be
+sure that it is clear to the reader what thing are commands to be entered in a terminal, associated output, and your 
+explanation. You may find it useful to include screen shots.
+
+This assignment is due on Friday, 6 September at noon.  Email the document in PDF format to the lecturer (tclark@op.ac.nz) at or before this time.
+
+\end{document}
