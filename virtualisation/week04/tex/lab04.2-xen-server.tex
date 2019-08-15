@@ -13,8 +13,8 @@
 
 \begin{document}
 
-\title{Lab 14.2: Xen Server\\ IN720 Virtualisation}
-\date{9 November 2018}
+\title{Lab 04.2: Xen Server\\ IN720 Virtualisation}
+\date{}
 \maketitle
 
 \section*{Introduction}
@@ -31,7 +31,7 @@ You need to be on the internal Polytech network to do this lab, and since you ha
  Xen Center and start it. It will appear in your start menu under ``Citrix''. When it starts, select ``Add a Server'' and connect to our lab server with the parameters
  
  \begin{enumerate}
-  \item Server: \texttt{10.118.0.180}
+  \item Server: \texttt{10.118.0.165}
   \item Username \texttt{root}
   \item Password: our usual default
   \end{enumerate}
@@ -40,21 +40,16 @@ You need to be on the internal Polytech network to do this lab, and since you ha
   
   \section{Examine the server console}
  
- Once you connect, select ``Objects'' from the lower left menu and find our server, \texttt{xenserver-in720}, in the tree 
+ Once you connect, select ``Objects'' from the lower left menu and find our server, \texttt{xenserver}, in the tree 
  view. When you select it, examine the various tabs in the main part of the window to see what options are available. 
  Select the Console tab and log into the management console with our usual password. Use \texttt{xl list} to see the guest on the host.
  
  
 \section{Create a VM Guest} 
  To create a new VM, we need a \emph{template} and some installation media. Expand the Templates section of the 
- tree menu and  and select the Ubuntu 12.04 64 bit template. Why this one? Because our server can only run 
- paravirtualised guests and this is one of the few templates for PV\footnote{Understanding why our server only runs
- PV guests might come in handy on the final.}.
+ tree menu and  and select the Ubuntu 14.04 64 bit template. Why this one? Because it's the only one for which we have installation media. Right-click the template and run the New VM Wizard. When you get to the Installation Media selection, You should be able to select an Ubuntu 14.04 image from the Xenserver's local repository.
  
- Right-click the template and run the New VM Wizard. When you get to the Installation Media selection, choose DVD drive 0. Our Xen server needs a library of installation media. In our case the ``library'' is a disc in the DVD drive, but in 
- a full installation.
- 
- Generally just take the default options in the wizard. When you get to the Network section, choose Network 0.
+ Once you create the VM, find it in the VM section of the tree menu, select your VM and go to the console tab. You'll be presented with the standard Ubuntu installation wizard. Generally just take the default options in the wizard. When you get to the Network section, choose Network 0.
  Our new VM will appear in the VMs section of the tree menu, Choose yours and pick the console tab. In it, work through 
  the Ubuntu installer. You may run into problems with DHCP on your guest, if so don't worry about it; it's not necessary
  for this lab.
