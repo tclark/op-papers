@@ -13,12 +13,14 @@
 
 \begin{document}
 
-\title{Lab 8.1: The OpenStack Dashboard \\ IN720 Virtualisation}
+\title{Lab 5.1: The OpenStack Dashboard \\ IN720 Virtualisation}
 \date{}
 \maketitle
 
 \section*{Introduction}
 We will start exploring OpenStack's features by working with its web based dashboard. Using it, we will upload an ssh key pair, launch a VM instance from an image, and associate a public IP address with it so that we can log into it remotely. Then we will create an attach a volume to our VM, format it, and mount it on the VM.
+
+Note that you should have received an invitation to the paper's OpenStack project via your student email.
 
 
 
@@ -33,7 +35,7 @@ ssh-keygen -t rsa -f openstack.key
 
 This will create two files \texttt{openstack.key} and \texttt{openstack.key.pub}. Use \texttt{cat} to output the contents of \texttt{openstack.key.pub} and copy it to your clipboard.
 
-On the web dashboard, select ``Key Pairs'' from the left side menu and then click ``Import Key Pair''. In the resulting dialogue, name your key pair \texttt{<your-username>-key} and copy the key text into the text area box.
+Log onto our OpenStack dashboard. On the web dashboard, select ``Key Pairs'' from the left side menu and then click ``Import Key Pair''. In the resulting dialogue, name your key pair \texttt{<your-username>-key} and copy the key text into the text area box.
 
 \section{Launch a VM instance}
 Now we are ready to launch a VM. Select ``Instances'' from the left side menu and then click ``Launch Instance'' at the top right. You will be walked through a set of dialogues.
@@ -44,7 +46,7 @@ Now we are ready to launch a VM. Select ``Instances'' from the left side menu an
   \item Flavor: Choose the \texttt{c1.c1r1} flavor.
   \item Networks: The \texttt{private-net} network should be selected.
   \item Network Ports: Do nothing here.
-  \item Security Groups: Choose \texttt{lab8.1-secgrp}.
+  \item Security Groups: Choose \texttt{lab5-secgrp}.
   \item Key Pair: Select the key pair you created earlier.
  \end{enumerate}
  
