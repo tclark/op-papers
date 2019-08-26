@@ -13,14 +13,14 @@
 
 \begin{document}
 
-\title{Lab 8.2: The OpenStack CLI \\ IN720 Virtualisation}
+\title{Lab 6.1: The OpenStack CLI \\ IN720 Virtualisation}
 \date{}
 \maketitle
 
 \section*{Introduction}
 In the previous lab we got started using the OpenStack web dashboard which works well for most of the system tasks we need to perform. However, in this lab we will see that there is also a comprehensive set of CLI tools that let us operate OpenStack very quickly and easily (at least once you get the hang of using them).
 
-All of the tasks in this lab must be done on \texttt{cloudapi.foo.org.nz}, since the service provider's firewall has whitelisted only that address for remote CLI/API access. 
+All of the tasks in this lab must be done on \texttt{cloudapi.foo.org.nz}, since the service provider's firewall has whitelisted only that address for remote CLI/API access. You should be able to log into the server using your OP user name (lowercase) and our standard password.
 
 Two notes:
 
@@ -106,8 +106,8 @@ To make our subnet reachable, we also need to create and configure a router to c
 We can launch our VM with one command, but we have to specify a lot of options. Basically, we have to specify the options we chose in the setup dialogues last time.
 
 \begin{verbatim}
-  openstack server create --image ubuntu-16.04-x86_64 \
-                                         --security-group lab8.1-secgrp \
+  openstack server create --image ubuntu-18.04-x86_64 \
+                                         --security-group lab5-secgrp \
                                          --key-name <your-key> \
                                          --flavor c1.c1r1 \
                                          --network <username>-net \
