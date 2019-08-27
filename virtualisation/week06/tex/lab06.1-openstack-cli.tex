@@ -83,7 +83,7 @@ There are three things you need to do to prepare your command line environment o
 \subsection{Create a network}
 First we need to create a private network for our VM with a subnet, 192.168.X.0/24, but we need to find a free value for X. See what subnets are already in use with the command
 
- \texttt{openstack network list}
+ \texttt{openstack subnet list}
  
  Once we have a suitable value for the third octet, we can create our network and subnet with the commands
 
@@ -98,7 +98,7 @@ To make our subnet reachable, we also need to create and configure a router to c
 
 \begin{verbatim}
  openstack router create <username>-router
- openstack router add-subnet <username>-router  <username>-subnet
+ openstack router add subnet <username>-router  <username>-subnet
  openstack router set --external-gateway public-net <username>-router
 \end{verbatim}
 
