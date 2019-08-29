@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.2cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 6.2: The OpenStack SDK \\ IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+Last time we logged onto our \texttt{cloudapi} server, created a Python \emph{virtualenv} and installed the OpenStack CLI tools in it. It turns out that those tools are implemented the Python OpenStack SDK. In this lab we will start writing our own code to interact with our OpenStack project using this SDK. The SDK is already installed in our virtualenvs as a side effect of installing the CLI tools last time.
+
+\section{Create a credentials file}
+When we use the OpenStack SDK we need to supply credentials to access our project. The easiest way to to this is to use a \texttt{clouds.yaml} file. We will place this file in the same directory where we place our Python code.
+
+First, log into the \texttt{cloudapi} server we used in the previous lab. Create a subdirectory of your home directory called \texttt{openstack}. We'll place all of our files for this lab in that directory.
+
+Next, log into the web dashboard at \url{https://catalystcloud.nz}. Go to the API Access item on the main menu. From there you can pull down the menu labeled ``Download OpenStack RC File'' and select the ``OpenStack clouds.yaml File'' option. Download this file and copy it into the new working directory on the \texttt{cloudapi} server. Don't forget to add your password to this file.
+
+\section{Use the SDK to connect to OpenStack}
+Now write a small Python script, \texttt{connect.py} to try out connecting to our OpenStack project. Don't forget to activate your Python virtual environment with the command
+
+\begin{verbatim}
+  source ~/in720/bin/activate
+\end{verbatim}
+
+In your Python file, import the SDK by starting with the line
+
+\begin{verbatim}
+  import openstack
+\end{verbatim}
+
+then, connect to an OpenStack service with a line like
+
+\begin{verbatim}
+  conn = openstack.connect(cloud_name='openstack')
+\end{verbatim}
+
+With this connection object we can do things like query the compute service to see what servers are present:
+
+\begin{verbatim}
+  for server in conn.compute.servers():
+      print(server)
+\end{verbatim}
+
+We can connect to other services in the same way by replacing \texttt{compute} with other service types. Experiment with these services by consulting the documentation at \url{https://docs.openstack.org/openstacksdk/stein/user/index.html}
+
+\textbf{N.B.:} During this lab, restrict your coding to methods that query OpenStack for information about our project. Don't write any code that creates OpenStack resources or alters their states.
+
+\section{A little more in depth}
+You can use the API to get information about a specific server using the the \texttt{find\_server} method. Use this method to ``find'' the \texttt{cloudapi} server in your zone. Query that server instance (see the docs above) to find information about the server, like it's IP address(es).
+
+
+
+
+
+\end{document}
