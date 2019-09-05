@@ -13,8 +13,8 @@
 
 \begin{document}
 
-\title{Lab 9.2: Using the OpenStack SDK \\ IN720 Virtualisation}
-\date{\today}
+\title{Lab 7.1: Using the OpenStack SDK \\ IN720 Virtualisation}
+\date{}
 \maketitle
 
 \section*{Introduction}
@@ -31,17 +31,19 @@ In this lab we will use the OpenStack SDK to access services in our and launch a
 \end{enumerate}
 
 \section{Preliminary steps}
-Before you start coding, create a subdirectory of your home directory to hold your work, unless you have already done so. In that directory, create a \texttt{clouds.yml} file similar to the one we looked at in the last lab. Activate your Python virtualenv and make sure you can create a working connection object like we saw last time. In the code below, we will assume that you have created an OpenStack connection object and associated it with the variable \texttt{conn}.
+Before you start coding, create a subdirectory of your home directory to hold your work, unless you have already done so. In that directory, make sure there is a \texttt{clouds.yml} file that we set up the last lab. Activate your Python virtualenv and make sure you can create a working connection object like we saw last time. In the code below, we will assume that you have created an OpenStack connection object and associated it with the variable \texttt{conn}.
 
 \section{Identify resources}
 Before we can launch our instances, we need to find the needed OpenStack resources. Start by creating variables in your code with the resource names.
 
 \begin{verbatim}
   IMAGE = 'ubuntu-16.04-x86_64'
-  FLAVOUR = 'c1.c1r1'
+  FLAVOUR = 'c1.c1r1'7
   NETWORK = 'private-net'
   KEYPAIR = '<your keypair name>'
 \end{verbatim}
+
+N.B.: You should have a keypair from previous labs. If not, just create a new pair.
 
 
 \newpage
@@ -55,7 +57,7 @@ Next, we will use our connection object to get the resources with these names fr
     keypair  = conn.compute.find_keypair(KEYPAIR)
 \end{verbatim}
 
-Now we have objects that represent the specific resources we need to launch an instance. Note that if you don't have a keypair ready to use on the cloud, then you can use the SDK to create one. These calls generally raise \texttt{ResourceNotFound} exception if the requested resource is not found.
+Now we have objects that represent the specific resources we need to launch an instance. Note that if you don't have a keypair ready to use on the cloud, then you can use the SDK to create one. These calls generally raise \texttt{ResourceNotFound} exceptions if the requested resource is not found.
 
 \section{Launch an instance}
 With our resources in hand, launching an instance is straightforward:
@@ -77,7 +79,7 @@ The call is completed \emph{asynchronously}, meaning it may take some time befor
 
 
 \section{Associate a floating IP address}
-Floating IP addresses are available on our public network, so we will access the network and get an ip address from it:
+Floating IP addresses are available on our public network, so we will access the network and get an ip address from it:@
 
 \begin{verbatim}
     public_net = conn.network.find_network('public-net')
