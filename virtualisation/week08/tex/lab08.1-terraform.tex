@@ -18,7 +18,116 @@
 \maketitle
 
 \section*{Introduction}
+We have been learning about the OpenStack API and accessing it with the 
+Python SDK. One thing we keep in mind is that \emph{any} cloud service 
+will have similar tools available. Given that, the next logical step is
+to ask if we could have a general tool that abstracts out the differences
+between these various platforms. Then we could write out one description of
+some virtual machines we want to run and apply it to any cloud platform.
 
-\section{Stuff}
+It turns out that we can have tools that are \textbf{close} to meeting that
+goal, but they don't quite work on any platform. There are too many differences
+between these platforms to allow us to write one script and run it anywhere, 
+but we get pretty close. One such tool is called \emph{Terraform} 
+(\url{https://www.terraform.io}). In this lab we will write a simple Terraform
+configuration and use it to create and destroy a VM instance on OpenStack.
+
+All of the steps below must be carried out on our \texttt{cloudapi} server.
+
+\section{Setup}
+When we run Terraform it will read all the files in the working directory
+ending in \texttt{.tf}, so start by creating a subdirectory of your home 
+directory called \texttt{terraform}. Place any files for this lab in that 
+directory.
+
+When using other OpenStack tools we loaded credentials from either an
+RC file or a \texttt{clouds.yaml} file. For today's lab we will use
+both. (This doesn't exactly make sense, but it does work.) Your OpenStack RC file 
+may still be in your home directory, or you can download a new one. Copy the 
+\texttt{clouds.yaml} file from your Python code directory into your new Terraform 
+directory.
+
+\section{Configuring our provider}
+Create a new file in your Terraform directory named \texttt{lab8.tf}. This file 
+will contain two elements, a \emph{provider} and a \emph{resource}.
+
+A Terraform provider tells Terraform what sort of cloud service you are using. 
+Our provider configuration is very simple, and looks like this:
+
+\begin{verbatim}
+ provider "openstack" {
+   cloud = "openstack"
+}
+\end{verbatim}
+
+The first line tells Terraform that our cloud service is an OpenStack instance. The next line
+tells it to look for the ``\texttt{openstack}'' cloud in our \texttt{clouds.yaml} file. It
+is just a coincidence that they both have the same name in our case. Once you've added this element, 
+save your file and return to your shell inside your Terraform directory.
+
+\section{Initialising the project}
+Now that we have some minimal configuration, we can initialise our project. First, don't forget to 
+activate your RC file with the command
+
+\begin{verbatim}
+ source ~/otago-polytechnic-openrc.sh
+\end{verbatim}
+
+to populate some needed environment variables. Now, run the command
+
+\begin{verbatim}
+ terraform init
+\end{verbatim}
+
+This will create a \texttt{.terraform} directory inside our project directory, and will also ensure that 
+the OpenStack plugin is installed since we indicates that we are using an OpenStack provider.
+
+\section{Configure a resource}
+To actually manage OpenStack items with Terraform, we need to define \emph{resources}. For
+this lab we will configure a resource defining a virtual machine instance. Add the following 
+to your \texttt{.tf} file.
+
+\begin{verbatim}
+ resource "openstack_compute_instance_v2" "<your username>" {
+  name = "<your username>"
+  image_id = "7132a53d-a71d-4da1-b90e-1403c8007949"
+  flavor_id = "3d11be79-5788-4d70-9058-4ccd20c750ee"
+  key_pair = "<your keypair name>"
+  security_groups = ["default"]
+  network {
+    name = "private-net"
+  }
+}
+\end{verbatim}
+
+This configuration tells Terraform that we want a compute instance. The image id and flavor id are the GUIDs
+of items defined in our OpenStack instance and were found be checking the web dashboard. You may 
+should verify that those are correct values for the Ubuntu 10.04 minimal image and the \texttt{c1.c1r05}
+flavor.
+
+Once this resource is defined in your file, return to your shell and run the command
+
+\begin{verbatim}
+ terraform apply
+\end{verbatim}
+
+Terraform will display it's \emph{plan} for what changes will be made to our OpenStack project
+to satisfy the configuration. Once you say ``yes'' to this proposed plan Terraform will carry out 
+the planned steps. Once this is done, check the web dashboard to verify that your VM instance
+was created.
+
+Next re-run \texttt{terraform apply} and check the plan. Since the VM instance you configured is already
+running, Terraform concludes that there is nothing to do.
+
+\section{Clean up}
+I keep reminding people to not leave unneeded items running in OpenStack. Terraform makes it easy in this case.
+Simply run 
+
+\begin{verbatim}
+ terraform destroy
+\end{verbatim}
+
+and confirm the plan to remove any resources configured in our \texttt{.tf} files from our
+OpenStack project.
 
 \end{document}
