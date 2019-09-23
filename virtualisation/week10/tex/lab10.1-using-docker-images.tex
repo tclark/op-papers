@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\title{Using Docker Images\\ IN720 Virtualisation}
+\title{Lab 10.2: Using Docker Images\\ IN720 Virtualisation}
 \date{}
 \maketitle
 
@@ -52,6 +52,8 @@ sudo docker run -p 80:80 -p 2222:22 --name wordpress -d tlongren/docker-wordpres
 \end{verbatim}
 
 The \texttt{-p} option map ports between the container and the host system. Once your container is running, you should be able to browse to your virtual machine with a web browser and see the initial Wordpress setup screen.  You can also ssh into your container by ssh'ing to your host machine's ip address at port 2222.  For ssh, the user name and password are both \texttt{wordpress}.
+
+As an aside, we've been saying that a Docker container's purpose is to run one process, but containers made from this Wordpress image clearly are running more that one. How is this the case? 
 
 
 
