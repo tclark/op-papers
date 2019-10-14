@@ -55,7 +55,9 @@
 	We can create volumes from the command line:
 	
 	\begin{Verbatim}[commandchars=\\\{\}]
-	sudo docker run -it --name vol-test \codeHighlight{-v /data} \textbackslash
+	sudo docker run -it --name vol-test \textbackslash
+	
+	\codeHighlight{--mount type=volume,target=/data} \textbackslash
 	
 	ubuntu /bin/bash
 	\end{Verbatim}
@@ -66,7 +68,7 @@
 	We can create volumes from the in a Dockerfile:
 	
 	\begin{Verbatim}[commandchars=\\\{\}]
-	FROM ubuntu:14.04
+	FROM ubuntu:18.04
 	\codeHighlight{VOLUME /data}
 	\end{Verbatim}
 \end{frame}
@@ -84,7 +86,7 @@
 	Note that 
 	\begin{itemize}
 		\item The container \texttt{vol-test} \emph{doesn't have to be running}.
-		\item Changes to the volume are immediately visibile in both containers (and the host).
+		\item Changes to the volume are immediately visible in both containers (and the host).
 	\end{itemize}
 \end{frame}
 
@@ -99,29 +101,24 @@
 	And then use them in a container later
 	\begin{Verbatim}[commandchars=\\\{\}]
 	docker run -ti \textbackslash
-	\codeHighlight{--v Volume1:/volume1} \textbackslash
+	\codeHighlight{--mount type=volume,source=Volume1,target=/volume1} \textbackslash
 	ubuntu
 	\end{Verbatim}
 
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Creating Volumes}
-	We can create volumes from directories that already exist on the host:
+	\frametitle{Bind mounts}
+	We can create ``volumes'' (actually \emph{bind mounts}) from directories that already exist on the host:
 	
 	\begin{Verbatim}[commandchars=\\\{\}]
-	sudo docker run -it --name vol-test3 \textbackslash
-	\codeHighlight{-v /home/tclark/data:/data}  \textbackslash
-	ubuntu /bin/bash
+  sudo docker run -it --name vol-test3 \textbackslash
+  \codeHighlight{--mount type=bind,source=/home/tclark/data,target=/data}  \textbackslash
+  ubuntu /bin/bash
 	\end{Verbatim}
 \end{frame}
 
 
-\begin{frame}
-	\frametitle{Data-only containers}
-	
-	One application of containers with volumes is creating containers with the express purpose of establishing data volumes that are accessed by other containers.  These are called \emph{data-only containers} and they are described at \\
-	 {\footnotesize \url{https://container42.com/2013/12/16/persistent-volumes-with-docker-container-as-volume-pattern/}}
-\end{frame}
+
 
 \end{document}
