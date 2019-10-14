@@ -13,12 +13,12 @@
 
 \begin{document}
 
-\title{Docker Volumes\\ IN720 Virtualisation}
+\title{Lab 11.1: Docker Volumes\\ IN720 Virtualisation}
 \date{}
 \maketitle
 
 \section*{Introduction}
-In this lab we are going to play around with Docker volumes to see how we can create and seed volumes with data that we can then share across other containers.
+In this lab we are going to play around with Docker volumes and bind mounts to see how we can create and seed volumes with data that we can then share across other containers.
 
 
 \section{Build a data container}
@@ -36,7 +36,7 @@ Build your image and launch a container called \texttt{vol\_lab\_1} from it.
 \section{Find your volume on the host system}
 In another ssh session, inspect your new container to find its volumes with the command
 
-\texttt{sudo docker inspect -f \{\{.Volumes\}\} vol\_lab\_1}
+\texttt{sudo docker inspect -f \{\{.Mounts\}\} vol\_lab\_1}
 
 Once you find the directory on the host that stores your volume, modify one of the files inside it.  Attach a terminal to \texttt{vol\_lab\_1} and see if the changes on the host system are visible inside the container.
 
@@ -47,14 +47,13 @@ Shut down \texttt{vol\_lab\_1}.  Start a new container with the command
 
 When your new container starts, inspect the \texttt{/data} volume inside it.  Make some changes inside the volume and then shut down this container.  Then, check the volume directory on the host system and see if your changes are visible there.
 
-\section{Creating a volume from an exisiting directory on the host}
+\section{Creating a bind mount from an exisiting directory on the host}
 Often, especially when developing applications, we have a directory on the host system that contains code or other resources we want to use inside a container while still keeping access to them directly on the host. Modify the container image you created earlier by doing the following:
 
 \begin{enumerate}
 	\item Create a directory, \texttt{/home/user/mydata} on your host system. Place some files in it.
-	\item In your Dockerfile, remove the earlier commands that created the \texttt{/data} directory and its contents.
-	\item Make \texttt{/data} a volume that mount \texttt{/home/user/mydata}.
-	\item Rebuild your image and start a new container from it. 
+	\item In your Dockerfile, remove the earlier commands that created the files in \texttt{/data}, but do create the \texttt{/data} directory.
+	\item Rebuild your image and start a new container from it. Create a bind mount of \texttt{/home/user/mydata} onto \texttt{/data}
 	\item On your host system, modify the contents of \texttt{/home/user/mydata} and then observe how those changes are visible inside your running container.
 \end{enumerate}
 
