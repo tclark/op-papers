@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\title{DockerHub\\ IN720 Virtualisation}
+\title{Lab 11.1: DockerHub\\ IN720 Virtualisation}
 \date{}
 \maketitle
 
@@ -34,9 +34,7 @@ Check the DockerHub web site to verify that your image shows up on your profile.
 \section{Automated builds}
 Although we can now distribute our images on DockerHub, the situation is less than ideal.  Anytime we make a change to the image we must perform a set of manual steps to rebuild and push the image.  Also, even though we are storing the build context on GitHub, there's nothing explicitly linking the image to those sources. Effectively, we can't be completely sure what is in those images. We can address all of those by setting up an \emph{automated build}.
 
-To start, delete the DockerHub repository we created above, so that we can create a new one with the same name.
-
-Next, from your Dashboard page, select Create $\rightarrow$ Create Automated Build. You will have to link your DockerHub account to your GitHub account if you have not already done so. Once you have done this, you will select the GitHub repository that holds your image's build context. Fill out the resulting form, click create, and you're done.
+On DockerHub, go to your repository's page. Select the ``Build'' item from the top menu and then click the GitHub link to connect your DockerHub repository to the associated GitHub repository that holds your container image's build context.
 
 From now on, any time you push a new commit to your GitHub repository it will trigger a new build of your image on DockerHub. Try is now by making a small change to your build context and committing it.
 
