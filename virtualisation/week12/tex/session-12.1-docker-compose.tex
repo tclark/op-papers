@@ -54,7 +54,7 @@
   \frametitle{How would we redo the last lab with Docker Compose?}
    
    \begin{enumerate}
-     \item Create a project directory, called \texttt{lab4}.
+     \item Create a project directory, called \texttt{lab11}.
      \item Place the build contexts for our images inside this directory.
      \item Create a file, \texttt{docker-compose.yml} in the directory with appropriate directives.
    \end{enumerate}
@@ -67,15 +67,14 @@
     \frametitle{Our compose file}
     
     \begin{verbatim}
-version: '3'
+version: "2.0"
 services:
     flaskapp:
         build: ./flaskapp
-        image: flaskapp
+        image: user/flaskapp
         networks:
             - app
     nginx:
-        build: ./nginx
         image: nginx
         ports:
             - 8080:80
@@ -86,6 +85,16 @@ services:
 networks:
     app:
     \end{verbatim}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Compose file sections}
+   \begin{itemize}
+     \item \texttt{version:} May be 2.x or 3.x   
+     \item \texttt{services:} Define your containers here
+     \item \texttt{networks:} Declare your networks
+     \item \texttt{volumes:} Define named volumes
+   \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -102,5 +111,10 @@ networks:
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{More Information}
+  
+  See \url{https://docs.docker.com/compose/}
+\end{frame}
 
 \end{document}

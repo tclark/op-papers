@@ -13,31 +13,31 @@
 
 \begin{document}
 
-\title{Docker Compose\\IN720 Virtualisation}
+\title{Lab 12.1: Docker Compose\\IN720 Virtualisation}
 \date{}
 \maketitle
 
 \section*{Introduction}
-In this lab we will create a service using a three different containers managed with Docker Compose. To begin, create a project directory named \texttt{lab\_4.2}
+In this lab we will create a service using a three different containers managed with Docker Compose. To begin, create a project directory named \texttt{lab\_12}
 
 \section{Create a Flask application container}
-Make a directory \texttt{flaskapp} to serve as a build context for the Python/Flask application image. You can just reuse the context you used in lab 4.1, with a two changes:
+Make a directory \texttt{flaskapp} to serve as a build context for the Python/Flask application image. You can just reuse the context you used in lab 11.2, with a two changes:
 
   \begin{enumerate}
-    \item Replace the Flask application code from last time with the files \texttt{app.py} and \texttt{requirements.txt} you will find in the \texttt{week04/lab-4.2-resources} directory.
+    \item Replace the Flask application code from last time with the files \texttt{app.py} and \texttt{requirements.txt} you will find in the \texttt{week12/lab-12-resources} directory.
     \item Change the \texttt{ENTRYPOINT} value to \texttt{python app.py}.
     \end{enumerate}
 
 \section{Create an nginx proxy container}
-In this case you can simply reuse the nginx container from lab 4.1 with no changes. It would, however, be a good idea to rename the image to something else, like ``\texttt{proxy}''.
+In this case you can simply reuse the nginx container from lab 11.2 with no changes. It would, however, be a good idea to rename the image to something else, like ``\texttt{lab12-nginx}''.
 
 \section{Create a compose file}
 Finally., create the \texttt{docker-compose.yml} file. In it, you will need directives to
 
 \begin{enumerate}
   \item Build and run the \texttt{flaskapp} container, using the \texttt{app} network.
-  \item Build and run the \texttt{proxy} container, using the app network and mapping its port 80 to a port on the host.
-  \item Run a \texttt{redis} container, also attached to the app network. It's not necessary to set up a special image for this. You can just use the standard \texttt{redis} image from Dockerhub.
+  \item Build and run the \texttt{lab12-nginx} container, using the app network and mapping its port 80 to a port on the host.
+  \item Run a \texttt{redis-svr} container, also attached to the app network. It's not necessary to set up a special image for this. You can just use the standard \texttt{redis:latest} image from Dockerhub.
   \item Create the app network.
   \end{enumerate}
 
