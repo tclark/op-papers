@@ -43,7 +43,9 @@ Once you find the directory on the host that stores your volume, modify one of t
 \section{Using the volume in another container}
 Shut down \texttt{vol\_lab\_1}.  Start a new container with the command
 
-\texttt{sudo docker run -it  --volumes-from vol\_lab\_1 ubuntu /bin/bash}
+\begin{verbatim}
+sudo docker run -it  --volumes-from=vol_lab_1 ubuntu /bin/bash
+\end{verbatim}
 
 When your new container starts, inspect the \texttt{/data} volume inside it.  Make some changes inside the volume and then shut down this container.  Then, check the volume directory on the host system and see if your changes are visible there.
 
