@@ -13,14 +13,14 @@
 
 \begin{document}
 
-\title{Lab 5.1: Docker Swarm \\ IN720 Virtualisation}
+\title{Lab 12.2: Docker Swarm \\ IN720 Virtualisation}
 \date{}
 \maketitle
 
 \section*{Introduction}
 Docker Swarm is a system that lets us manage containers across a collection of Docker hosts. It's already included in more recent versions of Docker, so there is nothing extra to install. In one sense, it's just an additional set of \texttt{docker} commands to run.
 
-For this lab you will get a new set of three virtual machines to use. Go ahead and open ssh settings on each of them. For some not particularly amusing reason, they probably all have the same host names. Rename one of the machines \texttt{manager} and the other two \texttt{worker0} and \texttt{worker1}. Make sure that the \texttt{docker.io} package is installed, and put the \texttt{user} account into the \texttt{docker} group with the command \texttt{sudo adduser user docker}. This will let you run \texttt{docker} commands without using sudo.
+For this lab you will get a new set of three virtual machines to use. Go ahead and open ssh settings on each of them. You will find that one is named \texttt{master} and the other two are \texttt{worker0} and \texttt{worker1}. There's nothing different in how the three machines are set up at this point, it's just a matter of how we plan to use them.
 
 \section{Set up our swarm}
 
@@ -37,6 +37,8 @@ or
 \texttt{docker swarm join-token manager}
 
 if you want to add managers to your swarm.
+
+From this point on, any commands we use will be entered on the manager unless noted otherwise.
 
 Now add your two remaining machines to your swarm as workers. You can see the systems in your swarm with the command
 
@@ -80,6 +82,15 @@ Finally, you can stop your service with the command
 
 \texttt{docker service rm hi}
 
-You can see all the various docker commands at \url{https://docs.docker.com/engine/reference/commandline/docker/}. In particular, the sections on \texttt{docker swarm} and \texttt{docker service} are most relevant today.
+You can see the relevant docker commands at \url{https://docs.docker.com/engine/reference/commandline/swarm/} and \url{https://docs.docker.com/engine/reference/commandline/service/}. 
+
+\section{Set up a service with a compose file}
+Now that you can work with a swarm, take the compose file you wrote in lab 12.1 and adapt it for use on your swarm. In particular:
+
+\begin{enumerate}
+  \item Since you can't use \texttt{build} in a swarm setting, remove that.
+  \item Any images you need to build must be pushed up to Docker Hub.
+  \item Specify that you will use an \texttt{overlay} network.
+\end{enumerate}
 
 \end{document}
