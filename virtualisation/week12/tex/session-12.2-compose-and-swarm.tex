@@ -24,6 +24,34 @@
   \titlepage
 \end{frame}
 
+\begin{frame}
+  \frametitle{Part 1: Docker swarm}
+  
+  We've just been working on one Docker server. However, Docker is 
+  a service that listens on network interfaces. New versions have the 
+  capability to be joined with other docker servers over a network to
+  form a \emph{swarm}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Forming a swarm}
+  
+  \begin{enumerate}
+    \item Initialise the swarm on one server. This server becomes a \emph{manager}.
+    \item Optionally, join additional managers to the swarm\footnote{Best practice is to limit the number of managers to 3-7.}.
+    \item Join \emph{workers} to the swarm.
+    \item On a manager node we may issue commands to control and monitor the swarm.
+  \end{enumerate}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Part 2: Compose and swarm}
+  
+  There are a few options for deploying containerised services on a swarm.
+  We will see how to use a Docker Compose file for this.
+\end{frame}
+
+
 \begin{frame}[fragile]
   \frametitle{To some extent, it just works}
   
@@ -33,7 +61,7 @@
   $ docker-compose up
    \end{verbatim}
    
-   There are some issues, however\footnote{The above won't work on our machines.  Don't sweat it.}.
+   There are some issues, however\footnote{You don't actually do it this way, though.}.
 \end{frame}
 
 \begin{frame}
@@ -41,8 +69,8 @@
    
    \begin{itemize}
      \item We saw that you can specify that Docker build an image in a Compose file.
-     \item But we also saw that Swarm needs images to be accessible in a registry.
-     \item So, building in a compose file used for Swarm deployment is right out.
+     \item But swarm needs images to be accessible in a registry.
+     \item So, building in a compose file used for swarm deployment is right out.
      \item Really, when you're deploying to a production setting, you shouldn't be building on the fly anyway.
    \end{itemize}
 \end{frame}
@@ -61,6 +89,7 @@
 \begin{frame}
   \frametitle{Issue three: dependencies}
    
+   The \texttt{depends\_on} directive in a compose file has a different meaning in a swarm context.
    \begin{itemize}
      \item We can create dependencies between containers
               \begin{itemize}
@@ -79,7 +108,7 @@
     \frametitle{The tricky case: multiple dependencies}
     
     \begin{verbatim}
-version: '3'
+version: "3"
 services:
     svc_a:  
         image: image_a
@@ -91,7 +120,12 @@ services:
     svc_c:  
         image: image_c
     \end{verbatim}
+    
+    In this case, \texttt{svc\_a} must be deployed on a host that is already running \texttt{svc\_b} and \texttt{svc\_c}. But we aren't guaranteed that 
+    \texttt{svc\_b} and \texttt{svc\_c} will be placed together on the same host. There is a \texttt{constraints} directive available in Compose that helps deal with this.
 \end{frame}
+
+
 
 \begin{frame}
   \frametitle{Final issue: networks}
@@ -121,22 +155,5 @@ networks:
      \item Stack Overflow does not care about you.
    \end{itemize}
 \end{frame}    
-
-\begin{frame}
-    \begin{center}
-     \includegraphics[scale=0.4]{demo}
-     \end{center}
-\end{frame}
- 
- \begin{frame}
-  \frametitle{Today's lab}
-   
-   \begin{itemize}
-     \item Redo lab 4.2, using Docker Swarm
-     \item What changes do you need to make?
-     \item Scale up your \texttt{flaskapp} service to 3
-     \item You should only need one \texttt{nginx} container.
-   \end{itemize}
-\end{frame}
 
 \end{document}
