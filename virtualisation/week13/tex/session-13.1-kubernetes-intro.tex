@@ -1,0 +1,181 @@
+% Beamer slide template prepared by Tom Clark <tom.clark@op.ac.nz>
+% Otago Polytechnic
+% Dec 2012
+
+\documentclass[10pt]{beamer}
+\usetheme{Dunedin}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+
+\newcommand\codeHighlight[1]{\textcolor[rgb]{1,0,0}{\textbf{#1}}}
+
+\title{Kubernetes}
+
+\author[I720]{Virtualisation}
+\institute[Otago Polytechnic]{
+  Otago Polytechnic \\
+  Dunedin, New Zealand \\
+}
+\date{}
+\begin{document}
+
+%----------- titlepage ----------------------------------------------%
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Last time: Swarm}
+  Docker Swarm
+  \begin{itemize}
+    \item joins multiple machines into a cluster;
+    \item lets us interact with the cluster as a single entity;
+    \item allows us to run containers and set up volumes for them on the cluster;
+    \item does all this while adding as little as possible to Docker.
+  \end{itemize}
+  
+  In fact, it's included in Docker, so it literally adds nothing.
+\end{frame}
+
+\begin{frame}
+  \frametitle{This time: Kubernetes}
+  Kubernetes 
+  \begin{itemize}
+    \item joins multiple machines into a cluster;
+    \item lets us interact with the cluster as a single entity;
+    \item allows us to run containers and set up volumes for them on the cluster;
+    \item uses a container runtime (typically, but not necessarily, Docker);
+    \item \textbf{adds a significant amount of extra machinery on top of Docker.}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kubernetes clusters}
+  
+  \begin{itemize}
+    \item Clusters are made up of masters and worker nodes.
+    \item Bother require a collection of software components.
+    \item The components are distinct for masters and workers.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Worker node components}
+  
+  \begin{itemize}
+    \item kubelet
+    \item kube-proxy
+    \item a container runtime, e.g., Docker
+  \end{itemize}
+  
+  In general we don't interact with worker nodes.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Master components}
+  
+  \begin{itemize}
+    \item kube-api-server
+    \item etcd
+    \item kube-scheduler
+    \item controller managers
+    \item controllers
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Add ons}
+  
+  \begin{itemize}
+    \item DNS
+    \item Web dashboard
+    \item Resource monitoring
+    \item Logging service
+  \end{itemize}
+  
+  None of these is strictly required, although we generally always need DNS.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Admin interface}
+  
+  kubectl is the standard CLI tool used to administer a Kubernetes cluster. It interacts with the kube-api-server on the master. Typically we would install it on a workstation.
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Installing Kubernetes}
+  
+  Since Kubernetes is actually a collection of software spread across several machines, there is no one standard installation method or package.
+  
+  We will use a special version of Kubernetes designed to run on a single machine, called \texttt{microk8s}.
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pods}
+  
+  \begin{itemize}
+    \item The basic unit of deployment is the \emph{pod}.
+    \item A pod is a collection of containers and volumes.
+    \item All of the items in a pod will be deployed onto the same node.
+    \item Other deployment elements are built up from pods.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pod manifests}
+  
+  \begin{itemize}
+    \item There is more than one way to create a pod. Typically we create them from manifest files.
+    \item These are JSON or YAML files (typically we use YAML).
+    \item We use these files with kubectl (e.g. \texttt{kubectl apply -f mypod.yml}).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{verbatim}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  volumes:
+  - name: "kuard-data"
+      hostPath:
+        path: "/var/lib/kuard"
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      volumeMounts:
+        - mountPath: "/data"
+          name: "kuard-data"
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+\end{verbatim}
+
+\tiny{From: Kelsey Hightower, Brendan Burns, and Joe Beda. "Kubernetes: Up and Running."}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other deployment elements}
+  
+  \begin{itemize}
+    \item ReplicaSets
+    \item DaemonSets
+    \item Jobs
+    \item Deployments
+  \end{itemize}
+\end{frame}
+
+
+
+
+
+\end{document}
