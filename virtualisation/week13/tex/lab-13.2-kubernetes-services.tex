@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Lab 13.2: Kubernetes Services \\IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+In the previous lab we saw how we could deploy pods to a Kubernetes cluster that runs containers and creates volumes on the cluster's nodes. But until 
+we But until we do something to set it up, those containers are not networked. Two containers on the cluster cannot communicate with each other and it is not possible to connect to a container over the network from outside the cluster. To do either of these, we need to create and configure Kubernetes \emph{service objects}. In this lab we will see how to do this.
+
+
+\textbf{N.B.:} Begin this lab by enabling the Kubernetes DNS feature with the command \texttt{microk8s.enable dns}.
+
+\section{Deploy redis}
+We will deploy two containers to our cluster. One will use a standard \texttt{redis} image and the other will use the same \texttt{flaskapp} image we have used previously. Recall that the flask application needs to connect to redis over the network in order to function, and the flask application itself is meant to be accessed over the network.
+
+First, launch a redis container with the following command
+
+\begin{verbatim}
+  microk8s.kubectl create deployment redis --image=redis:alpine
+\end{verbatim}
+
+This creates a \emph{deployment}, which is a higher level construct than a simple pod. In this case it's simply a matter of convenience. \texttt{kubectl create} can't be used to create a pod.
+
+Redis listens for requests on port 6379, but our container hasn't been created with that port open. It's easy to modify its configuration with the command
+  
+\begin{verbatim}
+  microk8s.kubectl edit deployment redis
+\end{verbatim}
+
+This will open our deployemnt's manifest in a text editor. We can make changes which will be applied once we save and close the editor. Look for the section of the manifest where the container properties are defined and add the following, right after the \texttt{name} property. (That property is included below to illustrate the correct indenting level. You don't need to add it again.)
+
+\begin{verbatim}
+  name: redis
+  ports:
+    - containerPort: 6379
+      name: redis
+      protocol: TCP
+\end{verbatim}
+
+Even though we've exposed the container port, it isn't accessible to other containers in the cluster yet. We need to create the service object with the command
+
+\begin{verbatim}
+  microk8s.kubectl expose deployment redis
+\end{verbatim}
+
+and then inspect its properties with the command 
+
+\begin{verbatim}
+  microk8s.kubectl describe service redis
+\end{verbatim}
+
+We see from the output that this service provides a \texttt{ClusterIP} to which we can connect on port \texttt{6379} (because that is the port exposed by the container). Other containers in the cluster that connect to the ClusterIP will have their requests routed to one of the \texttt{Endpoints}, of which there is only one in our case. It's possible to connect directly to the endpoint, but Kubernetes will keep the \texttt{ClusterIP} stable. The endpoint addresses, on the other hand, may change. Also, since we have enabled the Kubernetes DNS service, the \texttt{ClusterIP} is reachable using the service's name, \texttt{redis}.
+
+Services exposed through a \texttt{ClusterIP} are not accessible outside the cluster.
+
+\section{Deploy the flask application}
+The first steps in this process are basically the same as the ones we carried our for the redis container.
+
+Create the flaskapp deployment:
+\begin{verbatim}
+  microk8s.kubectl create deployment flaskapp --image=tclark/flaskapp
+\end{verbatim}
+
+The flask application container needs to be able to connect to the redis container using the hostname \texttt{redis}, and it can. We configured that above. We cannot connect to the flask application, however.
+
+Edit the deployment's properties, this time to expose port 5000 on the container:
+\begin{verbatim}
+  microk8s.kubectl edit deployment flaskapp
+\end{verbatim}
+
+Edit the manifest as we did above, just with the different port.
+
+Now we will use an \texttt{expose} command to create the service object, but we do not want a \texttt{ClusterIP} in this case since it's not accessible outside the cluster. Instead, create a service with a \texttt{NodePort} using the command
+\begin{verbatim}
+  microk8s.kubectl expose deployment flaskapp --type=NodePort
+\end{verbatim}
+
+and see what external port has been assigned by entering the command
+\begin{verbatim}
+  microk8s.kubectl describe service flaskapp 
+\end{verbatim}
+
+and looking for the \texttt{NodePort} value
+
+Now, using a browser or curl, you should be able to access the flask application at the address \\
+\texttt{http://<ip address of server>:<NodePort>}. 
+
+
+
+
+
+
+
+\end{document}
