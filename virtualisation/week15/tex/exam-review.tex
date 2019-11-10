@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+%\usepackage{inconsolata}
+\usepackage{enumerate}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[parfill]{parskip}
+\usepackage[margin = 2.5cm]{geometry}
+
+\usepackage[T1]{fontenc}
+
+
+\begin{document}
+
+\title{Final review outline\\IN720 Virtualisation}
+\date{}
+\maketitle
+
+\section*{Introduction}
+We will end our study of virtualisation with a final examination on Friday, 22 November. The exam will include questions from any topic we explored during the semester. Rather than focus on implementation details (That's what the labs and assignments were for), the exam will test understanding of the underlying ideas. Questions will mainly have a short answer format along with a small number of long answer questions.
+
+Things that may be on the exam:
+\begin{itemize}
+  \item Questions about the major software systems we used during the semester
+  \item Questions in which you are shown examples of code or configuration and have to explain what they do
+  \item Questions that describe an error and problem and ask how you might troubleshoot them
+  \item Questions about how networking works in virtual systems contexts
+  \item Questions about the pros and cons of different virtualised systems
+  \item Questions about recurring themes we saw more than once during the semester.
+  \item Questions about \emph{why} we do things (rather than how).
+\end{itemize}
+
+Things that \textbf{will not} be on the exam:
+\begin{itemize}
+  \item Questions for which you will be expected to write code or configuration from memory
+  \item Questions that require you to reproduce specific commands we used
+\end{itemize}
+
+Below is a chronological outline of topics that may be covered on the exam.
+
+\section{Virtual machines and hypervisors}
+\begin{itemize}
+  \item Comparison of emulation, full virtualisation, paravirtualisation
+  \item Hosted and bare metal virtualisation
+  \item Components that comprise a guest VM
+  \item VM images
+  \item Dom0 and DomU guests
+  \item Networking for Xen guests
+  \item Backend and frontend network drivers
+  \item Bridged vs. routed networking
+  \item Volumes
+\end{itemize}
+  
+
+
+\section{Managed cloud services}
+\begin{itemize}
+  \item Pros and cons of managed services vs. self-hosting
+  \item Operational consequences of cloud services
+  \item Networking of cloud hosted VMs
+  \item Floating IP addresses
+  \item Cloud service APIs and SDKs
+  \item OpenStack's Python SDK
+  \item Terraform
+\end{itemize}
+
+\section{Containers}
+\begin{itemize}
+  \item Comparison of containers vs. VMs
+  \item Container images
+  \item Image creation
+  \item Image repositories
+  \item Volumes and bind mounts
+  \item Networking in Docker
+  \item Docker Compose
+  \item Docker Swarm
+  \item Kubernetes components
+  \item Kubernetes pods
+  \item Kubernetes service objects
+  \item Service deployments with containers
+\end{itemize}
+
+
+\end{document}
