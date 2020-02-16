@@ -23,7 +23,7 @@ The Operations Report Card at \url{http://opsreportcard.com} is a list of 32 yes
 
 \section{Public Facing Practices}
 
-\subsection{Are user requests tracked via a ticket system? \Checkmark}
+\subsection{Are user requests tracked via a ticket system?  }
 This is so basic it pains me that I have to explain it.
 
 Humans can't remember as well as computers. Expecting sysadmins to remember all user requests is the direct route to dropping requests.
@@ -40,7 +40,7 @@ It helps users help themselves. Frequently when a user writes down what their pr
 
 I spent the 1990s being the ``radical'' encouraging people to set up ticket systems. I spend the 200xs pleased to see it become accepted practice. We are well into the third decade. If you don't have a way to track user requests at this point shame on you.
 
-\subsection{Are ``the 3 empowering policies'' defined and published? \Checkmark}
+\subsection{Are ``the 3 empowering policies'' defined and published?  }
 There are three public-facing policies you must have if a sysadmin team is going to be able to get any work done. This is as much about serving customers as it is enabling team efficiency.
 
 If you are a manager that feels your team has bad time management skills, maybe it is your fault for not having or not enforcing these policies:
@@ -76,7 +76,7 @@ An official definition of what is supported enables sysadmins to say ``no''. It 
 
 Without the ability to say ``no'', sysadmins will support everything. An eager, helpful, sysadmin will spend countless hours trying to get an unsupportable video card to work when it would have been cheaper to have gifted him or her a supported card out of your own budget. A sysadmin, assumed lost or dead, will magically reappear having spent the day at a user's house fixing their Internet connection. Alternatively a curmudgeonly sysadmin will tell people something isn't supported just because they're busy.
 
-\subsection{Does the team record monthly metrics? \Checkmark}
+\subsection{Does the team record monthly metrics?  }
 You need to be data-driven when you make decisions or sway upper levels of management.
 
 The best way to develop your metrics is to create one metric per sentence or clause of your charter.
@@ -105,7 +105,7 @@ That's it. Really. Recording those once a month is the difference between starti
 Ultimately collecting these metrics should be automated. Until then, generate email to yourself on the first of each month with a reminder to do it manually.
 
 \section{Modern Team Practices}
-\subsection{Do you have a ``policy and procedure'' wiki? \Checkmark}
+\subsection{Do you have a ``policy and procedure'' wiki?  }
 Your team needs a wiki. On it you can document all your policies (what should be done) and procedures (how it is done).
 
 Automation is great but before you can automate something you must be able to do it manually. Documenting the manual process for something is a precondition to automation. In the meantime it enables consistent operations across a team and it gains you the ability to delegate. If it is documented, someone other than you can do it.
@@ -144,7 +144,7 @@ There are many excellent software-based password ``vaults'' systems. Though an e
 
 The problem is often verification. How do you know that an evil co-worker isn't putting the wrong password in those envelopes? If you are that paranoid have a different person verify any new passwords.
 
-\subsection{Is your team's code kept in a source code control system? \Checkmark}
+\subsection{Is your team's code kept in a source code control system?  }
 \begin{quote}
 When installing a new machine is an API call, we're all programmers now. -Limoncelli, on cloud computing, devops, and the importance of developer skills in system administration.
 \end{quote}
@@ -198,7 +198,7 @@ This format works when seeking feedback whether you want serious critiques or ju
 
 Your design doc format might have more headings or fewer, some may be optional, others may be required. Be flexible. A small project should only require a few headings. A huge project should require more of the headings. Be flexible. Have a ``short form'' and ``long form''. Having a standard template that people can use as a starting point avoids the ``blank page syndrome''.
 
-\subsection{Do you have a ``post-mortem'' process? \Checkmark}
+\subsection{Do you have a ``post-mortem'' process?  }
 After a failure do you write up what happened so you can learn from it or do you just hope nobody notices and that it will all go away?
 
 A good post-mortem (PM) includes a timeline of what happened, who was affected, what was done to fix it, how was business affected, and a list of proposed solutions to prevent this problem from happening again. Each proposal should be filed as a bug or ticket so they can be tracked to completion.
@@ -214,7 +214,7 @@ The PM should be published for all to see. You may be embarrassed and concerned 
 Of course, to really develop confidence all those bugs and tickets filed as a result need to actually get worked on.
 
 \section{Operational Practices}
-\subsection{Does each service have an OpsDoc? \Checkmark}
+\subsection{Does each service have an OpsDoc?  }
 Your DNS server dies. You rebuild it because you know how. Cool, right? You need to compile the newest version of BIND and install it, and you do it because you know how, right? When the monitoring system reports that error that happens now and then, you know how to fix it, right? You know how to do all this. Why write anything down?
 
 Here's why:
@@ -247,7 +247,7 @@ If this is something being developed in-house, the 8th tab would be information 
 
 Be a hero and create the template for the rest of your team to use. Document a basic service like DNS to get started. Then do this for a bigger service. Create the skeleton so others can use it as a template and just fill in the missing pieces. Get in the habit of starting a new opsdoc any time you begin a new project.
 
-\subsection{Does each service have appropriate monitoring? \Checkmark}
+\subsection{Does each service have appropriate monitoring?  }
 \begin{quote}
 	It isn't a service if it isn't monitored. If there is no monitoring then you're just running software. -Limoncelli
 \end{quote}
@@ -256,7 +256,7 @@ The monitoring should be based on the SLA from the OpsDoc. If you don't have an 
 
 Don't forget to update the Pager Playbook.
 
-\subsection{Do you have a pager rotation schedule? \Checkmark}
+\subsection{Do you have a pager rotation schedule?  }
 Do you have a pager rotation schedule or are you a sucker that is simply on-call forever?
 
 An on-call rotation schedule documents who is ``carrying the pager'' (or responsible for alerts and emergencies) at which times.
@@ -311,7 +311,7 @@ Here are some canary techniques:
 This procedure can be done manually but if you use a configuration management system, the ability to do canaries should be ``baked in'' to the system.
 
 \section{Fleet Management Processes}
-\subsection{Is there a database of all machines? \Checkmark}
+\subsection{Is there a database of all machines?  }
 Every site should know what machines it has. The database should store at least some basic attributes: OS, RAM, disk size, IP address, owner/funder, who to notify about maintenance, and so on.
 
 Having a database of all machines enables automation across all your machines. Being able to run a command on precisely the machines with a certain configuration is key to many common procedures.
@@ -337,7 +337,7 @@ If you can re-install the OS automatically, so can the users. Now you have one l
 
 Not being able to easily wipe and reload a machine is a security issue. A machine should be wiped and reloaded when a ``hand me down'' computer moves from one user to another. If this process isn't ``friction free'' there is temptation to ``save time'' by not doing it.
 
-\subsection{Can you automatically patch software across your entire fleet? \Checkmark}
+\subsection{Can you automatically patch software across your entire fleet?  }
 If OS installation is automated then all machines start out the same. If patching is automated then all machines stay current. Consistency is a good thing.
 
 Security updates are very important because the reliability of your systems requires them. Non-security related updates are important because the reliability of your system requires them and because it brings new features to your customers. Withholding new patches is like a parent withholding love. Who raised you?
@@ -412,7 +412,7 @@ If your site isn't configured that way, you are living in the days when computer
 
 Exception: Sites small enough that they don't have a core. Even then all trunks should be redundant and a ``spares kit'' should exist for each kind of hardware device.
 
-\subsection{Are your backups automated? \Checkmark}
+\subsection{Are your backups automated?  }
 This question assumes you are doing backups. You are doing backups, right?
 
 You need backups for 4 reasons:
@@ -489,14 +489,14 @@ It is critical to have a written security policy before you implement it.
 \subsection{Do you submit to periodic security audits?}
 This needs little explanation. If you aren't testing your security, you don't know how vulnerable you are.
 
-\subsection{Can a user's account be disabled on all systems in 1 hour? \Checkmark}
+\subsection{Can a user's account be disabled on all systems in 1 hour?  }
 This indicates a lot more about your team and the environment you run than just whether or not you can disable an account. It indicates the use of a global unified account system.
 
 Having a single authentication database that all systems rely on is no longer a ``would be nice''. It is a ``must have''. If you think you don't need it until you are larger, you will find that you don't have time to install it when you are busy growing.
 
 The best practice is to employ user account life-cycle management systems. With such a system user accounts are created, managed and controlled from pre-employment through life changes to termination and beyond. What if a user's name changes? What if someone rejoins the company? What if they rejoin the company and their name has changed? There are a lot of ``edge cases'' they must be able to handle.
 
-\subsection{Can you change all privileged (root) passwords in 1 hour? \Checkmark}
+\subsection{Can you change all privileged (root) passwords in 1 hour?  }
 This also indicates a lot more than what the question specifically asks. It indicates if your administrative access is well managed.
 
 If you do not have this ability, create a checklist of everywhere it must be changed on a wiki page. Change the password globally by following the list, adding to it as you remember other devices. For obscure systems, document the exact command or process to change the password.
