@@ -63,11 +63,6 @@ Next edit the \texttt{site.pp} you created earlier on your management server and
   }
 \end{verbatim}
 
-This directs Puppet to be sure that \texttt{vim} is installed on our agent - Or at least it will, when you add the following line to \texttt{/etc/puppet/manifests/site.pp}:
-
-\begin{verbatim}
-  import 'nodes.pp'
-\end{verbatim}
 
 It is not necessary to restart the puppetmaster, but you will need to re-run the agent on the db server using the same command we used earlier since we're using it interactively. Log into your db server in another session and check to see that \texttt{vim} was installed.
 
