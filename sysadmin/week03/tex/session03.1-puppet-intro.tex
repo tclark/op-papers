@@ -164,32 +164,13 @@ node default {
 
 %----------- slide --------------------------------------------------%
 \begin{frame}[fragile]
-  \frametitle{Node Inheritance}
-
-A node can inherit from another node.  For example 'www.foo.org.nz' gets all of the configuration from the base node, plus it's own specific configuration.
-
-\begin{verbatim}
-node base {
-
-}
-
-node 'www.foo.org.nz' inherits base {
-
-}
-\end{verbatim}
-
-Note that Puppet best practice is to be careful to avoid overusing inheritance.  If you find yourself going back and modifying base classes or adding and removing inheritance relationships often, that is a sign that you shouldn't be using inheritance.
-
-\end{frame}
-%----------- slide --------------------------------------------------%
-\begin{frame}[fragile]
   \frametitle{Applying Configuration to a Node}
 
 
 
 \begin{verbatim}
 node 'db.foo.org.nz' {
-  packaage { 'vim':
+  package { 'vim':
              ensure => installed,
            }  
               
@@ -211,7 +192,7 @@ node 'app.foo.org.nz' {
 }
 \end{verbatim}
 
-We will create and apply a module in today's lab.
+We will create and apply a module in Thursday's lab.
 
 
 
