@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{A Puppet Module to Manage MariaDB \\ IN719 Systems Administration}
+\title{Lab 04.2: A Puppet Module to Manage MariaDB \\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -16,7 +16,7 @@
 \section*{Introduction}
 In this lab we will build a more complex module to manage our database server software.  This module will use a collection of related \emph{classes}.  We've used classes already, but you may not have paid much attention to them.  Note that this lab is based on an example from \emph{Pro Puppet} by James Turnbull.  In this module we will handle not just installation and configuration of a service, but also preinstallation tasks, operation, and ongoing maintenance of the service.
 \section{Module setup}
-Create a standard module structure in the \texttt{/etc/puppet/modules} directory of your puppetmaster.
+Create a standard module structure with the following files and directories in the \texttt{/etc/puppet/code/modules} directory of your puppetmaster.
 
 \texttt{mariadb} \\
 \texttt{mariadb/files/50-server.cnf} \\
@@ -26,7 +26,7 @@ Create a standard module structure in the \texttt{/etc/puppet/modules} directory
 \texttt{mariadb/manifests/service.pp} \\
 \texttt{mariadb/templates} \\
 
-Notice that we're using some more manifest files than we've used in the past. We will be writing a bit more code and we need to organise it more deliberately. Also, note that you can get a copy of the \texttt{50-server.cnf} file from the \texttt{week05} subdirectory of the class GitHub repository.
+Notice that we're using some more manifest files than we've used in the past. We will be writing a bit more code and we need to organise it more deliberately. Also, note that you can get a copy of the \texttt{50-server.cnf} file from the \texttt{week04} subdirectory of the class GitHub repository.
 
 \section{mariadb::install}
 The \textbf{mariadb::install} class includes the resources needed to install MariaDB.  Put the following in your \texttt{install.pp} file
@@ -67,7 +67,7 @@ Place the following resources in your \texttt{config.pp} file.
     file { "/etc/mysql/mariadb.conf.d/50-server.cnf":
       ensure => present,
       source => "puppet:///modules/mariadb/50-server.cnf",
-      mode => 0444,
+      mode => "0444",
       owner => "root",
       group => "root",
       require => Class["mariadb::install"],
@@ -76,7 +76,7 @@ Place the following resources in your \texttt{config.pp} file.
   }
 \end{verbatim}
 
-Notice how these resources require mariadb::install, and they also \emph{notify} mariadb::service.  This means that the server daemon will be restarted whenever its configuration changes.
+Notice how these resources require mariadb::install, and they also \emph{notify} mariadb::service.  The \texttt{require} directive means that Puppet won't apply the \texttt{config} class if the \texttt{install} class hasn't been applied successfully. The \texttt{notify}directive means that the server daemon will be restarted whenever Puppet changes its configuration.
 
 \section{mariadb::service}
 The maria::service class is brief.  Place it in your \texttt{service.pp} file.
@@ -105,9 +105,6 @@ Finally we just combine our classes in the \texttt{init.pp} file.
   }
 \end{verbatim}
 
-Now you can apply the module to your db server by placing \texttt{include mariadb} in the node definition for your db server.
+Now you can apply the module to your db server by placing \texttt{include mariadb} in the node definition for your db server. Don't include this module in other nodes because we don't want to install or run the MariaDB server on them.
 
-\section{Follow up}
-With the ability to create modules like this, you are now prepared to start fully managing your servers with Puppet.  You should set nodes for your other servers and get those servers connected to Puppet.
- 
 \end{document}
