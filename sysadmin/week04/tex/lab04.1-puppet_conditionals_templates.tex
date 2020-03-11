@@ -39,13 +39,13 @@ Put the following code in your \texttt{init.pp} file.  Adjust the \texttt{mgmt-x
 
   }
 
-  class ntp_service::install {
+  class install {
       package { "ntp":
           ensure => present,
       }
   }
 
-  class ntp_service::config {
+  class config {
       if $hostname == "mgmt-x" {
           $restrict = "restrict 10.25.0.0 mask 255.255.0.0 nomodify notrap"
           $server = "server 127.127.1.0"
@@ -59,12 +59,12 @@ Put the following code in your \texttt{init.pp} file.  Adjust the \texttt{mgmt-x
           ensure => present,
           owner => "root",
           group => "root",
-          mode => 0444,
+          mode => "0444",
           content => template("ntp_service/ntp.conf.erb"),
       }    
   }
 
-  class ntp_service::service {
+  class service {
       service { "ntp":
           ensure => running,
           enable => true,
@@ -89,11 +89,11 @@ Retrieve the \texttt{ntp.conf.erb} file from the week 4 subdirectory of the clas
 
 \begin{verbatim}
 
-  <%= restrict %>
+  <%= @restrict %>
 
-  <%= server %>
+  <%= @server %>
 
-  <%= fudge %>
+  <%= @fudge %>
 
 \end{verbatim}
 

@@ -36,7 +36,7 @@ restrict -4 default kod notrap nomodify nopeer noquery limited
 restrict -6 default kod notrap nomodify nopeer noquery limited
 
 # allow local systems to query
-<%= restrict %>
+<%= @restrict %>
 
 # Local users may interrogate the ntp server more closely.
 restrict 127.0.0.1
@@ -68,5 +68,5 @@ restrict source notrap nomodify noquery
 #server 127.127.22.1                   # ATOM(PPS)
 #fudge 127.127.22.1 flag3 1            # enable PPS API
 
-<%= server %>
-<%= fudge %>
+<%= @server %>
+<%= @fudge %>
