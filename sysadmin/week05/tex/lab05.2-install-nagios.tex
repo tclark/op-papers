@@ -7,7 +7,7 @@
 \usepackage{enumerate}								% TeX will automatically convert eps --> pdf in pdflatex		
 
 
-\title{Lab 06.01:  Set Up Nagios With Puppet\\ IN719 Systems Administration}
+\title{Lab 05.2:  Set Up Nagios With Puppet\\ IN719 Systems Administration}
 \date{}							% Activate to display a given date or no date
 
 \begin{document}
@@ -16,11 +16,13 @@
 \section*{Introduction}
 Next week we will start working with Nagios to monitor our systems. We will introduce Nagios itself then, but we can already start using Puppet to install Nagios and to perform some basic configuration.
 
-There are two things about this that can be confusing. Nagios has its own configuration files with their own syntax, but for now we are only going to use Puppet and it manifest format to configure Nagios. We can do this because we won't us Puppet to manage Nagios' configuration \emph{files}. Instead we will prepare native Puppet resources that represent elements of Nagios configuration.
+There are two things about this that can be confusing. Nagios has its own configuration files with their own syntax, but for now we are only going to use Puppet and it manifest format to configure Nagios. We can do this because we won't use Puppet to manage Nagios' configuration \emph{files}. Instead we will prepare native Puppet resources that represent elements of Nagios configuration. Puppet has features that directly support Nagios.
+
+Note that everything in today's lab will take place on our \texttt{mgmt} servers. There is no reason to touch any other servers for this lab.
 
 
 \section{Set up a Nagios Module}
-Following the example of our MariaDB module, create a new module for Nagios with an \texttt{install}, \texttt{config}, and \texttt{service} class. Most of the work will be in the config class, but the other two are what we need to get set up first.
+Following the example of our MariaDB module, create a new module for Nagios with an \texttt{install}, \texttt{config}, and \texttt{service} class. Most of the work in the coming weeks will be in the config class, but the other two are what we need to get set up first.
 
 We will apply this module to \textbf{only} our \texttt{mgmt} servers.
 
@@ -33,7 +35,7 @@ The \texttt{service} class should enable the \texttt{nagios3} service and ensure
 \subsection{\texttt{config} class}
 Nagios requires a lot of configuration and we will be working on in over the next few weeks. We will get started today by creating a \texttt{config} class that includes the following: 
 
-Create a \texttt{file} resource that manages \texttt{/etc/nagios3/nagios.cfg}. You can use the default configuration file installed by the package for this. 
+Create a \texttt{file} resource that manages \texttt{/etc/nagios3/nagios.cfg}. You can use the default configuration file installed by the package for this. After installing you will find a copy of this file in \texttt{/etc/nagios3/nagios.cfg}. 
 
 Create a second \texttt{file} resource to manage \texttt{/etc/nagios3/htpasswd.users}. This file contains usernames and passwords used to log into the Nagios web interface. You will create this file with the \texttt{htpasswd} command, invoked in this manner:
 
@@ -46,7 +48,7 @@ Nagios uses a directory, \texttt{/etc/nagios3/conf.d}. Create a file resource th
 Finally, we will set up one nagios-specific resource, a \texttt{nagios\_host}. This will direct Nagios to monitor the status of our database server. Your \texttt{nagios\_host} resource should look like this:
 
 \begin{verbatim}
-nagios_host { "group00db.foo.org.nz":
+nagios_host { "db-x.foo.org.nz":
                  target => "/etc/nagios3/conf.d/ppt_hosts.cfg",
                  alias => "db",
                  check_period => "24x7",
@@ -64,7 +66,7 @@ We will discuss Nagios resources in class, but note especially that this resourc
 
 \section{Apply the Module}
 
-Use Puppet to apply this module to our management server \textbf{only}. If sanity is a thing you're into, don't do this by trying to write the complete module and applying it in one go. Write the module piece by piece, applying and debugging it successively until the module is complete and working. When it is done, you should be able to log into your Nagios web dashboard and find the status of your management and database servers. 
+Use Puppet to apply this module to our management servers \textbf{only}. If sanity is a thing you're into, don't do this by trying to write the complete module and applying it in one go. Write the module piece by piece, applying and debugging it successively until the module is complete and working. When it is done, you should be able to log into your Nagios web dashboard and find the status of your management and database servers. 
 
 
 
