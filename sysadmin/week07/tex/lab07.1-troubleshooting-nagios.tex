@@ -43,7 +43,7 @@ Next let's dig into what that check command does:
 \section{Test the check command manually}
 We see that our check command is probably \texttt{check\_mysql}. That command is defined in a file in \texttt{/etc/nagios-plugins/config}. Use \texttt{grep} on the files in that directory to see which one defines \texttt{check\_mysql}. Note that this definition shows that it executes a command \texttt{/usr/lib/nagios/plugins/check\_mysql}, passing a host address that is automatically interpolated by Nagios and an optional second argument. Let's see what happens when we run the command ourselves. Simply enter the command 
 
-\texttt{/usr/lib/nagios/plugins/check\_mysql -H group00db.foo.org.nz}
+\texttt{/usr/lib/nagios/plugins/check\_mysql -H db-x.foo.org.nz}
 
 Note the output and compare it to what we see on the Nagios web interface. If they match, then Nagios is correctly reporting the results of this check. This is good, because that means we understand what is happening.
 
