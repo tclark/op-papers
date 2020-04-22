@@ -1,0 +1,47 @@
+\documentclass{article}         % use "amsart" instead of "article" for AMSLaTeX format
+\usepackage[margin=0.5in]{geometry}                             % See geometry.pdf to learn the layout options. There are lots.
+\geometry{a4paper}                              % ... or a4paper or a5paper or ...
+
+\usepackage[parfill]{parskip}                   % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}                           % Use pdf, png, jpg, or eps with pdflatex; use eps in DVI mode
+\usepackage{enumerate}                                                          % TeX will automatically convert eps --> pdf in pdflatex                
+\usepackage{hyperref}
+
+\title{Notes on Nagios Checks\\ IN719 Systems Administration}
+\date{}                                                 % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+In lab 07.1 We stepped through the implementation of the \texttt{check\_mysql} command. Let's take a moment to review what we did and why so that we can use what we learned to understand Nagios check in general. This will help us when we want to implement and troubleshoot more checks in the future. You should read this after completing lab 07.1 and before completing lab 07.2.
+
+\section{Check commands}
+In our Nagios configuration files, i.e. the ones we place user \texttt{/etc/nagiso3/conf.d}, we define services that we want to check. Whenever we want to check a service we need a check command, like \texttt{check\_mysql}. This is just that name of a check that is configured elsewhere, and sometimes we need to see how it is configured to understand how a particular check works.
+
+Sometimes a check command can take additional arguments that we can supply in our configuration by adding them to check commands, bracketed with exclamation marks, like so:
+
+\begin{verbatim}
+  check_mysql_cmdlinecred!username!password
+\end{verbatim}
+
+\section{Nagios plugins}
+Nagios checks are implemented in plugins. Those plugins are pretty simple, so it's not difficult to make your own. The installed plugins are configured in files under \texttt{/etc/nagios-plugins/config}. If we want to see how a check command is executed and how to use it, we look for it on those files. If we're looking for checks to use with DHCP services, we look in the \texttt{dhcp.cfg} file. If we want to understand how the \texttt{check\_mysql} command works, we look int he file \texttt{mysql.cfg}.
+
+In practice, we almost never need to modify these files. If you ever think that you do need to modify one, stop and think carefully about why because you're probably wrong. An exception might be when you are creating your own plugins.
+
+\section{Check implementations}
+Nagios checks are implemented with little standalone executable programs. Any program that you can execute from the command line and that formats its output in a way that Nagios can read it can be used for a check. So when we want to see how the \texttt{check\_mysql} command is implemented, we look in its plugin configuration file. From the configuration we see that the check's executable file is \texttt{/usr/lib/nagios/plugins/check\_mysql}. In fact all of the MySQL checks use the same executable, just with different arguments.
+
+\section{Turning it around}
+To complete the picture, suppose we want to make our own plugin. We just work in the opposite direction.
+
+\begin{enumerate}
+  \item Write a command line program that produces output in the correct format.
+  \item Write a configuration file the links the program we wrote to a check command name.
+  \item Configure a service check on our Nagios server that uses our check command.
+\end{enumerate}
+
+
+\end{document}
+
