@@ -26,6 +26,8 @@ But how can we check for local properties like the latter on remote systems?  Se
 The NRPE service could be easily abused, since basically it accepts remote requests to execute programs on the monitored server.  For this reason, we have to configure it carefully. In this lab we will walk through setting up the NRPE service, but remember that there is \textbf{one} right way for us to do this: Prepare a Puppet module. You will want to apply the module to your app, db, and backups servers, but it makes no sense to apply it to your management server.
 
 \section{Install the NRPE server} 
+Carry out these tasks on your \texttt{db} server. Once you have this sorted and have completed the setup in your \texttt{mgmt} server described below, go back and repeat the process for your \texttt{app} and \texttt{backup} servers.
+
 To run NRPE checks on a host, we must first install the \texttt{nagios-nrpe-server} package. This will install the \texttt{nagios-nrpe-server} service which runs under the user and group \texttt{nagios}.
 
 \section{NRPE Server configuration}
@@ -34,7 +36,7 @@ The NRPE service is configured primarily with the file \texttt{/etc/nagios/nrpe.
 First, we need to configure the NRPE service so that it will accept requests to perform checks from the management servers. The NRPE service will ignore requests from any host that is not explicitly allowed to request checks. Edit the \texttt{allowed\_hosts} to accept requests from your server, e.g.:
 
 \begin{verbatim}
-  allowed_hosts=group00mgmt.foo.org.nz
+  allowed_hosts=mgmt-x.foo.org.nz
 \end{verbatim}
 
 Now we need to configure the NRPE server to perform the disk check. For security reasons, NRPE will only perform the checks it has been explicitly configured to do. There are some example ones in the \texttt{nagios.cfg} file, including one that is very close to what we want. Look for the line that reads:
@@ -52,9 +54,11 @@ Once these changes are done, it is necessary to restart \texttt{nagios-nrpe-serv
 \section{Nagios Server Configuration}
 Now that our remote server is ready, we can configure the check in Nagios on the management server.
 
-First, create a new hostgroup with a name like ``Remote Disks".  Place your \texttt{group00db.foo.org.nz} host in this new hostgroup.
+First, Our base Nagios installation does not support performing remote checks with NRPE. We need to add that capability by installing the \texttt{nagios-nrpe-plugin} package.
 
-Next, reate a new service that performs the disk check via NRPE.  The command to do this is \texttt{check\_nrpe\_1arg!check\_hd}.  This command is defined in the file \texttt{/etc/nagios-plugins/config/check\_nrpe.cfg}.  The single argument, \texttt{check\_hd}, is the name of the command we set up in the \texttt{nrpe.cfg} file on the remote system. You may have named yours something different.
+Next, create a new hostgroup with a name like ``Remote Disks".  Place your \texttt{db-x.foo.org.nz} host in this new hostgroup.
+
+Next, create a new service that performs the disk check via NRPE.  The command to do this is \texttt{check\_nrpe\_1arg!check\_hd}.  This command is defined in the file \texttt{/etc/nagios-plugins/config/check\_nrpe.cfg}.  The single argument, \texttt{check\_hd}, is the name of the command we set up in the \texttt{nrpe.cfg} file on the remote system. You may have named yours something different.
 
 \section{Follow up}
 Once you have NRPE and Nagios reporting on disk space on your db server, apply the NRPE module to your app and backups server and add them to the associated hostgroup. Then add other NRPE checks until you are satisfied that you are monitoring the states of all your servers thoroughly.
